@@ -1,0 +1,63 @@
+import 'package:equatable/equatable.dart';
+import 'package:absensi_bkr/model/kid_model.dart';
+
+abstract class KidsState extends Equatable {
+  const KidsState();
+  @override
+  List<Object> get props => [];
+  get temp => null;
+}
+
+class KidsInitial extends KidsState {}
+
+class KidsGetData extends KidsState {
+  final List<Kid> data;
+  final int totalData;
+  final int totalPage;
+  final int currentPage;
+  const KidsGetData(
+      this.data, this.totalData, this.totalPage, this.currentPage);
+  @override
+  List<Object> get props => [data];
+}
+
+class KidsGetDataIsEmpty extends KidsState {
+  const KidsGetDataIsEmpty();
+  @override
+  List<Object> get props => [];
+}
+
+class KidsError extends KidsState {
+  final String errMessage;
+  const KidsError(this.errMessage);
+  @override
+  List<Object> get props => [errMessage];
+}
+
+//
+
+class KidsUpdateDataSuccess extends KidsState {
+  const KidsUpdateDataSuccess();
+  @override
+  List<Object> get props => [];
+}
+
+class KidsUpdateDataFailed extends KidsState {
+  const KidsUpdateDataFailed();
+  @override
+  List<Object> get props => [];
+}
+
+//
+
+class KidsCreateDataSuccess extends KidsState {
+  const KidsCreateDataSuccess();
+  @override
+  List<Object> get props => [];
+}
+
+class KidsCreateDataFailed extends KidsState {
+  const KidsCreateDataFailed();
+  @override
+  List<Object> get props => [];
+}
