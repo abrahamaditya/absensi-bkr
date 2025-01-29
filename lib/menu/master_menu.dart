@@ -113,7 +113,9 @@ class MasterMenu extends StatelessWidget {
             create: (_) => AuthBloc()..add(InitLoginEvent()),
           ),
           BlocProvider(
-            create: (_) => TodayBloc()..add(FetchTodayEvent()),
+            create: (_) => TodayBloc()
+              ..add(FetchTodayEvent(
+                  date: DateTime.now().toIso8601String().split('T')[0])),
           ),
         ],
         child: Scaffold(

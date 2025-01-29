@@ -18,8 +18,11 @@ import 'package:absensi_bkr/bloc/camera_scan_absen_bloc/camera_scan_absen_event.
 import 'package:absensi_bkr/bloc/select_data_absen_bloc/select_data_absen_event.dart';
 import 'package:absensi_bkr/bloc/toggle_switch_absen_bloc/toggle_switch_absen_bloc.dart';
 import 'package:absensi_bkr/bloc/toggle_switch_absen_bloc/toggle_switch_absen_event.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 Widget hariIniWidget(BuildContext context) {
+  final ScrollController scrollController = ScrollController();
+
   return Container(
     color: white,
     height: double.infinity,
@@ -60,108 +63,118 @@ Widget hariIniWidget(BuildContext context) {
                   color: lightGrey,
                   thickness: 1,
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 20),
                 BlocBuilder<TodayBloc, TodayState>(
                   builder: (context, state) {
                     if (state is TodayGetData) {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (state.liveData.isNotEmpty) ...[
-                            Row(
-                              children: [
-                                Container(
-                                  width: 12,
-                                  height: 12,
-                                  decoration: BoxDecoration(
-                                    color: orange,
-                                    shape: BoxShape.circle,
+                          if (state.liveData.isNotEmpty ||
+                              state.upcomingData.isNotEmpty) ...[
+                            Text(
+                              state.liveData.isNotEmpty == true
+                                  ? "Sedang Berlangsung"
+                                  : "Selanjutnya",
+                              style: GoogleFonts.montserrat(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                color: state.liveData.isNotEmpty == true
+                                    ? orange
+                                    : middlePurple,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            GestureDetector(
+                              onHorizontalDragUpdate: (details) {
+                                scrollController.jumpTo(
+                                  scrollController.offset - details.delta.dx,
+                                );
+                              },
+                              child: Scrollbar(
+                                controller: scrollController,
+                                thumbVisibility: true,
+                                scrollbarOrientation:
+                                    ScrollbarOrientation.bottom,
+                                child: SingleChildScrollView(
+                                  controller: scrollController,
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    spacing: 10,
+                                    children: [
+                                      if (state.liveData.isNotEmpty) ...[
+                                        Wrap(
+                                          spacing: 10,
+                                          runSpacing: 10,
+                                          children:
+                                              state.liveData.map((service) {
+                                            return _kartu(
+                                              context: context,
+                                              data: service,
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ],
+                                      if (state.upcomingData.isNotEmpty) ...[
+                                        Wrap(
+                                          spacing: 10,
+                                          runSpacing: 10,
+                                          children:
+                                              state.upcomingData.map((service) {
+                                            return _kartu(
+                                              context: context,
+                                              data: service,
+                                              isNext: true,
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ],
+                                    ],
                                   ),
                                 ),
-                                const SizedBox(width: 7),
-                                Text(
-                                  "Sedang Berlangsung",
-                                  style: GoogleFonts.montserrat(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
-                                    color: orange,
-                                  ),
+                              ),
+                            ),
+                            const SizedBox(height: 35),
+                          ],
+                          if (state.pastData.isNotEmpty) ...[
+                            Wrap(
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Sudah Berakhir",
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        color: darkGrey,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    if (state.pastData.isNotEmpty) ...[
+                                      Wrap(
+                                        spacing: 10,
+                                        runSpacing: 10,
+                                        children: state.pastData.map((service) {
+                                          return _kartu(
+                                            context: context,
+                                            data: service,
+                                            isFinished: true,
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ],
+                                  ],
                                 ),
                               ],
                             ),
-                            Divider(
-                              color: lightGrey,
-                              thickness: 1,
-                            ),
-                            const SizedBox(height: 8),
-                            Wrap(
-                              spacing: 10,
-                              runSpacing: 10,
-                              children: state.liveData.map((service) {
-                                return _kartu(
-                                  context: context,
-                                  data: service,
-                                );
-                              }).toList(),
-                            ),
                             const SizedBox(height: 40),
-                          ],
-                          if (state.upcomingData.isNotEmpty) ...[
-                            Text(
-                              "Selanjutnya",
-                              style: GoogleFonts.montserrat(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                color: black,
-                              ),
-                            ),
-                            Divider(
-                              color: lightGrey,
-                              thickness: 1,
-                            ),
-                            const SizedBox(height: 8),
-                            Wrap(
-                              spacing: 10,
-                              runSpacing: 10,
-                              children: state.upcomingData.map((service) {
-                                return _kartu(
-                                  context: context,
-                                  data: service,
-                                  isNext: true,
-                                );
-                              }).toList(),
-                            ),
-                            const SizedBox(height: 40),
-                          ],
-                          if (state.pastData.isNotEmpty) ...[
-                            Text(
-                              "Sudah Berakhir",
-                              style: GoogleFonts.montserrat(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                color: black,
-                              ),
-                            ),
-                            Divider(
-                              color: lightGrey,
-                              thickness: 1,
-                            ),
-                            const SizedBox(height: 8),
-                            Wrap(
-                              spacing: 10,
-                              runSpacing: 10,
-                              children: state.pastData.map((service) {
-                                return _kartu(
-                                  context: context,
-                                  data: service,
-                                  isFinished: true,
-                                );
-                              }).toList(),
-                            ),
                           ],
                         ],
                       );
-                    } else {
+                    } else if (state is TodayGetDataIsEmpty) {
                       return Center(
                         child: SizedBox(
                           width: 700,
@@ -169,23 +182,93 @@ Widget hariIniWidget(BuildContext context) {
                           child: Stack(
                             alignment: Alignment.center,
                             children: [
-                              Lottie.asset(
-                                'asset/lottiefiles/orange-walk.json',
-                                width: 300,
+                              FractionallySizedBox(
+                                widthFactor: 0.4,
+                                child: Lottie.asset(
+                                    'asset/lottiefiles/orange-walk.json'),
                               ),
                               Positioned(
-                                bottom: 70,
+                                bottom:
+                                    MediaQuery.of(context).size.height * 0.0999,
                                 child: Text(
-                                  "Tidak ada jadwal apapun hari ini",
+                                  "Tidak ada aktivitas hari ini",
                                   style: GoogleFonts.montserrat(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: lightGrey,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                    color: black,
                                   ),
                                 ),
                               ),
                             ],
                           ),
+                        ),
+                      );
+                    } else {
+                      return Skeletonizer(
+                        enabled: true,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Daftar Kegiatan",
+                              style: GoogleFonts.montserrat(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                color: black,
+                              ),
+                            ),
+                            const SizedBox(height: 14),
+                            Wrap(
+                              spacing: 10,
+                              children: [
+                                Container(
+                                  height: 200,
+                                  width: 200,
+                                  color: lightPurple,
+                                ),
+                                Container(
+                                  height: 200,
+                                  width: 200,
+                                  color: lightPurple,
+                                ),
+                                Container(
+                                  height: 200,
+                                  width: 200,
+                                  color: lightPurple,
+                                ),
+                                Container(
+                                  height: 200,
+                                  width: 200,
+                                  color: lightPurple,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 25),
+                            Text(
+                              "Daftar Kegiatan",
+                              style: GoogleFonts.montserrat(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                color: black,
+                              ),
+                            ),
+                            const SizedBox(height: 14),
+                            Wrap(
+                              spacing: 10,
+                              children: [
+                                Container(
+                                  height: 125,
+                                  width: 200,
+                                  color: lightPurple,
+                                ),
+                                Container(
+                                  height: 125,
+                                  width: 200,
+                                  color: lightPurple,
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       );
                     }
@@ -207,16 +290,16 @@ Widget _kartu({
   bool isFinished = false,
 }) {
   return Container(
-    width: 225,
+    width: 210,
     padding: EdgeInsets.symmetric(
-      vertical: isNext || isFinished ? 15 : 20,
-      horizontal: 15,
+      vertical: isNext || isFinished ? 17 : 20,
+      horizontal: 17,
     ),
     decoration: BoxDecoration(
       color: isFinished
           ? lightGrey
           : isNext
-              ? lightGrey
+              ? lightPurple
               : purple,
       borderRadius: BorderRadius.circular(2),
     ),
@@ -224,23 +307,32 @@ Widget _kartu({
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          data.name!.contains("Ibadah Reguler") ||
-                  data.name!.contains("English Service")
-              ? "Ibadah Anak"
-              : data.name!.contains("Menara Doa")
-                  ? "Menara Doa"
-                  : "Lainnya",
+          isNext
+              ? "Upcoming"
+              : isFinished
+                  ? "Ended"
+                  : "LIVE",
           style: GoogleFonts.montserrat(
-            color: isFinished || isNext ? darkGrey : white,
+            color: isNext
+                ? middlePurple
+                : isFinished
+                    ? darkGrey
+                    : white,
             fontSize: 12,
             fontWeight: FontWeight.w400,
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 8),
         Text(
           data.name!,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
           style: GoogleFonts.montserrat(
-            color: isFinished || isNext ? darkGrey : white,
+            color: isNext
+                ? middlePurple
+                : isFinished
+                    ? darkGrey
+                    : white,
             fontSize: 18,
             fontWeight: FontWeight.w700,
           ),
@@ -248,13 +340,41 @@ Widget _kartu({
         Text(
           data.time!,
           style: GoogleFonts.montserrat(
-            color: isFinished || isNext ? darkGrey : white,
+            color: isNext
+                ? middlePurple
+                : isFinished
+                    ? darkGrey
+                    : white,
             fontSize: 18,
             fontWeight: FontWeight.w700,
           ),
         ),
+        if (isNext == false) ...[
+          const SizedBox(height: 30),
+          Row(
+            spacing: 3,
+            children: [
+              Icon(
+                Icons.person,
+                color: isFinished == false ? white : darkGrey,
+                size: 14,
+              ),
+              Text(
+                "${data.attendance!.length} Anak Hadir",
+                style: GoogleFonts.montserrat(
+                  color: isFinished || isNext ? darkGrey : white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ],
+        if (isNext == true && isFinished == false) ...[
+          const SizedBox(height: 103),
+        ],
         if (!isNext && !isFinished) ...[
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(

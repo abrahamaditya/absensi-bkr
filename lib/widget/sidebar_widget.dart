@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:absensi_bkr/helper/color.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:absensi_bkr/menu/master_menu.dart';
 import 'package:absensi_bkr/bloc/auth_bloc/auth_bloc.dart';
 import 'package:absensi_bkr/bloc/kids_bloc/kids_bloc.dart';
 import 'package:absensi_bkr/bloc/auth_bloc/auth_event.dart';
@@ -70,7 +71,8 @@ Widget sidebarWidget(BuildContext context, SidebarMenuSuccess state) {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                context.read<TodayBloc>().add(FetchTodayEvent());
+                context.read<TodayBloc>().add(FetchTodayEvent(
+                    date: DateTime.now().toIso8601String().split('T')[0]));
                 context.read<SidebarMenuBloc>().add(
                     FetchSidebarMenuEvent(menu: "Hari Ini", data: Object()));
               },

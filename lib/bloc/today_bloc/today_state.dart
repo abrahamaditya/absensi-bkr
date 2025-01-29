@@ -10,17 +10,22 @@ abstract class TodayState extends Equatable {
 
 class TodayInitial extends TodayState {}
 
+class TodayLoading extends TodayState {}
+
 class TodayGetData extends TodayState {
   final List<Service> pastData;
   final List<Service> liveData;
   final List<Service> upcomingData;
-  const TodayGetData(this.pastData, this.liveData, this.upcomingData);
+  final String date;
+  const TodayGetData(
+      this.pastData, this.liveData, this.upcomingData, this.date);
   @override
   List<Object> get props => [pastData, upcomingData];
 }
 
 class TodayGetDataIsEmpty extends TodayState {
-  const TodayGetDataIsEmpty();
+  final String date;
+  const TodayGetDataIsEmpty(this.date);
   @override
   List<Object> get props => [];
 }

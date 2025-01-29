@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:absensi_bkr/helper/format_date.dart';
 import 'package:absensi_bkr/service/services_service.dart';
@@ -13,20 +14,21 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
     });
     on<FetchTodayEvent>((event, emit) async {
       try {
-        final DateTime now = DateTime.now();
-        String today = DateTime.now().toIso8601String().split('T')[0];
+        DateTime parsedDate = DateTime.parse(event.date);
+        String dateShow =
+            DateFormat('EEEE, d MMMM yyyy', 'id_ID').format(parsedDate);
 
         //final now = DateTime.parse('2025-01-16 09:30:00.001');
         //String today =
         //DateTime.parse('2025-01-16').toIso8601String().split('T')[0];
 
         final servicesToday =
-            await _servicesService.ambilDataKegiatanHariIni(today);
+            await _servicesService.ambilDataKegiatanHariIni(event.date);
 
         if (servicesToday.isEmpty) {
-          emit(TodayGetDataIsEmpty());
-          return;
-        } else {
+          emit(TodayGetDataIsEmpty(dateShow));
+        }
+        if (servicesToday.isNotEmpty) {
           // Membagi data menjadi tiga kategori
           final pastServices = servicesToday.where((service) {
             final DateTime serviceTime =
@@ -66,7 +68,8 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
             return service;
           }).toList();
 
-          emit(TodayGetData(pastServices, liveServices, upcomingServices));
+          emit(TodayGetData(
+              pastServices, liveServices, upcomingServices, dateShow));
         }
       } catch (e) {
         emit(TodayError(e.toString()));

@@ -422,7 +422,7 @@ Widget detailKegiatanSubmenu(
                                                       'kidId': state.data.id,
                                                       'kidName':
                                                           state.data.name,
-                                                      'method': 'Manual',
+                                                      'method': 'Scan QR',
                                                       'timestamp': dateNow,
                                                     };
 
@@ -438,7 +438,7 @@ Widget detailKegiatanSubmenu(
                                                               serviceData.date),
                                                       'serviceTime':
                                                           serviceData.time,
-                                                      'method': 'Manual',
+                                                      'method': 'Scan QR',
                                                       'timestamp': dateNow,
                                                     };
 
@@ -458,7 +458,7 @@ Widget detailKegiatanSubmenu(
                                                               serviceData.date),
                                                       'serviceTime':
                                                           serviceData.time,
-                                                      'method': 'Manual',
+                                                      'method': 'Scan QR',
                                                       'timestamp': dateNow,
                                                     };
                                                     try {

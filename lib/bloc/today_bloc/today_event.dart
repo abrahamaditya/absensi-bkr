@@ -15,7 +15,8 @@ class InitTodayEvent extends TodayEvent {
 }
 
 class FetchTodayEvent extends TodayEvent {
-  FetchTodayEvent();
+  final String date;
+  FetchTodayEvent({required this.date});
   @override
   List<Object?> get props => [];
 }

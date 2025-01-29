@@ -11,6 +11,7 @@ Color lightOrange = const Color(0xFFFFA361);
 
 Color purple = const Color(0xFF4335A7);
 Color lightPurple = const Color(0xFFD4D1F0);
+Color middlePurple = const Color(0xFF7C77A3);
 
 Color red = const Color(0xFFCF0606);
 Color lightRed = const Color(0xFFFFDDDD);

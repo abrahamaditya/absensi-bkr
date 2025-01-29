@@ -493,8 +493,8 @@ Widget _fieldDatePickerTanggal(
           DateTime? selectedDate = await showDatePicker(
             context: context,
             initialDate: DateTime.now(),
-            firstDate: DateTime(1900),
-            lastDate: DateTime.now(),
+            firstDate: DateTime(2025),
+            lastDate: DateTime(2030),
             cancelText: "Batal",
             confirmText: "Pilih",
             helpText: "Pilih Tanggal",
