@@ -26,7 +26,9 @@ class InitialSelectDataAbsenEvent extends SelectDataAbsenEvent {
 
 class FetchSelectInputManualDataAbsenEvent extends SelectDataAbsenEvent {
   final Kid? selectedKid;
-  FetchSelectInputManualDataAbsenEvent({required this.selectedKid});
+  final String? serviceId;
+  FetchSelectInputManualDataAbsenEvent(
+      {required this.selectedKid, required this.serviceId});
   @override
   List<Object?> get props => [];
 }

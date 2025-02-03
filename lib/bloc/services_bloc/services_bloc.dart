@@ -81,19 +81,28 @@ class TakeAttendanceBloc extends Bloc<ServicesEvent, ServicesState> {
             await _servicesService.tambahAbsenDocsKegiatan(
                 data.serviceId, data.dataAttendanceService);
 
+        if (!resultUpdateAttendanceService) {
+          emit(ServicesCreateDataFailed());
+          return;
+        }
+
         bool resultUpdateAttendanceKid = await _kidsService.tambahAbsenDocsAnak(
             data.kidId, data.dataAttendanceKid);
+
+        if (!resultUpdateAttendanceKid) {
+          emit(ServicesCreateDataFailed());
+          return;
+        }
 
         bool resultUpdateAttendanceGlobal =
             await _globalAttendanceService.tambahAbsenDocsGlobalAttendance(
                 data.dataAttendanceGlobalAttendance);
 
-        if (resultUpdateAttendanceService == false &&
-            resultUpdateAttendanceKid == false &&
-            resultUpdateAttendanceGlobal == false) {
+        if (!resultUpdateAttendanceGlobal) {
           emit(ServicesCreateDataFailed());
           return;
         }
+
         emit(ServicesCreateDataSuccess());
       } catch (e) {
         emit(ServicesError(e.toString()));

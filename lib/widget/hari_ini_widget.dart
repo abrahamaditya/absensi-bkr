@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:absensi_bkr/helper/color.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:absensi_bkr/helper/padding.dart';
 import 'package:absensi_bkr/helper/format_date.dart';
 import 'package:absensi_bkr/model/service_model.dart';
@@ -18,7 +19,6 @@ import 'package:absensi_bkr/bloc/camera_scan_absen_bloc/camera_scan_absen_event.
 import 'package:absensi_bkr/bloc/select_data_absen_bloc/select_data_absen_event.dart';
 import 'package:absensi_bkr/bloc/toggle_switch_absen_bloc/toggle_switch_absen_bloc.dart';
 import 'package:absensi_bkr/bloc/toggle_switch_absen_bloc/toggle_switch_absen_event.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 Widget hariIniWidget(BuildContext context) {
   final ScrollController scrollController = ScrollController();

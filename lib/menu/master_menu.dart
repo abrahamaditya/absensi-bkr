@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:absensi_bkr/helper/color.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:absensi_bkr/model/kid_model.dart';
 import 'package:absensi_bkr/widget/anak_widget.dart';
 import 'package:absensi_bkr/widget/kegiatan_menu.dart';
@@ -52,106 +53,224 @@ class MasterMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      builder: (BuildContext context, Widget? child) => MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (_) => SidebarMenuBloc()
-              ..add(FetchSidebarMenuEvent(menu: "Hari Ini", data: Object())),
-          ),
-          BlocProvider(
-            create: (_) => ToggleSwitchAbsenBloc()
-              ..add(FetchToggleSwitchAbsenEvent(index: 0)),
-          ),
-          BlocProvider(
-            create: (_) =>
-                TabToggleSwitchBloc()..add(FetchTabToggleSwitchEvent(index: 0)),
-          ),
-          BlocProvider(
-            create: (_) => SelectDataAbsenBloc()
-              ..add(FetchSelectDataAbsenEvent(isSelected: false)),
-          ),
-          BlocProvider(
-            create: (_) => SelectInputManualDataAbsenBloc()
-              ..add(InitialInputManualDataAbsenEvent()),
-          ),
-          BlocProvider(
-            create: (_) => TakeAttendanceBloc()..add(InitTakeAttendanceEvent()),
-          ),
-          BlocProvider(
-            create: (_) => CameraScanAbsenBloc()
-              ..add(FetchCameraScanAbsenEvent(isOpened: false)),
-          ),
-          BlocProvider(
-            create: (_) => GetKidsByIdScanQRBloc()..add(InitIDScanQREvent()),
-          ),
-          BlocProvider(
-            create: (_) => GetServiceByIdBloc()..add(InitServiceByIDvent()),
-          ),
-          BlocProvider(
-            create: (_) => GetServicesBloc()
-              ..add(FetchServicesEvent(page: 1, searchNameQuery: "")),
-          ),
-          BlocProvider(
-            create: (_) => GetKidsBloc()
-              ..add(FetchKidsEvent(page: 1, searchNameQuery: "")),
-          ),
-          BlocProvider(
-            create: (_) => CreateKidsBloc()..add(InitCreateKidsEvent()),
-          ),
-          BlocProvider(
-            create: (_) => UpdateKidsBloc()..add(InitUpdateKidsEvent()),
-          ),
-          BlocProvider(
-            create: (_) => CreateServicesBloc()..add(InitCreateServicesEvent()),
-          ),
-          BlocProvider(
-            create: (_) => LainnyaServicesBloc()
-              ..add(LainnyaServicesEvent(visibility: false)),
-          ),
-          BlocProvider(
-            create: (_) => AuthBloc()..add(InitLoginEvent()),
-          ),
-          BlocProvider(
-            create: (_) => TodayBloc()
-              ..add(FetchTodayEvent(
-                  date: DateTime.now().toIso8601String().split('T')[0])),
-          ),
-        ],
-        child: Scaffold(
-          body: BlocBuilder<SidebarMenuBloc, SidebarMenuState>(
-            builder: (context, state) {
-              if (state is SidebarMenuSuccess) {
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    sidebarWidget(context, state),
-                    Expanded(
-                        child: ScreensView(
-                      context: context,
-                      menu: state.menu!,
-                      data: state.data,
-                      detailKegiatanPreviousMenu:
-                          state.detailKegiatanPreviousMenu ?? "",
-                    )),
-                  ],
-                );
-              } else if (state is SidebarMenuError) {
-                return Center(
-                  child: Text(
-                    "An error has occurred. Please try again later.",
-                    style: TextStyle(
-                      color: white,
-                      fontSize: 10,
-                    ),
-                  ),
-                );
-              } else {
-                return const SizedBox.shrink();
-              }
-            },
-          ),
+    final double screenWidth = MediaQuery.of(context).size.width;
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => SidebarMenuBloc()
+            ..add(FetchSidebarMenuEvent(menu: "Hari Ini", data: Object())),
         ),
+        BlocProvider(
+          create: (_) => ToggleSwitchAbsenBloc()
+            ..add(FetchToggleSwitchAbsenEvent(index: 0)),
+        ),
+        BlocProvider(
+          create: (_) =>
+              TabToggleSwitchBloc()..add(FetchTabToggleSwitchEvent(index: 0)),
+        ),
+        BlocProvider(
+          create: (_) => SelectDataAbsenBloc()
+            ..add(FetchSelectDataAbsenEvent(isSelected: false)),
+        ),
+        BlocProvider(
+          create: (_) => SelectInputManualDataAbsenBloc()
+            ..add(InitialInputManualDataAbsenEvent()),
+        ),
+        BlocProvider(
+          create: (_) => TakeAttendanceBloc()..add(InitTakeAttendanceEvent()),
+        ),
+        BlocProvider(
+          create: (_) => CameraScanAbsenBloc()
+            ..add(FetchCameraScanAbsenEvent(isOpened: false)),
+        ),
+        BlocProvider(
+          create: (_) => GetKidsByIdScanQRBloc()..add(InitIDScanQREvent()),
+        ),
+        BlocProvider(
+          create: (_) => GetServiceByIdBloc()..add(InitServiceByIDvent()),
+        ),
+        BlocProvider(
+          create: (_) => GetServicesBloc()
+            ..add(FetchServicesEvent(page: 1, searchNameQuery: "")),
+        ),
+        BlocProvider(
+          create: (_) =>
+              GetKidsBloc()..add(FetchKidsEvent(page: 1, searchNameQuery: "")),
+        ),
+        BlocProvider(
+          create: (_) => CreateKidsBloc()..add(InitCreateKidsEvent()),
+        ),
+        BlocProvider(
+          create: (_) => UpdateKidsBloc()..add(InitUpdateKidsEvent()),
+        ),
+        BlocProvider(
+          create: (_) => CreateServicesBloc()..add(InitCreateServicesEvent()),
+        ),
+        BlocProvider(
+          create: (_) => LainnyaServicesBloc()
+            ..add(LainnyaServicesEvent(visibility: false)),
+        ),
+        BlocProvider(
+          create: (_) => AuthBloc()..add(InitLoginEvent()),
+        ),
+        BlocProvider(
+          create: (_) => TodayBloc()
+            ..add(FetchTodayEvent(
+                date: DateTime.now().toIso8601String().split('T')[0])),
+        ),
+      ],
+      child: ScreenUtilInit(
+        builder: (BuildContext context, Widget? child) => (screenWidth < 1000
+            ? Scaffold(
+                bottomNavigationBar: Container(
+                  height: 50,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 10,
+                        offset: Offset(0, -1),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          context.read<TodayBloc>().add(FetchTodayEvent(
+                              date: DateTime.now()
+                                  .toIso8601String()
+                                  .split('T')[0]));
+                          context.read<SidebarMenuBloc>().add(
+                              FetchSidebarMenuEvent(
+                                  menu: "Hari Ini", data: Object()));
+                        },
+                        child: Container(
+                          width: screenWidth / 3,
+                          color: purple,
+                          child: Center(
+                            child: Text(
+                              "Hari Ini",
+                              style: GoogleFonts.montserrat(
+                                color: white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          context.read<TodayBloc>().add(FetchTodayEvent(
+                              date: DateTime.now()
+                                  .toIso8601String()
+                                  .split('T')[0]));
+                          context.read<SidebarMenuBloc>().add(
+                              FetchSidebarMenuEvent(
+                                  menu: "Kegiatan", data: Object()));
+                        },
+                        child: Container(
+                          width: screenWidth / 3,
+                          color: purple,
+                          child: Center(
+                            child: Text(
+                              "Kegiatan",
+                              style: GoogleFonts.montserrat(
+                                color: white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          context.read<TodayBloc>().add(FetchTodayEvent(
+                              date: DateTime.now()
+                                  .toIso8601String()
+                                  .split('T')[0]));
+                          context.read<SidebarMenuBloc>().add(
+                              FetchSidebarMenuEvent(
+                                  menu: "Anak", data: Object()));
+                        },
+                        child: Container(
+                          width: screenWidth / 3,
+                          color: purple,
+                          child: Center(
+                            child: Text(
+                              "Anak",
+                              style: GoogleFonts.montserrat(
+                                color: white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                drawer: BlocBuilder<SidebarMenuBloc, SidebarMenuState>(
+                  builder: (context, state) {
+                    if (state is SidebarMenuSuccess) {
+                      return sidebarWidget(context, state);
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                ),
+                body: BlocBuilder<SidebarMenuBloc, SidebarMenuState>(
+                  builder: (context, state) {
+                    if (state is SidebarMenuSuccess) {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              child: ScreensView(
+                            context: context,
+                            menu: state.menu!,
+                            data: state.data,
+                            detailKegiatanPreviousMenu:
+                                state.detailKegiatanPreviousMenu ?? "",
+                          )),
+                        ],
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                ),
+              )
+            : Scaffold(
+                body: BlocBuilder<SidebarMenuBloc, SidebarMenuState>(
+                  builder: (context, state) {
+                    if (state is SidebarMenuSuccess) {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          sidebarWidget(context, state),
+                          Expanded(
+                              child: ScreensView(
+                            context: context,
+                            menu: state.menu!,
+                            data: state.data,
+                            detailKegiatanPreviousMenu:
+                                state.detailKegiatanPreviousMenu ?? "",
+                          )),
+                        ],
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                ),
+              )),
       ),
     );
   }

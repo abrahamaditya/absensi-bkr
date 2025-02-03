@@ -187,6 +187,10 @@ Widget detailKegiatanSubmenu(
                                 context
                                     .read<TabToggleSwitchBloc>()
                                     .add(FetchTabToggleSwitchEvent(index: 0));
+
+                                context
+                                    .read<GetKidsByIdScanQRBloc>()
+                                    .add(InitIDScanQREvent());
                               },
                             ),
                             InkWell(
@@ -228,6 +232,7 @@ Widget detailKegiatanSubmenu(
                               ),
                               onTap: () {
                                 selected = defaultKid;
+
                                 context
                                     .read<SelectInputManualDataAbsenBloc>()
                                     .add(InitialInputManualDataAbsenEvent());
@@ -331,7 +336,8 @@ Widget detailKegiatanSubmenu(
                                             context
                                                 .read<GetKidsByIdScanQRBloc>()
                                                 .add(FetchIDScanQREvent(
-                                                    kidId: capture.raw));
+                                                    kidId: capture.raw,
+                                                    serviceId: serviceData.id));
                                           },
                                         ),
                                       ),
@@ -410,158 +416,228 @@ Widget detailKegiatanSubmenu(
                                                     "Kelas", state.data.grade),
                                                 SizedBox(height: 20),
                                                 ElevatedButton(
-                                                  onPressed: () {
-                                                    final id = membuatAbsenId();
-                                                    final dateNow =
-                                                        ambilWaktuSekarang();
-
-                                                    Map<String, dynamic>
-                                                        dataAttendanceService =
-                                                        {
-                                                      '_id': id,
-                                                      'kidId': state.data.id,
-                                                      'kidName':
-                                                          state.data.name,
-                                                      'method': 'Scan QR',
-                                                      'timestamp': dateNow,
-                                                    };
-
-                                                    Map<String, dynamic>
-                                                        dataAttendanceKid = {
-                                                      '_id': id,
-                                                      'serviceId':
-                                                          serviceData.id,
-                                                      'serviceName':
-                                                          serviceData.name,
-                                                      'serviceDate':
-                                                          formatJadiYYYYMMDD(
-                                                              serviceData.date),
-                                                      'serviceTime':
-                                                          serviceData.time,
-                                                      'method': 'Scan QR',
-                                                      'timestamp': dateNow,
-                                                    };
-
-                                                    Map<String, dynamic>
-                                                        dataAttendanceGlobalAttendance =
-                                                        {
-                                                      '_id': id,
-                                                      'kidId': state.data.id,
-                                                      'kidName':
-                                                          state.data.name,
-                                                      'serviceId':
-                                                          serviceData.id,
-                                                      'serviceName':
-                                                          serviceData.name,
-                                                      'serviceDate':
-                                                          formatJadiYYYYMMDD(
-                                                              serviceData.date),
-                                                      'serviceTime':
-                                                          serviceData.time,
-                                                      'method': 'Scan QR',
-                                                      'timestamp': dateNow,
-                                                    };
-                                                    try {
-                                                      context
-                                                          .read<
-                                                              TakeAttendanceBloc>()
-                                                          .add(
-                                                            TakeAttendanceEvent(
-                                                              kidId: state
-                                                                  .data.id!,
-                                                              serviceId:
-                                                                  serviceData
-                                                                      .id!,
-                                                              dataAttendanceService:
-                                                                  dataAttendanceService,
-                                                              dataAttendanceKid:
-                                                                  dataAttendanceKid,
-                                                              dataAttendanceGlobalAttendance:
-                                                                  dataAttendanceGlobalAttendance,
+                                                  onPressed: state
+                                                              .alreadyExist ==
+                                                          true
+                                                      ? () {
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            SnackBar(
+                                                              backgroundColor:
+                                                                  red,
+                                                              duration:
+                                                                  Duration(
+                                                                      seconds:
+                                                                          3),
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          20,
+                                                                      vertical:
+                                                                          10),
+                                                              showCloseIcon:
+                                                                  true,
+                                                              closeIconColor:
+                                                                  white,
+                                                              content: Text(
+                                                                "${state.data.name!.split(' ').first} sudah melakukan absen sebelumnya",
+                                                                style: GoogleFonts
+                                                                    .montserrat(
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  color: white,
+                                                                ),
+                                                              ),
                                                             ),
                                                           );
+                                                        }
+                                                      : () {
+                                                          final id =
+                                                              membuatAbsenId();
+                                                          final dateNow =
+                                                              ambilWaktuSekarang();
 
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        SnackBar(
-                                                          backgroundColor:
-                                                              green,
-                                                          duration: Duration(
-                                                              seconds: 3),
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  horizontal:
-                                                                      20,
-                                                                  vertical: 10),
-                                                          showCloseIcon: true,
-                                                          closeIconColor: white,
-                                                          content: Text(
-                                                            "${state.data.name} berhasil diabsen!",
-                                                            style: GoogleFonts
-                                                                .montserrat(
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              color: white,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      );
-                                                      context
-                                                          .read<
-                                                              CameraScanAbsenBloc>()
-                                                          .add(
-                                                              FetchCameraScanAbsenEvent(
-                                                                  isOpened:
-                                                                      false));
-                                                      context
-                                                          .read<
-                                                              GetKidsByIdScanQRBloc>()
-                                                          .add(
-                                                              InitIDScanQREvent());
+                                                          Map<String, dynamic>
+                                                              dataAttendanceService =
+                                                              {
+                                                            '_id': id,
+                                                            'kidId':
+                                                                state.data.id,
+                                                            'kidName':
+                                                                state.data.name,
+                                                            'method': 'Scan QR',
+                                                            'timestamp':
+                                                                dateNow,
+                                                          };
 
-                                                      context
-                                                          .read<
-                                                              GetServiceByIdBloc>()
-                                                          .add(FetchServiceByIDEvent(
-                                                              serviceId:
-                                                                  serviceData
-                                                                      .id));
-                                                    } catch (e) {
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        SnackBar(
-                                                          backgroundColor: red,
-                                                          duration: Duration(
-                                                              seconds: 3),
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  horizontal:
-                                                                      20,
-                                                                  vertical: 10),
-                                                          showCloseIcon: true,
-                                                          closeIconColor: white,
-                                                          content: Text(
-                                                            "Gagal melakukan absen",
-                                                            style: GoogleFonts
-                                                                .montserrat(
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              color: white,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }
-                                                  },
+                                                          Map<String, dynamic>
+                                                              dataAttendanceKid =
+                                                              {
+                                                            '_id': id,
+                                                            'serviceId':
+                                                                serviceData.id,
+                                                            'serviceName':
+                                                                serviceData
+                                                                    .name,
+                                                            'serviceDate':
+                                                                formatJadiYYYYMMDD(
+                                                                    serviceData
+                                                                        .date),
+                                                            'serviceTime':
+                                                                serviceData
+                                                                    .time,
+                                                            'method': 'Scan QR',
+                                                            'timestamp':
+                                                                dateNow,
+                                                          };
+
+                                                          Map<String, dynamic>
+                                                              dataAttendanceGlobalAttendance =
+                                                              {
+                                                            '_id': id,
+                                                            'kidId':
+                                                                state.data.id,
+                                                            'kidName':
+                                                                state.data.name,
+                                                            'serviceId':
+                                                                serviceData.id,
+                                                            'serviceName':
+                                                                serviceData
+                                                                    .name,
+                                                            'serviceDate':
+                                                                formatJadiYYYYMMDD(
+                                                                    serviceData
+                                                                        .date),
+                                                            'serviceTime':
+                                                                serviceData
+                                                                    .time,
+                                                            'method': 'Scan QR',
+                                                            'timestamp':
+                                                                dateNow,
+                                                          };
+                                                          try {
+                                                            context
+                                                                .read<
+                                                                    TakeAttendanceBloc>()
+                                                                .add(
+                                                                  TakeAttendanceEvent(
+                                                                    kidId: state
+                                                                        .data
+                                                                        .id!,
+                                                                    serviceId:
+                                                                        serviceData
+                                                                            .id!,
+                                                                    dataAttendanceService:
+                                                                        dataAttendanceService,
+                                                                    dataAttendanceKid:
+                                                                        dataAttendanceKid,
+                                                                    dataAttendanceGlobalAttendance:
+                                                                        dataAttendanceGlobalAttendance,
+                                                                  ),
+                                                                );
+
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              SnackBar(
+                                                                backgroundColor:
+                                                                    green,
+                                                                duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                            3),
+                                                                padding: EdgeInsets
+                                                                    .symmetric(
+                                                                        horizontal:
+                                                                            20,
+                                                                        vertical:
+                                                                            10),
+                                                                showCloseIcon:
+                                                                    true,
+                                                                closeIconColor:
+                                                                    white,
+                                                                content: Text(
+                                                                  "${state.data.name} berhasil diabsen!",
+                                                                  style: GoogleFonts
+                                                                      .montserrat(
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    color:
+                                                                        white,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                            context
+                                                                .read<
+                                                                    CameraScanAbsenBloc>()
+                                                                .add(FetchCameraScanAbsenEvent(
+                                                                    isOpened:
+                                                                        false));
+                                                            context
+                                                                .read<
+                                                                    GetKidsByIdScanQRBloc>()
+                                                                .add(
+                                                                    InitIDScanQREvent());
+
+                                                            context
+                                                                .read<
+                                                                    GetServiceByIdBloc>()
+                                                                .add(FetchServiceByIDEvent(
+                                                                    serviceId:
+                                                                        serviceData
+                                                                            .id));
+                                                          } catch (e) {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              SnackBar(
+                                                                backgroundColor:
+                                                                    red,
+                                                                duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                            3),
+                                                                padding: EdgeInsets
+                                                                    .symmetric(
+                                                                        horizontal:
+                                                                            20,
+                                                                        vertical:
+                                                                            10),
+                                                                showCloseIcon:
+                                                                    true,
+                                                                closeIconColor:
+                                                                    white,
+                                                                content: Text(
+                                                                  "Gagal melakukan absen",
+                                                                  style: GoogleFonts
+                                                                      .montserrat(
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    color:
+                                                                        white,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }
+                                                        },
                                                   style:
                                                       ElevatedButton.styleFrom(
-                                                    backgroundColor: darkOrange,
+                                                    backgroundColor:
+                                                        state.alreadyExist ==
+                                                                true
+                                                            ? darkGrey
+                                                            : darkOrange,
                                                     shape:
                                                         RoundedRectangleBorder(
                                                       borderRadius:
@@ -576,7 +652,9 @@ Widget detailKegiatanSubmenu(
                                                     ),
                                                   ),
                                                   child: Text(
-                                                    "Absen",
+                                                    state.alreadyExist == true
+                                                        ? "Sudah Absen"
+                                                        : "Absen",
                                                     style:
                                                         GoogleFonts.montserrat(
                                                       fontSize: 16,
@@ -626,11 +704,17 @@ Widget detailKegiatanSubmenu(
                                     context.read<SelectDataAbsenBloc>().add(
                                         FetchSelectDataAbsenEvent(
                                             isSelected: true));
-                                    context
-                                        .read<SelectInputManualDataAbsenBloc>()
-                                        .add(
+
+                                    if (selected.id != "-") {
+                                      context
+                                          .read<
+                                              SelectInputManualDataAbsenBloc>()
+                                          .add(
                                             FetchSelectInputManualDataAbsenEvent(
-                                                selectedKid: selected));
+                                                selectedKid: selected,
+                                                serviceId: serviceData.id),
+                                          );
+                                    }
                                   },
                                   selectedItem: selected,
                                   itemAsString: (item) {
@@ -798,151 +882,211 @@ Widget detailKegiatanSubmenu(
                                                   state.selectedKid.grade),
                                               SizedBox(height: 20),
                                               ElevatedButton(
-                                                onPressed: () {
-                                                  final id = membuatAbsenId();
-                                                  final dateNow =
-                                                      ambilWaktuSekarang();
-
-                                                  Map<String, dynamic>
-                                                      dataAttendanceService = {
-                                                    '_id': id,
-                                                    'kidId':
-                                                        state.selectedKid.id,
-                                                    'kidName':
-                                                        state.selectedKid.name,
-                                                    'method': 'Manual',
-                                                    'timestamp': dateNow,
-                                                  };
-
-                                                  Map<String, dynamic>
-                                                      dataAttendanceKid = {
-                                                    '_id': id,
-                                                    'serviceId': serviceData.id,
-                                                    'serviceName':
-                                                        serviceData.name,
-                                                    'serviceDate':
-                                                        formatJadiYYYYMMDD(
-                                                            serviceData.date),
-                                                    'serviceTime':
-                                                        serviceData.time,
-                                                    'method': 'Manual',
-                                                    'timestamp': dateNow,
-                                                  };
-
-                                                  Map<String, dynamic>
-                                                      dataAttendanceGlobalAttendance =
-                                                      {
-                                                    '_id': id,
-                                                    'kidId':
-                                                        state.selectedKid.id,
-                                                    'kidName':
-                                                        state.selectedKid.name,
-                                                    'serviceId': serviceData.id,
-                                                    'serviceName':
-                                                        serviceData.name,
-                                                    'serviceDate':
-                                                        formatJadiYYYYMMDD(
-                                                            serviceData.date),
-                                                    'serviceTime':
-                                                        serviceData.time,
-                                                    'method': 'Manual',
-                                                    'timestamp': dateNow,
-                                                  };
-                                                  try {
-                                                    context
-                                                        .read<
-                                                            TakeAttendanceBloc>()
-                                                        .add(
-                                                          TakeAttendanceEvent(
-                                                            kidId: state
-                                                                .selectedKid
-                                                                .id!,
-                                                            serviceId:
-                                                                serviceData.id!,
-                                                            dataAttendanceService:
-                                                                dataAttendanceService,
-                                                            dataAttendanceKid:
-                                                                dataAttendanceKid,
-                                                            dataAttendanceGlobalAttendance:
-                                                                dataAttendanceGlobalAttendance,
+                                                onPressed: state.alreadyExist ==
+                                                        true
+                                                    ? () {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                            backgroundColor:
+                                                                red,
+                                                            duration: Duration(
+                                                                seconds: 3),
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        20,
+                                                                    vertical:
+                                                                        10),
+                                                            showCloseIcon: true,
+                                                            closeIconColor:
+                                                                white,
+                                                            content: Text(
+                                                              "${state.selectedKid.name!.split(' ').first} sudah melakukan absen sebelumnya",
+                                                              style: GoogleFonts
+                                                                  .montserrat(
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                color: white,
+                                                              ),
+                                                            ),
                                                           ),
                                                         );
+                                                      }
+                                                    : () {
+                                                        final id =
+                                                            membuatAbsenId();
+                                                        final dateNow =
+                                                            ambilWaktuSekarang();
 
-                                                    context
-                                                        .read<
-                                                            GetServiceByIdBloc>()
-                                                        .add(
-                                                            FetchServiceByIDEvent(
-                                                                serviceId:
-                                                                    serviceData
-                                                                        .id));
+                                                        Map<String, dynamic>
+                                                            dataAttendanceService =
+                                                            {
+                                                          '_id': id,
+                                                          'kidId': state
+                                                              .selectedKid.id,
+                                                          'kidName': state
+                                                              .selectedKid.name,
+                                                          'method': 'Manual',
+                                                          'timestamp': dateNow,
+                                                        };
 
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        backgroundColor: green,
-                                                        duration: Duration(
-                                                            seconds: 3),
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 20,
-                                                                vertical: 10),
-                                                        showCloseIcon: true,
-                                                        closeIconColor: white,
-                                                        content: Text(
-                                                          "${state.selectedKid.name} berhasil diabsen!",
-                                                          style: GoogleFonts
-                                                              .montserrat(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            color: white,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    );
+                                                        Map<String, dynamic>
+                                                            dataAttendanceKid =
+                                                            {
+                                                          '_id': id,
+                                                          'serviceId':
+                                                              serviceData.id,
+                                                          'serviceName':
+                                                              serviceData.name,
+                                                          'serviceDate':
+                                                              formatJadiYYYYMMDD(
+                                                                  serviceData
+                                                                      .date),
+                                                          'serviceTime':
+                                                              serviceData.time,
+                                                          'method': 'Manual',
+                                                          'timestamp': dateNow,
+                                                        };
 
-                                                    selected = defaultKid;
-                                                    dropDownKey.currentState!
-                                                        .changeSelectedItem(
-                                                            selected);
+                                                        Map<String, dynamic>
+                                                            dataAttendanceGlobalAttendance =
+                                                            {
+                                                          '_id': id,
+                                                          'kidId': state
+                                                              .selectedKid.id,
+                                                          'kidName': state
+                                                              .selectedKid.name,
+                                                          'serviceId':
+                                                              serviceData.id,
+                                                          'serviceName':
+                                                              serviceData.name,
+                                                          'serviceDate':
+                                                              formatJadiYYYYMMDD(
+                                                                  serviceData
+                                                                      .date),
+                                                          'serviceTime':
+                                                              serviceData.time,
+                                                          'method': 'Manual',
+                                                          'timestamp': dateNow,
+                                                        };
+                                                        try {
+                                                          context
+                                                              .read<
+                                                                  TakeAttendanceBloc>()
+                                                              .add(
+                                                                TakeAttendanceEvent(
+                                                                    kidId: state
+                                                                        .selectedKid
+                                                                        .id!,
+                                                                    serviceId:
+                                                                        serviceData
+                                                                            .id!,
+                                                                    dataAttendanceService:
+                                                                        dataAttendanceService,
+                                                                    dataAttendanceKid:
+                                                                        dataAttendanceKid,
+                                                                    dataAttendanceGlobalAttendance:
+                                                                        dataAttendanceGlobalAttendance),
+                                                              );
 
-                                                    context
-                                                        .read<
-                                                            SelectInputManualDataAbsenBloc>()
-                                                        .add(
-                                                            InitialInputManualDataAbsenEvent());
-                                                  } catch (e) {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        backgroundColor: red,
-                                                        duration: Duration(
-                                                            seconds: 3),
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 20,
-                                                                vertical: 10),
-                                                        showCloseIcon: true,
-                                                        closeIconColor: white,
-                                                        content: Text(
-                                                          "Gagal melakukan absen",
-                                                          style: GoogleFonts
-                                                              .montserrat(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            color: white,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                },
+                                                          context
+                                                              .read<
+                                                                  GetServiceByIdBloc>()
+                                                              .add(FetchServiceByIDEvent(
+                                                                  serviceId:
+                                                                      serviceData
+                                                                          .id));
+
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            SnackBar(
+                                                              backgroundColor:
+                                                                  green,
+                                                              duration:
+                                                                  Duration(
+                                                                      seconds:
+                                                                          3),
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          20,
+                                                                      vertical:
+                                                                          10),
+                                                              showCloseIcon:
+                                                                  true,
+                                                              closeIconColor:
+                                                                  white,
+                                                              content: Text(
+                                                                "${state.selectedKid.name} berhasil diabsen!",
+                                                                style: GoogleFonts
+                                                                    .montserrat(
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  color: white,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          );
+
+                                                          selected = defaultKid;
+                                                          dropDownKey
+                                                              .currentState!
+                                                              .changeSelectedItem(
+                                                                  selected);
+
+                                                          context
+                                                              .read<
+                                                                  SelectInputManualDataAbsenBloc>()
+                                                              .add(
+                                                                  InitialInputManualDataAbsenEvent());
+                                                        } catch (e) {
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            SnackBar(
+                                                              backgroundColor:
+                                                                  red,
+                                                              duration:
+                                                                  Duration(
+                                                                      seconds:
+                                                                          3),
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          20,
+                                                                      vertical:
+                                                                          10),
+                                                              showCloseIcon:
+                                                                  true,
+                                                              closeIconColor:
+                                                                  white,
+                                                              content: Text(
+                                                                "Gagal melakukan absen",
+                                                                style: GoogleFonts
+                                                                    .montserrat(
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  color: white,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          );
+                                                        }
+                                                      },
                                                 style: ElevatedButton.styleFrom(
-                                                  backgroundColor: darkOrange,
+                                                  backgroundColor:
+                                                      state.alreadyExist == true
+                                                          ? darkGrey
+                                                          : darkOrange,
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -956,7 +1100,9 @@ Widget detailKegiatanSubmenu(
                                                   ),
                                                 ),
                                                 child: Text(
-                                                  "Absen",
+                                                  state.alreadyExist == true
+                                                      ? "Sudah Absen"
+                                                      : "Absen",
                                                   style: GoogleFonts.montserrat(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w600,

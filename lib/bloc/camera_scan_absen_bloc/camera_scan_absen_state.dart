@@ -28,7 +28,8 @@ class CameraScanAbsenError extends CameraScanAbsenState {
 
 class GetIDScanQR extends CameraScanAbsenState {
   final Kid data;
-  const GetIDScanQR(this.data);
+  final bool alreadyExist;
+  const GetIDScanQR(this.data, this.alreadyExist);
   @override
   List<Object> get props => [data];
 }

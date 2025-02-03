@@ -25,7 +25,8 @@ class InitIDScanQREvent extends CameraScanAbsenEvent {
 
 class FetchIDScanQREvent extends CameraScanAbsenEvent {
   final String? kidId;
-  FetchIDScanQREvent({required this.kidId});
+  final String? serviceId;
+  FetchIDScanQREvent({required this.kidId, required this.serviceId});
   @override
   List<Object?> get props => [];
 }

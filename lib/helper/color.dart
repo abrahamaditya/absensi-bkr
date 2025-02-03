@@ -9,6 +9,8 @@ Color darkOrange = const Color(0xFFE05712);
 Color orange = const Color(0xFFFF7F3E);
 Color lightOrange = const Color(0xFFFFA361);
 
+Color yellow = const Color(0xFFF9CB43);
+
 Color purple = const Color(0xFF4335A7);
 Color lightPurple = const Color(0xFFD4D1F0);
 Color middlePurple = const Color(0xFF7C77A3);

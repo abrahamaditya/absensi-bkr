@@ -1,5 +1,5 @@
-import 'package:absensi_bkr/model/kid_model.dart';
 import 'package:equatable/equatable.dart';
+import 'package:absensi_bkr/model/kid_model.dart';
 
 abstract class SelectDataAbsenState extends Equatable {
   const SelectDataAbsenState();
@@ -35,7 +35,8 @@ class SelectDataAbsenFalse extends SelectDataAbsenState {
 
 class SelectInputManualDataAbsen extends SelectDataAbsenState {
   final Kid selectedKid;
-  const SelectInputManualDataAbsen(this.selectedKid);
+  final bool alreadyExist;
+  const SelectInputManualDataAbsen(this.selectedKid, this.alreadyExist);
   @override
   List<Object> get props => [selectedKid];
 }
