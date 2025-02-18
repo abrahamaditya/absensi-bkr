@@ -122,124 +122,434 @@ class MasterMenu extends StatelessWidget {
       child: ScreenUtilInit(
         builder: (BuildContext context, Widget? child) => (screenWidth < 1000
             ? Scaffold(
-                bottomNavigationBar: Container(
-                  height: 50,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 10,
-                        offset: Offset(0, -1),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          context.read<TodayBloc>().add(FetchTodayEvent(
-                              date: DateTime.now()
-                                  .toIso8601String()
-                                  .split('T')[0]));
-                          context.read<SidebarMenuBloc>().add(
-                              FetchSidebarMenuEvent(
-                                  menu: "Hari Ini", data: Object()));
-                        },
-                        child: Container(
-                          width: screenWidth / 3,
-                          color: purple,
-                          child: Center(
-                            child: Text(
-                              "Hari Ini",
-                              style: GoogleFonts.montserrat(
-                                color: white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          context.read<TodayBloc>().add(FetchTodayEvent(
-                              date: DateTime.now()
-                                  .toIso8601String()
-                                  .split('T')[0]));
-                          context.read<SidebarMenuBloc>().add(
-                              FetchSidebarMenuEvent(
-                                  menu: "Kegiatan", data: Object()));
-                        },
-                        child: Container(
-                          width: screenWidth / 3,
-                          color: purple,
-                          child: Center(
-                            child: Text(
-                              "Kegiatan",
-                              style: GoogleFonts.montserrat(
-                                color: white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          context.read<TodayBloc>().add(FetchTodayEvent(
-                              date: DateTime.now()
-                                  .toIso8601String()
-                                  .split('T')[0]));
-                          context.read<SidebarMenuBloc>().add(
-                              FetchSidebarMenuEvent(
-                                  menu: "Anak", data: Object()));
-                        },
-                        child: Container(
-                          width: screenWidth / 3,
-                          color: purple,
-                          child: Center(
-                            child: Text(
-                              "Anak",
-                              style: GoogleFonts.montserrat(
-                                color: white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                drawer: BlocBuilder<SidebarMenuBloc, SidebarMenuState>(
-                  builder: (context, state) {
-                    if (state is SidebarMenuSuccess) {
-                      return sidebarWidget(context, state);
-                    } else {
-                      return const SizedBox.shrink();
-                    }
-                  },
-                ),
                 body: BlocBuilder<SidebarMenuBloc, SidebarMenuState>(
                   builder: (context, state) {
                     if (state is SidebarMenuSuccess) {
-                      return Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                              child: ScreensView(
-                            context: context,
-                            menu: state.menu!,
-                            data: state.data,
-                            detailKegiatanPreviousMenu:
-                                state.detailKegiatanPreviousMenu ?? "",
-                          )),
-                        ],
+                      return Container(
+                        color: white,
+                        height: double.infinity,
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: Opacity(
+                                opacity: 0.025,
+                                child: Image.asset(
+                                  'asset/image/background.jpg',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Stack(
+                                  children: [
+                                    Container(
+                                      height: 125,
+                                      color: purple,
+                                      width: double.infinity,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        top: 25,
+                                        left: 20,
+                                        right: 20,
+                                        bottom: 20,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Image.asset(
+                                                    'asset/logo/logo-bkr.png',
+                                                    width: 40,
+                                                    height: 40,
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        "Absensi BKR",
+                                                        style: GoogleFonts
+                                                            .montserrat(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          color: white,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "Modernland",
+                                                        style: GoogleFonts
+                                                            .montserrat(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          color: white,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              IconButton(
+                                                iconSize: 20,
+                                                onPressed: () {
+                                                  context.read<AuthBloc>().add(
+                                                      LogoutEvent(
+                                                          context: context));
+                                                },
+                                                icon: Icon(
+                                                  Icons.logout_outlined,
+                                                  color: white,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 30),
+                                          BlocBuilder<SidebarMenuBloc,
+                                              SidebarMenuState>(
+                                            builder: (context, state) {
+                                              if (state is SidebarMenuSuccess) {
+                                                return Row(
+                                                  spacing: 14,
+                                                  children: [
+                                                    Expanded(
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          context
+                                                              .read<TodayBloc>()
+                                                              .add(FetchTodayEvent(
+                                                                  date: DateTime
+                                                                          .now()
+                                                                      .toIso8601String()
+                                                                      .split(
+                                                                          'T')[0]));
+                                                          context
+                                                              .read<
+                                                                  SidebarMenuBloc>()
+                                                              .add(FetchSidebarMenuEvent(
+                                                                  menu:
+                                                                      "Hari Ini",
+                                                                  data:
+                                                                      Object()));
+                                                        },
+                                                        child: Container(
+                                                          width: 75,
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                            horizontal: 10,
+                                                            vertical: 15,
+                                                          ),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: state.menu!
+                                                                    .startsWith(
+                                                                        "Hari Ini")
+                                                                ? orange
+                                                                : white,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(
+                                                              Radius.circular(
+                                                                  8),
+                                                            ),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color: Colors
+                                                                    .black
+                                                                    .withOpacity(
+                                                                        0.1),
+                                                                spreadRadius: 2,
+                                                                blurRadius: 5,
+                                                                offset: Offset(
+                                                                    0, -1),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            spacing: 2,
+                                                            children: [
+                                                              Icon(
+                                                                Icons
+                                                                    .flag_outlined,
+                                                                color: state
+                                                                        .menu!
+                                                                        .startsWith(
+                                                                            "Hari Ini")
+                                                                    ? white
+                                                                    : black,
+                                                                size: 20,
+                                                              ),
+                                                              Text(
+                                                                "Hari Ini",
+                                                                style: GoogleFonts
+                                                                    .montserrat(
+                                                                  color: state
+                                                                          .menu!
+                                                                          .startsWith(
+                                                                              "Hari Ini")
+                                                                      ? white
+                                                                      : black,
+                                                                  fontSize: 10,
+                                                                  fontWeight: state
+                                                                          .menu!
+                                                                          .startsWith(
+                                                                              "Hari Ini")
+                                                                      ? FontWeight
+                                                                          .w700
+                                                                      : FontWeight
+                                                                          .w500,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          context
+                                                              .read<TodayBloc>()
+                                                              .add(FetchTodayEvent(
+                                                                  date: DateTime
+                                                                          .now()
+                                                                      .toIso8601String()
+                                                                      .split(
+                                                                          'T')[0]));
+                                                          context
+                                                              .read<
+                                                                  SidebarMenuBloc>()
+                                                              .add(FetchSidebarMenuEvent(
+                                                                  menu:
+                                                                      "Kegiatan",
+                                                                  data:
+                                                                      Object()));
+                                                        },
+                                                        child: Container(
+                                                          width: 75,
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                            horizontal: 10,
+                                                            vertical: 15,
+                                                          ),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: state.menu!
+                                                                    .startsWith(
+                                                                        "Kegiatan")
+                                                                ? orange
+                                                                : white,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(
+                                                              Radius.circular(
+                                                                  8),
+                                                            ),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color: Colors
+                                                                    .black
+                                                                    .withOpacity(
+                                                                        0.1),
+                                                                spreadRadius: 2,
+                                                                blurRadius: 5,
+                                                                offset: Offset(
+                                                                    0, -1),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            spacing: 2,
+                                                            children: [
+                                                              Icon(
+                                                                Icons
+                                                                    .calendar_month,
+                                                                color: state
+                                                                        .menu!
+                                                                        .startsWith(
+                                                                            "Kegiatan")
+                                                                    ? white
+                                                                    : black,
+                                                                size: 20,
+                                                              ),
+                                                              Text(
+                                                                "Kegiatan",
+                                                                style: GoogleFonts
+                                                                    .montserrat(
+                                                                  color: state
+                                                                          .menu!
+                                                                          .startsWith(
+                                                                              "Kegiatan")
+                                                                      ? white
+                                                                      : black,
+                                                                  fontSize: 10,
+                                                                  fontWeight: state
+                                                                          .menu!
+                                                                          .startsWith(
+                                                                              "Kegiatan")
+                                                                      ? FontWeight
+                                                                          .w700
+                                                                      : FontWeight
+                                                                          .w500,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          context
+                                                              .read<TodayBloc>()
+                                                              .add(FetchTodayEvent(
+                                                                  date: DateTime
+                                                                          .now()
+                                                                      .toIso8601String()
+                                                                      .split(
+                                                                          'T')[0]));
+                                                          context
+                                                              .read<
+                                                                  SidebarMenuBloc>()
+                                                              .add(FetchSidebarMenuEvent(
+                                                                  menu: "Anak",
+                                                                  data:
+                                                                      Object()));
+                                                        },
+                                                        child: Container(
+                                                          width: 75,
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                            horizontal: 10,
+                                                            vertical: 15,
+                                                          ),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: state.menu!
+                                                                    .startsWith(
+                                                                        "Anak")
+                                                                ? orange
+                                                                : white,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(
+                                                              Radius.circular(
+                                                                  8),
+                                                            ),
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                // ignore: deprecated_member_use
+                                                                color: Colors
+                                                                    .black
+                                                                    .withOpacity(
+                                                                        0.1),
+                                                                spreadRadius: 2,
+                                                                blurRadius: 5,
+                                                                offset: Offset(
+                                                                    0, -1),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            spacing: 2,
+                                                            children: [
+                                                              Icon(
+                                                                Icons
+                                                                    .people_outlined,
+                                                                color: state
+                                                                        .menu!
+                                                                        .startsWith(
+                                                                            "Anak")
+                                                                    ? white
+                                                                    : black,
+                                                                size: 20,
+                                                              ),
+                                                              Text(
+                                                                "Anak",
+                                                                style: GoogleFonts
+                                                                    .montserrat(
+                                                                  color: state
+                                                                          .menu!
+                                                                          .startsWith(
+                                                                              "Anak")
+                                                                      ? white
+                                                                      : black,
+                                                                  fontSize: 10,
+                                                                  fontWeight: state
+                                                                          .menu!
+                                                                          .startsWith(
+                                                                              "Anak")
+                                                                      ? FontWeight
+                                                                          .w700
+                                                                      : FontWeight
+                                                                          .w500,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              } else {
+                                                return SizedBox.shrink();
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      top: 25,
+                                      left: 20,
+                                      right: 20,
+                                      bottom: 20,
+                                    ),
+                                    child: ScreensView(
+                                      context: context,
+                                      menu: state.menu!,
+                                      data: state.data,
+                                      detailKegiatanPreviousMenu:
+                                          state.detailKegiatanPreviousMenu ??
+                                              "",
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                       );
                     } else {
                       return const SizedBox.shrink();

@@ -7,3 +7,11 @@ EdgeInsetsGeometry paddingMenu = EdgeInsets.only(
   left: 50,
   right: 50,
 );
+
+// Padding untuk menu widget (hari ini, anak, & kegiatan)
+EdgeInsetsGeometry paddingMobileMenu = EdgeInsets.only(
+  top: 20,
+  bottom: 20,
+  left: 30,
+  right: 30,
+);

@@ -22,265 +22,273 @@ import 'package:absensi_bkr/bloc/toggle_switch_absen_bloc/toggle_switch_absen_ev
 
 Widget hariIniWidget(BuildContext context) {
   final ScrollController scrollController = ScrollController();
+  final double screenWidth = MediaQuery.of(context).size.width;
 
-  return Container(
-    color: white,
-    height: double.infinity,
-    child: Stack(
-      children: [
-        Positioned.fill(
-          child: Opacity(
-            opacity: 0.025,
-            child: Image.asset(
-              'asset/image/background.jpg',
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        SingleChildScrollView(
-          child: Padding(
-            padding: paddingMenu,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Jadwal Hari Ini",
-                  style: GoogleFonts.montserrat(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w800,
-                    color: black,
+  return screenWidth < 1000
+      ? mobileLayout(context)
+      : Container(
+          color: white,
+          height: double.infinity,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: Opacity(
+                  opacity: 0.025,
+                  child: Image.asset(
+                    'asset/image/background.jpg',
+                    fit: BoxFit.cover,
                   ),
                 ),
-                Text(
-                  dateNow,
-                  style: GoogleFonts.montserrat(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: black,
-                  ),
-                ),
-                Divider(
-                  color: lightGrey,
-                  thickness: 1,
-                ),
-                const SizedBox(height: 20),
-                BlocBuilder<TodayBloc, TodayState>(
-                  builder: (context, state) {
-                    if (state is TodayGetData) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (state.liveData.isNotEmpty ||
-                              state.upcomingData.isNotEmpty) ...[
-                            Text(
-                              state.liveData.isNotEmpty == true
-                                  ? "Sedang Berlangsung"
-                                  : "Selanjutnya",
-                              style: GoogleFonts.montserrat(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                                color: state.liveData.isNotEmpty == true
-                                    ? orange
-                                    : middlePurple,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            GestureDetector(
-                              onHorizontalDragUpdate: (details) {
-                                scrollController.jumpTo(
-                                  scrollController.offset - details.delta.dx,
-                                );
-                              },
-                              child: Scrollbar(
-                                controller: scrollController,
-                                thumbVisibility: true,
-                                scrollbarOrientation:
-                                    ScrollbarOrientation.bottom,
-                                child: SingleChildScrollView(
-                                  controller: scrollController,
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    spacing: 10,
-                                    children: [
-                                      if (state.liveData.isNotEmpty) ...[
-                                        Wrap(
-                                          spacing: 10,
-                                          runSpacing: 10,
-                                          children:
-                                              state.liveData.map((service) {
-                                            return _kartu(
-                                              context: context,
-                                              data: service,
-                                            );
-                                          }).toList(),
-                                        ),
-                                      ],
-                                      if (state.upcomingData.isNotEmpty) ...[
-                                        Wrap(
-                                          spacing: 10,
-                                          runSpacing: 10,
-                                          children:
-                                              state.upcomingData.map((service) {
-                                            return _kartu(
-                                              context: context,
-                                              data: service,
-                                              isNext: true,
-                                            );
-                                          }).toList(),
-                                        ),
-                                      ],
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 35),
-                          ],
-                          if (state.pastData.isNotEmpty) ...[
-                            Wrap(
+              ),
+              SingleChildScrollView(
+                child: Padding(
+                  padding: paddingMenu,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Jadwal Hari Ini",
+                        style: GoogleFonts.montserrat(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w800,
+                          color: black,
+                        ),
+                      ),
+                      Text(
+                        dateNow,
+                        style: GoogleFonts.montserrat(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: black,
+                        ),
+                      ),
+                      Divider(
+                        color: lightGrey,
+                        thickness: 1,
+                      ),
+                      const SizedBox(height: 20),
+                      BlocBuilder<TodayBloc, TodayState>(
+                        builder: (context, state) {
+                          if (state is TodayGetData) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Sudah Berakhir",
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                        color: darkGrey,
+                                if (state.liveData.isNotEmpty ||
+                                    state.upcomingData.isNotEmpty) ...[
+                                  Text(
+                                    state.liveData.isNotEmpty == true
+                                        ? "Sedang Berlangsung"
+                                        : "Selanjutnya",
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w800,
+                                      color: state.liveData.isNotEmpty == true
+                                          ? orange
+                                          : middlePurple,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  GestureDetector(
+                                    onHorizontalDragUpdate: (details) {
+                                      scrollController.jumpTo(
+                                        scrollController.offset -
+                                            details.delta.dx,
+                                      );
+                                    },
+                                    child: Scrollbar(
+                                      controller: scrollController,
+                                      thumbVisibility: true,
+                                      scrollbarOrientation:
+                                          ScrollbarOrientation.bottom,
+                                      child: SingleChildScrollView(
+                                        controller: scrollController,
+                                        scrollDirection: Axis.horizontal,
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          spacing: 10,
+                                          children: [
+                                            if (state.liveData.isNotEmpty) ...[
+                                              Wrap(
+                                                spacing: 10,
+                                                runSpacing: 10,
+                                                children: state.liveData
+                                                    .map((service) {
+                                                  return _kartu(
+                                                    context: context,
+                                                    data: service,
+                                                  );
+                                                }).toList(),
+                                              ),
+                                            ],
+                                            if (state
+                                                .upcomingData.isNotEmpty) ...[
+                                              Wrap(
+                                                spacing: 10,
+                                                runSpacing: 10,
+                                                children: state.upcomingData
+                                                    .map((service) {
+                                                  return _kartu(
+                                                    context: context,
+                                                    data: service,
+                                                    isNext: true,
+                                                  );
+                                                }).toList(),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                    const SizedBox(height: 8),
-                                    if (state.pastData.isNotEmpty) ...[
-                                      Wrap(
-                                        spacing: 10,
-                                        runSpacing: 10,
-                                        children: state.pastData.map((service) {
-                                          return _kartu(
-                                            context: context,
-                                            data: service,
-                                            isFinished: true,
-                                          );
-                                        }).toList(),
+                                  ),
+                                  const SizedBox(height: 35),
+                                ],
+                                if (state.pastData.isNotEmpty) ...[
+                                  Wrap(
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Sudah Berakhir",
+                                            style: GoogleFonts.montserrat(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700,
+                                              color: darkGrey,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          if (state.pastData.isNotEmpty) ...[
+                                            Wrap(
+                                              spacing: 10,
+                                              runSpacing: 10,
+                                              children:
+                                                  state.pastData.map((service) {
+                                                return _kartu(
+                                                  context: context,
+                                                  data: service,
+                                                  isFinished: true,
+                                                );
+                                              }).toList(),
+                                            ),
+                                          ],
+                                        ],
                                       ),
                                     ],
+                                  ),
+                                  const SizedBox(height: 40),
+                                ],
+                              ],
+                            );
+                          } else if (state is TodayGetDataIsEmpty) {
+                            return Center(
+                              child: SizedBox(
+                                width: 700,
+                                height: MediaQuery.of(context).size.height / 2,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    FractionallySizedBox(
+                                      widthFactor: 0.4,
+                                      child: Lottie.asset(
+                                          'asset/lottiefiles/orange-walk.json'),
+                                    ),
+                                    Positioned(
+                                      bottom:
+                                          MediaQuery.of(context).size.height *
+                                              0.0999,
+                                      child: Text(
+                                        "Tidak ada aktivitas hari ini",
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          color: black,
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
-                              ],
-                            ),
-                            const SizedBox(height: 40),
-                          ],
-                        ],
-                      );
-                    } else if (state is TodayGetDataIsEmpty) {
-                      return Center(
-                        child: SizedBox(
-                          width: 700,
-                          height: MediaQuery.of(context).size.height / 2,
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              FractionallySizedBox(
-                                widthFactor: 0.4,
-                                child: Lottie.asset(
-                                    'asset/lottiefiles/orange-walk.json'),
                               ),
-                              Positioned(
-                                bottom:
-                                    MediaQuery.of(context).size.height * 0.0999,
-                                child: Text(
-                                  "Tidak ada aktivitas hari ini",
-                                  style: GoogleFonts.montserrat(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700,
-                                    color: black,
+                            );
+                          } else {
+                            return Skeletonizer(
+                              enabled: true,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Daftar Kegiatan",
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w800,
+                                      color: black,
+                                    ),
                                   ),
-                                ),
+                                  const SizedBox(height: 14),
+                                  Wrap(
+                                    spacing: 10,
+                                    children: [
+                                      Container(
+                                        height: 200,
+                                        width: 200,
+                                        color: lightPurple,
+                                      ),
+                                      Container(
+                                        height: 200,
+                                        width: 200,
+                                        color: lightPurple,
+                                      ),
+                                      Container(
+                                        height: 200,
+                                        width: 200,
+                                        color: lightPurple,
+                                      ),
+                                      Container(
+                                        height: 200,
+                                        width: 200,
+                                        color: lightPurple,
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 25),
+                                  Text(
+                                    "Daftar Kegiatan",
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w800,
+                                      color: black,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 14),
+                                  Wrap(
+                                    spacing: 10,
+                                    children: [
+                                      Container(
+                                        height: 125,
+                                        width: 200,
+                                        color: lightPurple,
+                                      ),
+                                      Container(
+                                        height: 125,
+                                        width: 200,
+                                        color: lightPurple,
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                      );
-                    } else {
-                      return Skeletonizer(
-                        enabled: true,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Daftar Kegiatan",
-                              style: GoogleFonts.montserrat(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                                color: black,
-                              ),
-                            ),
-                            const SizedBox(height: 14),
-                            Wrap(
-                              spacing: 10,
-                              children: [
-                                Container(
-                                  height: 200,
-                                  width: 200,
-                                  color: lightPurple,
-                                ),
-                                Container(
-                                  height: 200,
-                                  width: 200,
-                                  color: lightPurple,
-                                ),
-                                Container(
-                                  height: 200,
-                                  width: 200,
-                                  color: lightPurple,
-                                ),
-                                Container(
-                                  height: 200,
-                                  width: 200,
-                                  color: lightPurple,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 25),
-                            Text(
-                              "Daftar Kegiatan",
-                              style: GoogleFonts.montserrat(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                                color: black,
-                              ),
-                            ),
-                            const SizedBox(height: 14),
-                            Wrap(
-                              spacing: 10,
-                              children: [
-                                Container(
-                                  height: 125,
-                                  width: 200,
-                                  color: lightPurple,
-                                ),
-                                Container(
-                                  height: 125,
-                                  width: 200,
-                                  color: lightPurple,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  },
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ),
-      ],
-    ),
-  );
+        );
 }
 
 Widget _kartu({
@@ -417,6 +425,244 @@ Widget _kartu({
             ),
           ),
         ],
+      ],
+    ),
+  );
+}
+
+Widget mobileLayout(BuildContext context) {
+  final ScrollController scrollController = ScrollController();
+
+  return SingleChildScrollView(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Jadwal Hari Ini",
+          style: GoogleFonts.montserrat(
+            fontSize: 30,
+            fontWeight: FontWeight.w800,
+            color: black,
+          ),
+        ),
+        Text(
+          dateNow,
+          style: GoogleFonts.montserrat(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: black,
+          ),
+        ),
+        Divider(
+          color: lightGrey,
+          thickness: 1,
+        ),
+        const SizedBox(height: 20),
+        BlocBuilder<TodayBloc, TodayState>(
+          builder: (context, state) {
+            if (state is TodayGetData) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (state.liveData.isNotEmpty ||
+                      state.upcomingData.isNotEmpty) ...[
+                    Text(
+                      state.liveData.isNotEmpty == true
+                          ? "Sedang Berlangsung"
+                          : "Selanjutnya",
+                      style: GoogleFonts.montserrat(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: state.liveData.isNotEmpty == true
+                            ? orange
+                            : middlePurple,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    GestureDetector(
+                      onHorizontalDragUpdate: (details) {
+                        scrollController.jumpTo(
+                          scrollController.offset - details.delta.dx,
+                        );
+                      },
+                      child: Scrollbar(
+                        controller: scrollController,
+                        thumbVisibility: true,
+                        scrollbarOrientation: ScrollbarOrientation.bottom,
+                        child: SingleChildScrollView(
+                          controller: scrollController,
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            spacing: 10,
+                            children: [
+                              if (state.liveData.isNotEmpty) ...[
+                                Wrap(
+                                  spacing: 10,
+                                  runSpacing: 10,
+                                  children: state.liveData.map((service) {
+                                    return _kartu(
+                                      context: context,
+                                      data: service,
+                                    );
+                                  }).toList(),
+                                ),
+                              ],
+                              if (state.upcomingData.isNotEmpty) ...[
+                                Wrap(
+                                  spacing: 10,
+                                  runSpacing: 10,
+                                  children: state.upcomingData.map((service) {
+                                    return _kartu(
+                                      context: context,
+                                      data: service,
+                                      isNext: true,
+                                    );
+                                  }).toList(),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 35),
+                  ],
+                  if (state.pastData.isNotEmpty) ...[
+                    Wrap(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Sudah Berakhir",
+                              style: GoogleFonts.montserrat(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: darkGrey,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            if (state.pastData.isNotEmpty) ...[
+                              Wrap(
+                                spacing: 10,
+                                runSpacing: 10,
+                                children: state.pastData.map((service) {
+                                  return _kartu(
+                                    context: context,
+                                    data: service,
+                                    isFinished: true,
+                                  );
+                                }).toList(),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 40),
+                  ],
+                ],
+              );
+            } else if (state is TodayGetDataIsEmpty) {
+              return Center(
+                child: SizedBox(
+                  width: 700,
+                  height: MediaQuery.of(context).size.height / 2,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      FractionallySizedBox(
+                        widthFactor: 0.4,
+                        child:
+                            Lottie.asset('asset/lottiefiles/orange-walk.json'),
+                      ),
+                      Positioned(
+                        bottom: MediaQuery.of(context).size.height * 0.0999,
+                        child: Text(
+                          "Tidak ada aktivitas hari ini",
+                          style: GoogleFonts.montserrat(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: black,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            } else {
+              return Skeletonizer(
+                enabled: true,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Daftar Kegiatan",
+                      style: GoogleFonts.montserrat(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: black,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    Wrap(
+                      spacing: 10,
+                      children: [
+                        Container(
+                          height: 200,
+                          width: 200,
+                          color: lightPurple,
+                        ),
+                        Container(
+                          height: 200,
+                          width: 200,
+                          color: lightPurple,
+                        ),
+                        Container(
+                          height: 200,
+                          width: 200,
+                          color: lightPurple,
+                        ),
+                        Container(
+                          height: 200,
+                          width: 200,
+                          color: lightPurple,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 25),
+                    Text(
+                      "Daftar Kegiatan",
+                      style: GoogleFonts.montserrat(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: black,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    Wrap(
+                      spacing: 10,
+                      children: [
+                        Container(
+                          height: 125,
+                          width: 200,
+                          color: lightPurple,
+                        ),
+                        Container(
+                          height: 125,
+                          width: 200,
+                          color: lightPurple,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }
+          },
+        ),
       ],
     ),
   );
