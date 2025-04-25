@@ -10,6 +10,24 @@ final KidsService _kidsService = KidsService();
 final GlobalAttendanceService _globalAttendanceService =
     GlobalAttendanceService();
 
+class GetAllServicesBloc extends Bloc<ServicesEvent, ServicesState> {
+  GetAllServicesBloc() : super(ServicesInitial()) {
+    on<FetchAllServicesEvent>((get, emit) async {
+      try {
+        final services = await _servicesService.ambilSemuaDataKegiatan();
+        if (services.isEmpty) {
+          emit(ServicesGetAllDataIsEmpty());
+          return;
+        } else {
+          emit(ServicesGetAllData(services));
+        }
+      } catch (e) {
+        emit(ServicesError(e.toString()));
+      }
+    });
+  }
+}
+
 class GetServicesBloc extends Bloc<ServicesEvent, ServicesState> {
   GetServicesBloc() : super(ServicesInitial()) {
     on<FetchServicesEvent>((get, emit) async {

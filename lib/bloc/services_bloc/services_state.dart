@@ -10,6 +10,13 @@ abstract class ServicesState extends Equatable {
 
 class ServicesInitial extends ServicesState {}
 
+class ServicesGetAllData extends ServicesState {
+  final List<Service> data;
+  const ServicesGetAllData(this.data);
+  @override
+  List<Object> get props => [data];
+}
+
 class ServicesGetData extends ServicesState {
   final List<Service> data;
   final int totalData;
@@ -17,6 +24,12 @@ class ServicesGetData extends ServicesState {
   const ServicesGetData(this.data, this.totalData, this.totalPage);
   @override
   List<Object> get props => [data];
+}
+
+class ServicesGetAllDataIsEmpty extends ServicesState {
+  const ServicesGetAllDataIsEmpty();
+  @override
+  List<Object> get props => [];
 }
 
 class ServicesGetDataIsEmpty extends ServicesState {

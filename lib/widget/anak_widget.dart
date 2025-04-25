@@ -21,316 +21,323 @@ Widget semuaAnakWidget(BuildContext context) {
   final ScrollController scrollController = ScrollController();
   final double screenWidth = MediaQuery.of(context).size.width;
 
-  return Container(
-    color: white,
-    height: double.infinity,
-    child: Stack(
-      children: [
-        Positioned.fill(
-          child: Opacity(
-            opacity: 0.025,
-            child: Image.asset(
-              'asset/image/background.jpg',
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        SingleChildScrollView(
-          child: Padding(
-            padding: paddingMenu,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Semua Anak",
-                          style: GoogleFonts.montserrat(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w800,
-                            color: black,
-                          ),
-                        ),
-                        Text(
-                          "${kelasOptions[1]} - ${kelasOptions.last}",
-                          style: GoogleFonts.montserrat(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          context.read<SidebarMenuBloc>().add(
-                              FetchSidebarMenuEvent(
-                                  menu: "Anak Tambah Data", data: Object()));
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: orange,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(2),
-                          ),
-                          elevation: 0,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 18,
-                            horizontal: 20,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(Icons.add, color: white),
-                            const SizedBox(width: 10),
-                            Text(
-                              "Tambah Anak",
-                              style: GoogleFonts.montserrat(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+  return screenWidth < 1000
+      ? mobileLayout(context)
+      : Container(
+          color: white,
+          height: double.infinity,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: Opacity(
+                  opacity: 0.025,
+                  child: Image.asset(
+                    'asset/image/background.jpg',
+                    fit: BoxFit.cover,
+                  ),
                 ),
-                Divider(
-                  color: lightGrey,
-                  thickness: 1,
-                ),
-                const SizedBox(height: 20),
-                BlocBuilder<GetKidsBloc, KidsState>(
-                  builder: (context, state) {
-                    if (tableLoadingAnak == false) {
-                      tableLoadingAnak = true;
-                      return Skeletonizer(
-                        enabled: true,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Wrap(
-                              spacing: 2,
-                              runSpacing: 0,
-                              children: [
-                                Text(
-                                  "Total Data: ",
-                                  style: TextStyle(fontSize: 22),
-                                ),
-                                Text(
-                                  "0 dari 00 anak",
-                                  style: TextStyle(fontSize: 22),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 14),
-                            Container(
-                              height: 400,
-                              width: double.infinity,
-                              color: lightGrey,
-                            ),
-                          ],
-                        ),
-                      );
-                    } else if (state is KidsGetData) {
-                      isDataActuallyThere = true;
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+              SingleChildScrollView(
+                child: Padding(
+                  padding: paddingMenu,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Wrap(
-                            spacing: 2,
-                            runSpacing: 0,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Total Data: ",
+                                "Semua Anak",
                                 style: GoogleFonts.montserrat(
-                                  fontSize: 16,
+                                  fontSize: 30,
                                   fontWeight: FontWeight.w800,
                                   color: black,
                                 ),
                               ),
                               Text(
-                                "${state.data.length} dari ${state.totalData} anak",
+                                "${kelasOptions[1]} - ${kelasOptions.last}",
                                 style: GoogleFonts.montserrat(
                                   fontSize: 16,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w600,
                                   color: black,
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 8),
-                          Container(
-                            width: double.infinity,
-                            color: purple,
-                            padding: EdgeInsets.all(20),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: SizedBox(
-                                width: 300,
-                                child:
-                                    _fieldCariData(context, namaAnakController),
+                          SizedBox(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                context.read<SidebarMenuBloc>().add(
+                                    FetchSidebarMenuEvent(
+                                        menu: "Anak Tambah Data",
+                                        data: Object()));
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: orange,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
+                                elevation: 0,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 18,
+                                  horizontal: 20,
+                                ),
                               ),
-                            ),
-                          ),
-                          screenWidth < 1200
-                              ? GestureDetector(
-                                  onHorizontalDragUpdate: (details) {
-                                    scrollController.jumpTo(
-                                      scrollController.offset -
-                                          details.delta.dx,
-                                    );
-                                  },
-                                  child: Scrollbar(
-                                    controller: scrollController,
-                                    thumbVisibility: true,
-                                    scrollbarOrientation:
-                                        ScrollbarOrientation.bottom,
-                                    child: SingleChildScrollView(
-                                      controller: scrollController,
-                                      scrollDirection: Axis.horizontal,
-                                      child: _tabel(context, state.data,
-                                          state.currentPage, true),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Icon(Icons.add, color: white),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    "Tambah Anak",
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: white,
                                     ),
                                   ),
-                                )
-                              : _tabel(context, state.data, state.currentPage,
-                                  false),
-                          SizedBox(height: 20),
-                          NumberPagination(
-                            onPageChanged: (int pageNumber) {
-                              selectedPaginationNumberOfAllAnakPage =
-                                  pageNumber;
-                              context.read<GetKidsBloc>().add(FetchKidsEvent(
-                                    page: selectedPaginationNumberOfAllAnakPage,
-                                    searchNameQuery: namaAnakController.text,
-                                  ));
-                            },
-                            visiblePagesCount: state.totalPage,
-                            totalPages: state.totalPage,
-                            currentPage: state.currentPage,
-                            selectedButtonColor: purple,
-                            fontFamily: "Montserrat",
-                            fontSize: 14,
-                            buttonRadius: 2,
-                            buttonElevation: 0,
-                            betweenNumberButtonSpacing: 1,
-                            controlButtonSize: Size(30, 34),
-                            numberButtonSize: Size(30, 34),
-                            buttonSelectedBorderColor: purple,
-                            buttonUnSelectedBorderColor: lightGrey,
-                            controlButtonColor: lightPurple,
-                            firstPageIcon: Icon(
-                              Icons.keyboard_double_arrow_left,
-                              size: 15,
-                              color: black,
-                            ),
-                            lastPageIcon: Icon(
-                              Icons.keyboard_double_arrow_right,
-                              size: 15,
-                              color: black,
-                            ),
-                            nextPageIcon: Icon(
-                              Icons.keyboard_arrow_right,
-                              size: 15,
-                              color: black,
-                            ),
-                            previousPageIcon: Icon(
-                              Icons.keyboard_arrow_left,
-                              size: 15,
-                              color: black,
+                                ],
+                              ),
                             ),
                           ),
                         ],
-                      );
-                    } else if (state is KidsGetDataIsEmpty) {
-                      if (isDataActuallyThere == false) {
-                        return Text(
-                          "Data anak tidak ditemukan.",
-                          style: GoogleFonts.montserrat(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: lightGrey,
-                          ),
-                        );
-                      } else {
-                        List<Kid> data = [];
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Pencarian \"${namaAnakController.text}\" tidak ditemukan",
-                              style: GoogleFonts.montserrat(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: black,
+                      ),
+                      Divider(
+                        color: lightGrey,
+                        thickness: 1,
+                      ),
+                      const SizedBox(height: 20),
+                      BlocBuilder<GetKidsBloc, KidsState>(
+                        builder: (context, state) {
+                          if (tableLoadingAnak == false) {
+                            tableLoadingAnak = true;
+                            return Skeletonizer(
+                              enabled: true,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Wrap(
+                                    spacing: 2,
+                                    runSpacing: 0,
+                                    children: [
+                                      Text(
+                                        "Total Data: ",
+                                        style: TextStyle(fontSize: 22),
+                                      ),
+                                      Text(
+                                        "0 dari 00 anak",
+                                        style: TextStyle(fontSize: 22),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 14),
+                                  Container(
+                                    height: 400,
+                                    width: double.infinity,
+                                    color: lightGrey,
+                                  ),
+                                ],
                               ),
-                            ),
-                            const SizedBox(height: 8),
-                            Container(
-                              width: double.infinity,
-                              color: purple,
-                              padding: EdgeInsets.all(20),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: SizedBox(
-                                  width: 300,
-                                  child: _fieldCariData(
-                                      context, namaAnakController),
-                                ),
-                              ),
-                            ),
-                            screenWidth < 1200
-                                ? GestureDetector(
-                                    onHorizontalDragUpdate: (details) {
-                                      scrollController.jumpTo(
-                                        scrollController.offset -
-                                            details.delta.dx,
-                                      );
-                                    },
-                                    child: Scrollbar(
-                                      controller: scrollController,
-                                      thumbVisibility: true,
-                                      scrollbarOrientation:
-                                          ScrollbarOrientation.bottom,
-                                      child: SingleChildScrollView(
-                                        controller: scrollController,
-                                        scrollDirection: Axis.horizontal,
-                                        child: _tabel(
-                                            context,
-                                            data,
-                                            selectedPaginationNumberOfAllAnakPage,
-                                            true),
+                            );
+                          } else if (state is KidsGetData) {
+                            isDataActuallyThere = true;
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Wrap(
+                                  spacing: 2,
+                                  runSpacing: 0,
+                                  children: [
+                                    Text(
+                                      "Total Data: ",
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w800,
+                                        color: black,
                                       ),
                                     ),
-                                  )
-                                : _tabel(
-                                    context,
-                                    data,
-                                    selectedPaginationNumberOfAllAnakPage,
-                                    false)
-                          ],
-                        );
-                      }
-                    } else {
-                      return SizedBox.shrink();
-                    }
-                  },
+                                    Text(
+                                      "${state.data.length} dari ${state.totalData} anak",
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Container(
+                                  width: double.infinity,
+                                  color: purple,
+                                  padding: EdgeInsets.all(20),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: SizedBox(
+                                      width: 300,
+                                      child: _fieldCariData(
+                                          context, namaAnakController),
+                                    ),
+                                  ),
+                                ),
+                                screenWidth < 1200
+                                    ? GestureDetector(
+                                        onHorizontalDragUpdate: (details) {
+                                          scrollController.jumpTo(
+                                            scrollController.offset -
+                                                details.delta.dx,
+                                          );
+                                        },
+                                        child: Scrollbar(
+                                          controller: scrollController,
+                                          thumbVisibility: true,
+                                          scrollbarOrientation:
+                                              ScrollbarOrientation.bottom,
+                                          child: SingleChildScrollView(
+                                            controller: scrollController,
+                                            scrollDirection: Axis.horizontal,
+                                            child: _tabel(context, state.data,
+                                                state.currentPage, true),
+                                          ),
+                                        ),
+                                      )
+                                    : _tabel(context, state.data,
+                                        state.currentPage, false),
+                                SizedBox(height: 20),
+                                NumberPagination(
+                                  onPageChanged: (int pageNumber) {
+                                    selectedPaginationNumberOfAllAnakPage =
+                                        pageNumber;
+                                    context
+                                        .read<GetKidsBloc>()
+                                        .add(FetchKidsEvent(
+                                          page:
+                                              selectedPaginationNumberOfAllAnakPage,
+                                          searchNameQuery:
+                                              namaAnakController.text,
+                                        ));
+                                  },
+                                  visiblePagesCount: state.totalPage,
+                                  totalPages: state.totalPage,
+                                  currentPage: state.currentPage,
+                                  selectedButtonColor: purple,
+                                  fontFamily: "Montserrat",
+                                  fontSize: 14,
+                                  buttonRadius: 2,
+                                  buttonElevation: 0,
+                                  betweenNumberButtonSpacing: 1,
+                                  controlButtonSize: Size(30, 34),
+                                  numberButtonSize: Size(30, 34),
+                                  buttonSelectedBorderColor: purple,
+                                  buttonUnSelectedBorderColor: lightGrey,
+                                  controlButtonColor: lightPurple,
+                                  firstPageIcon: Icon(
+                                    Icons.keyboard_double_arrow_left,
+                                    size: 15,
+                                    color: black,
+                                  ),
+                                  lastPageIcon: Icon(
+                                    Icons.keyboard_double_arrow_right,
+                                    size: 15,
+                                    color: black,
+                                  ),
+                                  nextPageIcon: Icon(
+                                    Icons.keyboard_arrow_right,
+                                    size: 15,
+                                    color: black,
+                                  ),
+                                  previousPageIcon: Icon(
+                                    Icons.keyboard_arrow_left,
+                                    size: 15,
+                                    color: black,
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else if (state is KidsGetDataIsEmpty) {
+                            if (isDataActuallyThere == false) {
+                              return Text(
+                                "Data anak tidak ditemukan.",
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: lightGrey,
+                                ),
+                              );
+                            } else {
+                              List<Kid> data = [];
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Pencarian \"${namaAnakController.text}\" tidak ditemukan",
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: black,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Container(
+                                    width: double.infinity,
+                                    color: purple,
+                                    padding: EdgeInsets.all(20),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: SizedBox(
+                                        width: 300,
+                                        child: _fieldCariData(
+                                            context, namaAnakController),
+                                      ),
+                                    ),
+                                  ),
+                                  screenWidth < 1200
+                                      ? GestureDetector(
+                                          onHorizontalDragUpdate: (details) {
+                                            scrollController.jumpTo(
+                                              scrollController.offset -
+                                                  details.delta.dx,
+                                            );
+                                          },
+                                          child: Scrollbar(
+                                            controller: scrollController,
+                                            thumbVisibility: true,
+                                            scrollbarOrientation:
+                                                ScrollbarOrientation.bottom,
+                                            child: SingleChildScrollView(
+                                              controller: scrollController,
+                                              scrollDirection: Axis.horizontal,
+                                              child: _tabel(
+                                                  context,
+                                                  data,
+                                                  selectedPaginationNumberOfAllAnakPage,
+                                                  true),
+                                            ),
+                                          ),
+                                        )
+                                      : _tabel(
+                                          context,
+                                          data,
+                                          selectedPaginationNumberOfAllAnakPage,
+                                          false)
+                                ],
+                              );
+                            }
+                          } else {
+                            return SizedBox.shrink();
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ),
-      ],
-    ),
-  );
+        );
 }
 
 Widget _tabel(
@@ -505,5 +512,316 @@ Widget _fieldCariData(BuildContext context, TextEditingController controller) {
             ),
           );
     },
+  );
+}
+
+Widget mobileLayout(BuildContext context) {
+  TextEditingController namaAnakController = TextEditingController();
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Semua Anak",
+                style: GoogleFonts.montserrat(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  color: black,
+                ),
+              ),
+              Text(
+                "${kelasOptions[1]} - ${kelasOptions.last}",
+                style: GoogleFonts.montserrat(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: black,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            child: ElevatedButton(
+              onPressed: () {
+                context.read<SidebarMenuBloc>().add(FetchSidebarMenuEvent(
+                    menu: "Anak Tambah Data", data: Object()));
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: orange,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(2),
+                ),
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 18,
+                  horizontal: 14,
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.add,
+                    color: white,
+                    size: 12,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    "Tambah Anak",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 25),
+      BlocBuilder<GetKidsBloc, KidsState>(
+        builder: (context, state) {
+          if (tableLoadingAnak == false) {
+            tableLoadingAnak = true;
+            return Skeletonizer(
+              enabled: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 30,
+                    width: double.infinity,
+                    color: lightGrey,
+                  ),
+                  const SizedBox(height: 15),
+                  ...List.generate(
+                    5,
+                    (index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 7),
+                        child: Container(
+                          height: 75,
+                          width: double.infinity,
+                          color: lightGrey,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            );
+          } else if (state is KidsGetData) {
+            isDataActuallyThere = true;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: _fieldCariData(context, namaAnakController),
+                ),
+                SizedBox(height: 15),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: state.data.length,
+                  itemBuilder: (context, index) {
+                    final kid = state.data[index];
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: white,
+                        border: Border.all(
+                          color: lightGrey,
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(
+                            4), // Adjusted to make it square
+                      ),
+                      margin: EdgeInsets.symmetric(vertical: 4),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 6,
+                          horizontal: 16,
+                        ),
+                        leading: CircleAvatar(
+                          backgroundColor: purple,
+                          child: Icon(
+                            Icons.person,
+                            color: white,
+                          ),
+                        ),
+                        title: Text(
+                          kid.name!,
+                          style: GoogleFonts.montserrat(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: black,
+                          ),
+                        ),
+                        subtitle: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Jumlah Kehadiran: ",
+                              style: GoogleFonts.montserrat(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: textFieldGrey,
+                              ),
+                            ),
+                            Text(
+                              "${kid.attendance!.length}",
+                              style: GoogleFonts.montserrat(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: textFieldGrey,
+                              ),
+                            ),
+                          ],
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          color: purple,
+                          size: 16,
+                        ),
+                        onTap: () {
+                          context.read<SidebarMenuBloc>().add(
+                                FetchSidebarMenuEvent(
+                                  menu: "Anak Detail",
+                                  data: kid,
+                                ),
+                              );
+                        },
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon:
+                          Icon(Icons.keyboard_double_arrow_left, color: purple),
+                      onPressed: state.currentPage > 1
+                          ? () {
+                              selectedPaginationNumberOfAllAnakPage = 1;
+                              context.read<GetKidsBloc>().add(FetchKidsEvent(
+                                    page: selectedPaginationNumberOfAllAnakPage,
+                                    searchNameQuery: namaAnakController.text,
+                                  ));
+                            }
+                          : null,
+                      padding: EdgeInsets.all(
+                          8), // Adjusted padding for square shape
+                      constraints: BoxConstraints(
+                        minWidth: 36,
+                        minHeight: 36,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.keyboard_arrow_left, color: purple),
+                      onPressed: state.currentPage > 1
+                          ? () {
+                              selectedPaginationNumberOfAllAnakPage =
+                                  state.currentPage - 1;
+                              context.read<GetKidsBloc>().add(FetchKidsEvent(
+                                    page: selectedPaginationNumberOfAllAnakPage,
+                                    searchNameQuery: namaAnakController.text,
+                                  ));
+                            }
+                          : null,
+                      padding: EdgeInsets.all(
+                          8), // Adjusted padding for square shape
+                      constraints: BoxConstraints(
+                        minWidth: 36,
+                        minHeight: 36,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.keyboard_arrow_right, color: purple),
+                      onPressed: state.currentPage < state.totalPage
+                          ? () {
+                              selectedPaginationNumberOfAllAnakPage =
+                                  state.currentPage + 1;
+                              context.read<GetKidsBloc>().add(FetchKidsEvent(
+                                    page: selectedPaginationNumberOfAllAnakPage,
+                                    searchNameQuery: namaAnakController.text,
+                                  ));
+                            }
+                          : null,
+                      padding: EdgeInsets.all(
+                          8), // Adjusted padding for square shape
+                      constraints: BoxConstraints(
+                        minWidth: 36,
+                        minHeight: 36,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.keyboard_double_arrow_right,
+                          color: purple),
+                      onPressed: state.currentPage < state.totalPage
+                          ? () {
+                              selectedPaginationNumberOfAllAnakPage =
+                                  state.totalPage;
+                              context.read<GetKidsBloc>().add(FetchKidsEvent(
+                                    page: selectedPaginationNumberOfAllAnakPage,
+                                    searchNameQuery: namaAnakController.text,
+                                  ));
+                            }
+                          : null,
+                      padding: EdgeInsets.all(
+                          8), // Adjusted padding for square shape
+                      constraints: BoxConstraints(
+                        minWidth: 36,
+                        minHeight: 36,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          } else if (state is KidsGetDataIsEmpty) {
+            if (isDataActuallyThere == false) {
+              return Text(
+                "Data anak tidak ditemukan.",
+                style: GoogleFonts.montserrat(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: lightGrey,
+                ),
+              );
+            } else {
+              // List<Kid> data = [];
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Pencarian \"${namaAnakController.text}\" tidak ditemukan",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: black,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: _fieldCariData(context, namaAnakController),
+                  ),
+                ],
+              );
+            }
+          } else {
+            return SizedBox.shrink();
+          }
+        },
+      ),
+    ],
   );
 }

@@ -12,7 +12,11 @@ class QRCodePopup extends StatefulWidget {
   final String id;
   final String name;
 
-  const QRCodePopup({super.key, required this.id, required this.name});
+  const QRCodePopup({
+    super.key,
+    required this.id,
+    required this.name,
+  });
 
   @override
   State<QRCodePopup> createState() => _QRCodePopupState();
@@ -33,37 +37,54 @@ class _QRCodePopupState extends State<QRCodePopup> {
               key: _popupKey, // Membungkus seluruh pop-up
               child: Container(
                 constraints: const BoxConstraints(
-                  minWidth: 460,
-                  minHeight: 480,
+                  minWidth: 368,
+                  minHeight: 544,
                 ),
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [orange, lightOrange],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+                  image: DecorationImage(
+                    image: AssetImage('asset/badge/badge.png'),
+                    fit: BoxFit.cover,
                   ),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Image.asset(
-                      'asset/logo/logo-bkr.png',
-                      width: 50,
-                      height: 50,
-                      fit: BoxFit.contain,
+                    const SizedBox(height: 147),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 200),
+                      child: Text(
+                        widget.name,
+                        style: TextStyle(
+                          fontFamily: 'NeatChalk',
+                          fontSize: 18,
+                          color: Colors.black,
+                          height: 1.9,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.clip,
+                      ),
                     ),
-                    const SizedBox(height: 20),
-                    QrImageView(
-                      data: widget.id,
-                      size: 220,
-                      version: QrVersions.auto,
-                      backgroundColor: white,
-                      padding: EdgeInsets.all(15),
+                    const SizedBox(height: 10),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.black,
+                          width: 3.5,
+                        ),
+                      ),
+                      child: QrImageView(
+                        data: widget.id,
+                        size: 130,
+                        version: QrVersions.auto,
+                        backgroundColor: Colors.white,
+                        padding: EdgeInsets.all(10),
+                      ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 4),
                     SizedBox(
                       width: 200,
                       child: Row(
@@ -72,41 +93,20 @@ class _QRCodePopupState extends State<QRCodePopup> {
                           Text(
                             "ID: ",
                             style: GoogleFonts.montserrat(
-                              fontSize: 14,
+                              fontSize: 10,
                               fontWeight: FontWeight.w400,
-                              color: white,
+                              color: Colors.black,
                             ),
                           ),
                           Text(
                             widget.id,
                             style: GoogleFonts.montserrat(
-                              fontSize: 14,
+                              fontSize: 10,
                               fontWeight: FontWeight.w800,
-                              color: white,
+                              color: Colors.black,
                             ),
                           ),
                         ],
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 20,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: white, width: 2),
-                        color: orange,
-                      ),
-                      child: Text(
-                        widget.name,
-                        style: GoogleFonts.montserrat(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: white,
-                        ),
-                        textAlign: TextAlign.center,
                       ),
                     ),
                   ],
@@ -114,21 +114,56 @@ class _QRCodePopupState extends State<QRCodePopup> {
               ),
             ),
             Positioned(
-              top: 8,
-              right: 8,
-              child: IconButton(
-                icon: Icon(Icons.close, color: white),
-                onPressed: () => Navigator.of(context).pop(),
+              top: 12,
+              right: 12,
+              child: Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: white,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: red, // border merah
+                    width: 2,
+                  ),
+                ),
+                child: IconButton(
+                  padding: EdgeInsets
+                      .zero, // supaya iconnya pas di tengah container kecil
+                  iconSize: 18, // bisa atur sesuai selera
+                  icon: Icon(
+                    Icons.close,
+                    color: red,
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
               ),
             ),
             Positioned(
-              top: 8,
-              right: 45,
-              child: IconButton(
-                icon: Icon(Icons.download_outlined, color: white),
-                onPressed: () async {
-                  await _downloadPopupAsImage();
-                },
+              top: 12,
+              right: 55,
+              child: Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: red, // background putih
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: white, // border merah
+                    width: 2,
+                  ),
+                ),
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  iconSize: 18,
+                  icon: Icon(
+                    Icons.download_rounded,
+                    color: white,
+                  ),
+                  onPressed: () async {
+                    await _downloadPopupAsImage();
+                  },
+                ),
               ),
             ),
           ],
@@ -149,13 +184,12 @@ class _QRCodePopupState extends State<QRCodePopup> {
       final blob = html.Blob([pngBytes]);
       final url = html.Url.createObjectUrlFromBlob(blob);
 
-      // ignore: unused_local_variable
       final anchor = html.AnchorElement(href: url)
-        ..setAttribute("download", "${widget.name}_${widget.id}_QR Code.png")
+        ..setAttribute("download", "${widget.name}_${widget.id}_QR_Code.png")
         ..click();
       html.Url.revokeObjectUrl(url);
     } catch (e) {
-      return;
+      print("Download error: $e");
     }
   }
 }

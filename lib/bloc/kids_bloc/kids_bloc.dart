@@ -5,6 +5,24 @@ import 'package:absensi_bkr/bloc/kids_bloc/kids_state.dart';
 
 final KidsService _kidsService = KidsService();
 
+class GetAllKidsBloc extends Bloc<KidsEvent, KidsState> {
+  GetAllKidsBloc() : super(KidsInitial()) {
+    on<FetchAllKidsEvent>((get, emit) async {
+      try {
+        final kids = await _kidsService.ambilSemuaDataAnakPlusQuery();
+        if (kids.isEmpty) {
+          emit(KidsGetAllDataIsEmpty());
+          return;
+        } else {
+          emit(KidsGetAllData(kids));
+        }
+      } catch (e) {
+        emit(KidsError(e.toString()));
+      }
+    });
+  }
+}
+
 class GetKidsBloc extends Bloc<KidsEvent, KidsState> {
   GetKidsBloc() : super(KidsInitial()) {
     on<FetchKidsEvent>((get, emit) async {
@@ -61,6 +79,7 @@ class CreateKidsBloc extends Bloc<KidsEvent, KidsState> {
     });
     on<CreateKidsEvent>((data, emit) async {
       try {
+        data.newData["attendance"] ??= [];
         bool result = await _kidsService.tambahDataAnak(data.newData);
         if (result == false) {
           emit(KidsCreateDataFailed());

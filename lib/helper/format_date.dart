@@ -66,3 +66,24 @@ DateTime formatYYYYMMDDHHMMSS(String timestamp) {
 
   return DateTime(year, month, day, hour, minute, second);
 }
+
+DateTime formatTimestamp(String date, String time) {
+  // Format asli dari element.date
+  final DateFormat originalDateFormat =
+      DateFormat("EEEE, dd MMMM yyyy", "id_ID");
+
+  final DateTime parsedDate = originalDateFormat.parse(date);
+
+  // Parse waktu (formatnya sudah benar, jadi bisa langsung dipecah)
+  final List<String> timeParts = time.split(":");
+  final int hour = int.parse(timeParts[0]);
+  final int minute = int.parse(timeParts[1]);
+
+  return DateTime(
+      parsedDate.year, parsedDate.month, parsedDate.day, hour, minute);
+}
+
+String formatAwalanAngka(String dateString) {
+  DateTime date = DateFormat("EEEE, dd MMMM y", "id_ID").parse(dateString);
+  return DateFormat("EEEE, d MMMM y", "id_ID").format(date);
+}

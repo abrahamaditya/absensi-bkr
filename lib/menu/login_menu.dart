@@ -28,154 +28,147 @@ class LoginMenu extends StatelessWidget {
         ),
       ],
       child: ScreenUtilInit(
-          builder: (BuildContext context, Widget? child) => Scaffold(
-                body: BlocListener<AuthBloc, AuthState>(
-                  listener: (context, state) {
-                    if (state is AuthValidSuccess) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const MasterMenu()),
-                      );
-                    }
-                  },
-                  child: BlocBuilder<AuthBloc, AuthState>(
-                    builder: (context, state) {
-                      if (state is AuthLoading) {
-                        return SizedBox.shrink();
-                      } else if (state is AuthInitial || state is AuthError) {
-                        return Stack(
-                          children: [
-                            Container(
-                              decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage(
-                                      'asset/image/backround-raw.JPG'),
-                                  fit: BoxFit.cover,
+        builder: (BuildContext context, Widget? child) => Scaffold(
+          body: BlocListener<AuthBloc, AuthState>(
+            listener: (context, state) {
+              if (state is AuthValidSuccess) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MasterMenu()),
+                );
+              }
+            },
+            child: BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                if (state is AuthLoading) {
+                  return SizedBox.shrink();
+                } else if (state is AuthInitial || state is AuthError) {
+                  return Stack(
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('asset/image/backround-raw.JPG'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        child: Container(
+                          color: purple.withOpacity(0.92),
+                        ),
+                      ),
+                      Center(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(height: 70),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: screenWidth < 1000 ? 30 : 40,
+                                  vertical: screenWidth < 1000 ? 35 : 45,
                                 ),
-                              ),
-                              child: Container(
-                                color: purple.withOpacity(0.92),
-                              ),
-                            ),
-                            Center(
-                              child: SingleChildScrollView(
+                                width: screenWidth < 1000 ? 325 : 375,
+                                decoration: BoxDecoration(
+                                  color: black,
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const SizedBox(height: 70),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal:
-                                            screenWidth < 1000 ? 30 : 40,
-                                        vertical: screenWidth < 1000 ? 35 : 45,
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "Shalom,",
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w300,
+                                          color: white,
+                                        ),
                                       ),
-                                      width: screenWidth < 1000 ? 325 : 375,
-                                      decoration: BoxDecoration(
-                                        color: black,
-                                        borderRadius: BorderRadius.circular(2),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "Masuk",
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 32,
+                                          fontWeight: FontWeight.w700,
+                                          color: white,
+                                        ),
                                       ),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              "Shalom,",
-                                              style: GoogleFonts.montserrat(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w300,
-                                                color: white,
-                                              ),
-                                            ),
+                                    ),
+                                    const SizedBox(height: 40),
+                                    _fieldFormInputUsername("Nama akun", false),
+                                    const SizedBox(height: 15),
+                                    _fieldFormInputPassword(context),
+                                    const SizedBox(height: 35),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      height: 50,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          context.read<AuthBloc>().add(
+                                              LoginEvent(
+                                                  email: emailController.text,
+                                                  password:
+                                                      passwordController.text,
+                                                  context: context));
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: orange,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(4),
                                           ),
-                                          Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
                                               "Masuk",
                                               style: GoogleFonts.montserrat(
-                                                fontSize: 32,
-                                                fontWeight: FontWeight.w700,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
                                                 color: white,
                                               ),
                                             ),
-                                          ),
-                                          const SizedBox(height: 40),
-                                          _fieldFormInputUsername(
-                                              "Nama akun", false),
-                                          const SizedBox(height: 15),
-                                          _fieldFormInputPassword(context),
-                                          const SizedBox(height: 35),
-                                          SizedBox(
-                                            width: double.infinity,
-                                            height: 50,
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                context.read<AuthBloc>().add(
-                                                    LoginEvent(
-                                                        email: emailController
-                                                            .text,
-                                                        password:
-                                                            passwordController
-                                                                .text,
-                                                        context: context));
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: orange,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(4),
-                                                ),
-                                              ),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    "Masuk",
-                                                    style:
-                                                        GoogleFonts.montserrat(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: white,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(width: 8),
-                                                  Icon(
-                                                    Icons.arrow_forward_rounded,
-                                                    color: white,
-                                                  ),
-                                                ],
-                                              ),
+                                            const SizedBox(width: 8),
+                                            Icon(
+                                              Icons.arrow_forward_rounded,
+                                              color: white,
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                    const SizedBox(height: 60),
-                                    Text(
-                                      "@2025. BKR MODERNLAND",
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        color: white,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
                                   ],
                                 ),
                               ),
-                            ),
-                          ],
-                        );
-                      } else {
-                        return const SizedBox.shrink();
-                      }
-                    },
-                  ),
-                ),
-              )),
+                              const SizedBox(height: 60),
+                              Text(
+                                "@2025. BKR MODERNLAND",
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: white,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                } else {
+                  return const SizedBox.shrink();
+                }
+              },
+            ),
+          ),
+        ),
+      ),
     );
   }
 

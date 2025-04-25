@@ -69,6 +69,36 @@ class KidsService {
     }
   }
 
+  Future<List<Kid>> ambilSemuaDataAnakPlusQuery({
+    String? searchNameQuery,
+  }) async {
+    try {
+      // Mengambil semua data dari Firestore
+      final snapshot = await _kidsRef.orderBy('name').get();
+      var kidsRaw = snapshot.docs.map((doc) {
+        var kid = doc.data() as Kid;
+        return kid;
+      }).toList();
+
+      var kidsSearched = kidsRaw;
+
+      // Jika ada query pencarian, filter berdasarkan nama
+      if (searchNameQuery != null && searchNameQuery.isNotEmpty) {
+        kidsSearched = kidsSearched.where((kid) {
+          // Cek jika name tidak null sebelum melakukan pencarian
+          bool matchesName =
+              kid.name?.toLowerCase().contains(searchNameQuery.toLowerCase()) ??
+                  false;
+          return matchesName;
+        }).toList();
+      }
+
+      return kidsSearched;
+    } catch (e) {
+      throw Exception('Gagal mengambil data anak: $e');
+    }
+  }
+
   Future<Kid> ambilDataAnakDariId(String kidId) async {
     try {
       final snapshot = await _kidsRef.doc(kidId).get();

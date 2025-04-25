@@ -13,8 +13,10 @@ import 'package:absensi_bkr/bloc/services_bloc/services_event.dart';
 import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_bloc.dart';
 import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_state.dart';
 import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_event.dart';
+import 'package:absensi_bkr/bloc/camera_scan_absen_bloc/camera_scan_absen_bloc.dart';
+import 'package:absensi_bkr/bloc/camera_scan_absen_bloc/camera_scan_absen_event.dart';
 
-Widget sidebarWidget(BuildContext context, SidebarMenuSuccess state) {
+Widget sidebarNormalWidget(BuildContext context, SidebarMenuSuccess state) {
   return Container(
     width: 275,
     color: purple,
@@ -70,10 +72,12 @@ Widget sidebarWidget(BuildContext context, SidebarMenuSuccess state) {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
+                context.read<TodayBloc>().add(InitTodayEvent());
                 context.read<TodayBloc>().add(FetchTodayEvent(
                     date: DateTime.now().toIso8601String().split('T')[0]));
                 context.read<SidebarMenuBloc>().add(
                     FetchSidebarMenuEvent(menu: "Hari Ini", data: Object()));
+                context.read<GetKidsByIdScanQRBloc>().add(InitIDScanQREvent());
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor:
@@ -122,6 +126,7 @@ Widget sidebarWidget(BuildContext context, SidebarMenuSuccess state) {
                     .add(FetchServicesEvent(page: 1, searchNameQuery: ""));
                 context.read<SidebarMenuBloc>().add(
                     FetchSidebarMenuEvent(menu: "Kegiatan", data: Object()));
+                context.read<GetKidsByIdScanQRBloc>().add(InitIDScanQREvent());
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor:
@@ -171,6 +176,7 @@ Widget sidebarWidget(BuildContext context, SidebarMenuSuccess state) {
                 context
                     .read<SidebarMenuBloc>()
                     .add(FetchSidebarMenuEvent(menu: "Anak", data: Object()));
+                context.read<GetKidsByIdScanQRBloc>().add(InitIDScanQREvent());
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor:

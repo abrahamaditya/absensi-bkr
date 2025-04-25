@@ -10,6 +10,13 @@ abstract class KidsState extends Equatable {
 
 class KidsInitial extends KidsState {}
 
+class KidsGetAllData extends KidsState {
+  final List<Kid> data;
+  const KidsGetAllData(this.data);
+  @override
+  List<Object> get props => [data];
+}
+
 class KidsGetData extends KidsState {
   final List<Kid> data;
   final int totalData;
@@ -19,6 +26,12 @@ class KidsGetData extends KidsState {
       this.data, this.totalData, this.totalPage, this.currentPage);
   @override
   List<Object> get props => [data];
+}
+
+class KidsGetAllDataIsEmpty extends KidsState {
+  const KidsGetAllDataIsEmpty();
+  @override
+  List<Object> get props => [];
 }
 
 class KidsGetDataIsEmpty extends KidsState {

@@ -18,6 +18,45 @@ class ServicesService {
         );
   }
 
+  Future<List<Service>> ambilSemuaDataKegiatan() async {
+    try {
+      final snapshot = await _servicesRef.get();
+      var services = snapshot.docs.map((doc) {
+        var service = doc.data() as Service;
+        return service;
+      }).toList();
+
+      // Pagination: Mengambil data sesuai dengan halaman dan limit
+      var filteredDocs = services.toList();
+
+      // Sort berdasarkan waktu kegiatan
+      filteredDocs.sort((a, b) {
+        DateTime dateTimeA = DateTime.parse('${a.date} ${a.time}');
+        DateTime dateTimeB = DateTime.parse('${b.date} ${b.time}');
+        return dateTimeB.compareTo(dateTimeA);
+      });
+
+      // Sort attendance jika ada
+      filteredDocs = filteredDocs.map((service) {
+        if (service.attendance != null) {
+          service.attendance!.sort((a, b) {
+            DateTime timestampA = formatYYYYMMDDHHMMSS(a.timestamp!);
+            DateTime timestampB = formatYYYYMMDDHHMMSS(b.timestamp!);
+            return timestampB.compareTo(timestampA);
+          });
+        }
+        if (service.date != null) {
+          service.date = formatTanggalEEEEDDMMMMYYYYIndonesia(service.date!);
+        }
+        return service;
+      }).toList();
+
+      return filteredDocs;
+    } catch (e) {
+      throw Exception('Gagal mengambil data kegiatan: $e');
+    }
+  }
+
   Future<List<Service>> ambilDataKegiatan({
     int? page,
     int? limit,

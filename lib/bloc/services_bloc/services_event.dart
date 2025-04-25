@@ -8,6 +8,12 @@ class InitEvent extends ServicesEvent {
   List<Object?> get props => [];
 }
 
+class FetchAllServicesEvent extends ServicesEvent {
+  FetchAllServicesEvent();
+  @override
+  List<Object?> get props => [];
+}
+
 class FetchServicesEvent extends ServicesEvent {
   final int page;
   final String searchNameQuery;

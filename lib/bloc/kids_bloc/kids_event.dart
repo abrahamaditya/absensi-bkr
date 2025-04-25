@@ -8,6 +8,13 @@ class InitEvent extends KidsEvent {
   List<Object?> get props => [];
 }
 
+class FetchAllKidsEvent extends KidsEvent {
+  final String searchNameQuery;
+  FetchAllKidsEvent({required this.searchNameQuery});
+  @override
+  List<Object?> get props => [];
+}
+
 class FetchKidsEvent extends KidsEvent {
   final int page;
   final String searchNameQuery;
@@ -17,7 +24,6 @@ class FetchKidsEvent extends KidsEvent {
 }
 
 // Update Kids
-
 class InitUpdateKidsEvent extends KidsEvent {
   InitUpdateKidsEvent();
   @override
@@ -33,7 +39,6 @@ class UpdateKidsEvent extends KidsEvent {
 }
 
 // Create Kids
-
 class InitCreateKidsEvent extends KidsEvent {
   InitCreateKidsEvent();
   @override
