@@ -3,7 +3,7 @@ import 'package:absensi_bkr/helper/color.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:absensi_bkr/model/kid_model.dart';
-import 'package:absensi_bkr/popup/anak_qr.dart';
+import 'package:absensi_bkr/popup/anak_qr_popup.dart';
 import 'package:absensi_bkr/menu/master_menu.dart';
 import 'package:absensi_bkr/helper/format_date.dart';
 import 'package:absensi_bkr/model/attendance_model.dart';
@@ -129,10 +129,12 @@ Widget detailAnakSubmenu(BuildContext context, dynamic data) {
                                                     menu: "Anak Ubah Data"));
                                           },
                                           style: ElevatedButton.styleFrom(
-                                            backgroundColor: orange,
+                                            backgroundColor: white,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(2),
+                                              side: BorderSide(
+                                                  color: orange, width: 1),
                                             ),
                                             elevation: 0,
                                             padding: const EdgeInsets.symmetric(
@@ -145,7 +147,7 @@ Widget detailAnakSubmenu(BuildContext context, dynamic data) {
                                             style: GoogleFonts.montserrat(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
-                                              color: white,
+                                              color: orange,
                                             ),
                                           ),
                                         ),
@@ -156,13 +158,19 @@ Widget detailAnakSubmenu(BuildContext context, dynamic data) {
                               : Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      kidsData.name!,
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.w800,
-                                        color: black,
+                                    Expanded(
+                                      child: Text(
+                                        kidsData.name!,
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.w800,
+                                          color: black,
+                                        ),
+                                        maxLines: 3,
+                                        overflow: TextOverflow.visible,
+                                        softWrap: true,
                                       ),
                                     ),
                                     Row(
@@ -211,10 +219,12 @@ Widget detailAnakSubmenu(BuildContext context, dynamic data) {
                                                     data: kidsData));
                                           },
                                           style: ElevatedButton.styleFrom(
-                                            backgroundColor: orange,
+                                            backgroundColor: white,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(2),
+                                              side: BorderSide(
+                                                  color: orange, width: 1),
                                             ),
                                             elevation: 0,
                                             padding: const EdgeInsets.symmetric(
@@ -227,7 +237,7 @@ Widget detailAnakSubmenu(BuildContext context, dynamic data) {
                                             style: GoogleFonts.montserrat(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
-                                              color: white,
+                                              color: orange,
                                             ),
                                           ),
                                         ),
@@ -330,7 +340,7 @@ Widget _tabel(List<AttendanceKids> data, bool isSmallScreen,
     0: FixedColumnWidth(60), // Kolom "No."
     1: FixedColumnWidth(250), // Kolom "Nama"
     2: FixedColumnWidth(300), // Kolom "Tanggal"
-    3: FixedColumnWidth(250), // Kolom "Waktu Absen Masuk"
+    3: FixedColumnWidth(250), // Kolom "Jam Absen"
   };
   Map<int, TableColumnWidth>? normalScreen = {
     0: FractionColumnWidth(0.12), // 12%
@@ -352,7 +362,7 @@ Widget _tabel(List<AttendanceKids> data, bool isSmallScreen,
           _headerTabel("No.", isMobile),
           _headerTabel("Kegiatan", isMobile),
           _headerTabel("Tanggal", isMobile),
-          _headerTabel("Waktu Absen Masuk", isMobile),
+          _headerTabel("Jam Absen", isMobile),
         ],
       ),
       // Data Baris Tabel dari parameter "data"
@@ -371,7 +381,7 @@ Widget _headerTabel(String title, bool isMobile) {
       title,
       textAlign: TextAlign.center,
       style: GoogleFonts.montserrat(
-        fontSize: isMobile == true ? 12 : 14,
+        fontSize: isMobile == true ? 10 : 14,
         fontWeight: FontWeight.w700,
         color: white,
       ),
@@ -386,7 +396,7 @@ TableRow _barisTabel(int index, AttendanceKids absence, bool isMobile) {
     ),
     children: [
       _selTabel("$index.", isMobile, isCenter: true),
-      _selTabel(absence.serviceName!, isMobile),
+      _selTabel(absence.serviceName!, isMobile, isCenter: true),
       _selTabel(absence.serviceDate!, isMobile),
       _selTabel(formatJadiHHMMSSDariString(absence.timestamp!), isMobile),
     ],
@@ -395,14 +405,14 @@ TableRow _barisTabel(int index, AttendanceKids absence, bool isMobile) {
 
 Widget _selTabel(String text, bool isMobile, {bool isCenter = false}) {
   return Container(
-    height: 45,
+    height: 50,
     alignment: Alignment.center,
     padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
     child: Text(
       text,
       textAlign: isCenter ? TextAlign.center : TextAlign.left,
       style: GoogleFonts.montserrat(
-        fontSize: isMobile == true ? 12 : 14,
+        fontSize: isMobile == true ? 10 : 14,
         fontWeight: FontWeight.w500,
         color: black,
       ),
@@ -411,13 +421,22 @@ Widget _selTabel(String text, bool isMobile, {bool isCenter = false}) {
 }
 
 Widget _infoDetailAnak(String label, String? value, bool isMobile) {
+  Map<int, TableColumnWidth>? smallScreen = {
+    0: FixedColumnWidth(125), // Lebar kolom pertama sesuai teks
+    1: FixedColumnWidth(10), // Lebar kolom ":" tetap
+    2: FlexColumnWidth(), // Kolom terakhir fleksibel
+  };
+  Map<int, TableColumnWidth>? normalScreen = {
+    0: FixedColumnWidth(175), // Lebar kolom pertama sesuai teks
+    1: FixedColumnWidth(10), // Lebar kolom ":" tetap
+    2: FlexColumnWidth(), // Kolom terakhir fleksibel
+  };
   return Padding(
     padding: const EdgeInsets.only(bottom: 5),
     child: Table(
-      columnWidths: const {
-        0: FixedColumnWidth(175), // Lebar kolom pertama sesuai teks
-        1: FixedColumnWidth(10), // Lebar kolom ":" tetap
-        2: FlexColumnWidth(), // Kolom terakhir fleksibel
+      columnWidths: {
+        if (isMobile) ...smallScreen,
+        if (!isMobile) ...normalScreen,
       },
       children: [
         TableRow(
@@ -425,7 +444,7 @@ Widget _infoDetailAnak(String label, String? value, bool isMobile) {
             Text(
               label,
               style: GoogleFonts.montserrat(
-                fontSize: isMobile == true ? 14 : 16,
+                fontSize: isMobile == true ? 12 : 16,
                 fontWeight: FontWeight.w400,
                 color: black,
               ),
@@ -433,7 +452,7 @@ Widget _infoDetailAnak(String label, String? value, bool isMobile) {
             Text(
               ":",
               style: GoogleFonts.montserrat(
-                fontSize: isMobile == true ? 14 : 16,
+                fontSize: isMobile == true ? 12 : 16,
                 fontWeight: FontWeight.w600,
                 color: black,
               ),
@@ -441,7 +460,7 @@ Widget _infoDetailAnak(String label, String? value, bool isMobile) {
             Text(
               value ?? "-",
               style: GoogleFonts.montserrat(
-                fontSize: isMobile == true ? 14 : 16,
+                fontSize: isMobile == true ? 12 : 16,
                 fontWeight: FontWeight.w600,
                 color: black,
               ),
@@ -454,179 +473,179 @@ Widget _infoDetailAnak(String label, String? value, bool isMobile) {
 }
 
 Widget mobileLayout(BuildContext context, Kid kidsData) {
-  return SizedBox(
-    height: MediaQuery.of(context).size.height - 225,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: double.infinity,
-          child: Row(
-            spacing: 10,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                width: 35,
-                height: 35,
-                decoration: BoxDecoration(
-                  color: purple,
-                  shape: BoxShape.circle,
-                ),
-                child: IconButton(
-                  onPressed: () {
-                    context.read<SidebarMenuBloc>().add(
-                          FetchSidebarMenuEvent(menu: "Anak", data: Object()),
-                        );
-                  },
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: white,
-                    size: 20,
-                  ),
-                ),
-              ),
-              Flexible(
-                child: Text(
-                  kidsData.name!,
-                  style: GoogleFonts.montserrat(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                    color: black,
-                  ),
-                  overflow: TextOverflow.visible,
-                  softWrap: true,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 18),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      SizedBox(
+        width: double.infinity,
+        child: Row(
+          spacing: 10,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _infoDetailAnak("ID", kidsData.id!, true),
-            _infoDetailAnak("Tanggal Lahir",
-                formatJadiDDMMMMYYYYIndonesia(kidsData.birthdate), true),
-            _infoDetailAnak("Alamat", kidsData.address, true),
-            _infoDetailAnak("No. Hp", kidsData.mobile, true),
-            _infoDetailAnak("Nama Orang Tua", kidsData.parentName, true),
-            _infoDetailAnak("Kelas", kidsData.grade, true),
-            const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return QRCodePopup(
-                            id: kidsData.id!,
-                            name: kidsData.name!,
-                          );
-                        },
+            Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: purple,
+                shape: BoxShape.circle,
+              ),
+              child: IconButton(
+                onPressed: () {
+                  context.read<SidebarMenuBloc>().add(
+                        FetchSidebarMenuEvent(menu: "Anak", data: Object()),
                       );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(2),
-                        side: BorderSide(color: orange, width: 1),
-                      ),
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 18,
-                        horizontal: 20,
-                      ),
-                    ),
-                    child: Text(
-                      "Lihat QR Code",
-                      style: GoogleFonts.montserrat(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: orange,
-                      ),
-                    ),
-                  ),
+                },
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: white,
+                  size: 15,
                 ),
-                const SizedBox(width: 10), // Space between buttons
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      context.read<SidebarMenuBloc>().add(FetchSidebarMenuEvent(
-                          menu: "Anak Ubah Data", data: kidsData));
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: orange,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 18,
-                        horizontal: 20,
-                      ),
-                    ),
-                    child: Text(
-                      "Ubah Data",
-                      style: GoogleFonts.montserrat(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+                hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+              ),
             ),
-          ],
-        ),
-        const SizedBox(height: 15),
-        Divider(
-          color: lightGrey,
-          thickness: 1,
-        ),
-        const SizedBox(height: 10),
-        if (kidsData.attendance!.isNotEmpty) ...[
-          Wrap(
-            spacing: 2,
-            runSpacing: 0,
-            children: [
-              Text(
-                "Data Absen Kegiatan ",
+            Flexible(
+              child: Text(
+                kidsData.name!,
                 style: GoogleFonts.montserrat(
-                  fontSize: 14,
+                  fontSize: 20,
                   fontWeight: FontWeight.w800,
                   color: black,
                 ),
-              ),
-              Text(
-                "(Total: ${kidsData.attendance!.length} kegiatan)",
-                style: GoogleFonts.montserrat(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: black,
-                ),
-              ),
-              const SizedBox(height: 25),
-              _tabel(kidsData.attendance!, false, isMobile: true),
-            ],
-          ),
-        ] else ...[
-          Center(
-            child: Text(
-              "${kidsData.name!.split(' ').first} belum melakukan absen kegiatan apapun",
-              style: GoogleFonts.montserrat(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: lightGrey,
+                overflow: TextOverflow.visible,
+                softWrap: true,
               ),
             ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 18),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _infoDetailAnak("ID", kidsData.id!, true),
+          _infoDetailAnak("Tanggal Lahir",
+              formatJadiDDMMMMYYYYIndonesia(kidsData.birthdate), true),
+          _infoDetailAnak("Alamat", kidsData.address, true),
+          _infoDetailAnak("No. Hp", kidsData.mobile, true),
+          _infoDetailAnak("Nama Orang Tua", kidsData.parentName, true),
+          _infoDetailAnak("Kelas", kidsData.grade, true),
+          const SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return QRCodePopup(
+                          id: kidsData.id!,
+                          name: kidsData.name!,
+                        );
+                      },
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(2),
+                      side: BorderSide(color: orange, width: 1),
+                    ),
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 18,
+                      horizontal: 20,
+                    ),
+                  ),
+                  child: Text(
+                    "Lihat QR Code",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: orange,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10), // Space between buttons
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {
+                    context.read<SidebarMenuBloc>().add(FetchSidebarMenuEvent(
+                        menu: "Anak Ubah Data", data: kidsData));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(2),
+                      side: BorderSide(color: orange, width: 1),
+                    ),
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 18,
+                      horizontal: 20,
+                    ),
+                  ),
+                  child: Text(
+                    "Ubah Data",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: orange,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
+      ),
+      const SizedBox(height: 15),
+      Divider(
+        color: lightGrey,
+        thickness: 1,
+      ),
+      const SizedBox(height: 10),
+      if (kidsData.attendance!.isNotEmpty) ...[
+        Wrap(
+          spacing: 2,
+          runSpacing: 0,
+          children: [
+            Text(
+              "Data Absen Kegiatan ",
+              style: GoogleFonts.montserrat(
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+                color: black,
+              ),
+            ),
+            Text(
+              "(Total: ${kidsData.attendance!.length} kegiatan)",
+              style: GoogleFonts.montserrat(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: black,
+              ),
+            ),
+            const SizedBox(height: 25),
+            _tabel(kidsData.attendance!, false, isMobile: true),
+          ],
+        ),
+      ] else ...[
+        Center(
+          child: Text(
+            "${kidsData.name!.split(' ').first} belum melakukan absen kegiatan apapun",
+            style: GoogleFonts.montserrat(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: lightGrey,
+            ),
+          ),
+        ),
       ],
-    ),
+    ],
   );
 }

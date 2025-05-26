@@ -66,7 +66,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             content: Text(
               "Login Berhasil",
               style: GoogleFonts.montserrat(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: white,
               ),
@@ -90,7 +90,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             content: Text(
               "Gagal Login. Email atau Password salah",
               style: GoogleFonts.montserrat(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: white,
               ),

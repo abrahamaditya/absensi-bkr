@@ -481,7 +481,7 @@ Widget _kartuMobile({
                     : isFinished
                         ? darkGrey
                         : white,
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -493,7 +493,7 @@ Widget _kartuMobile({
                     : isFinished
                         ? darkGrey
                         : white,
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -521,7 +521,7 @@ Widget _kartuMobile({
           ),
         ],
         if (!isNext && !isFinished) ...[
-          const SizedBox(height: 15),
+          const SizedBox(height: 2),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -556,7 +556,7 @@ Widget _kartuMobile({
               child: Text(
                 "Absensi",
                 style: GoogleFonts.montserrat(
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: FontWeight.w700,
                   color: white,
                 ),
@@ -570,141 +570,135 @@ Widget _kartuMobile({
 }
 
 Widget mobileLayout(BuildContext context) {
-  return SizedBox(
-    height: MediaQuery.of(context).size.height - 150,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Jadwal Hari Ini",
-          style: GoogleFonts.montserrat(
-            fontSize: 22,
-            fontWeight: FontWeight.w800,
-            color: black,
-          ),
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        "Jadwal Hari Ini",
+        style: GoogleFonts.montserrat(
+          fontSize: 20,
+          fontWeight: FontWeight.w800,
+          color: black,
         ),
-        Text(
-          dateNow,
-          style: GoogleFonts.montserrat(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: black,
-          ),
+      ),
+      Text(
+        dateNow,
+        style: GoogleFonts.montserrat(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: black,
         ),
-        const SizedBox(height: 16),
-        BlocBuilder<TodayBloc, TodayState>(
-          builder: (context, state) {
-            if (state is TodayGetData) {
-              return LayoutBuilder(
-                builder: (context, constraints) {
-                  double maxWidth = constraints.maxWidth;
-                  double cardWidth = (maxWidth / 2) - 6;
-                  final allData = [
-                    ...state.liveData,
-                    ...state.upcomingData,
-                    ...state.pastData
-                  ];
-                  return Column(
-                    children: List.generate(
-                      (allData.length / 2).ceil(),
-                      (index) {
-                        int firstIndex = index * 2;
-                        int secondIndex = firstIndex + 1;
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
+      ),
+      const SizedBox(height: 16),
+      BlocBuilder<TodayBloc, TodayState>(
+        builder: (context, state) {
+          if (state is TodayGetData) {
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                double maxWidth = constraints.maxWidth;
+                double cardWidth = (maxWidth / 2) - 6;
+                final allData = [
+                  ...state.liveData,
+                  ...state.upcomingData,
+                  ...state.pastData
+                ];
+                return Column(
+                  children: List.generate(
+                    (allData.length / 2).ceil(),
+                    (index) {
+                      int firstIndex = index * 2;
+                      int secondIndex = firstIndex + 1;
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: cardWidth,
+                              child: _kartuMobile(
+                                context: context,
+                                data: allData[firstIndex],
+                                isNext: state.upcomingData
+                                    .contains(allData[firstIndex]),
+                                isFinished: state.pastData
+                                    .contains(allData[firstIndex]),
+                              ),
+                            ),
+                            if (secondIndex < allData.length)
                               SizedBox(
                                 width: cardWidth,
                                 child: _kartuMobile(
                                   context: context,
-                                  data: allData[firstIndex],
+                                  data: allData[secondIndex],
                                   isNext: state.upcomingData
-                                      .contains(allData[firstIndex]),
+                                      .contains(allData[secondIndex]),
                                   isFinished: state.pastData
-                                      .contains(allData[firstIndex]),
+                                      .contains(allData[secondIndex]),
                                 ),
-                              ),
-                              if (secondIndex < allData.length)
-                                SizedBox(
-                                  width: cardWidth,
-                                  child: _kartuMobile(
-                                    context: context,
-                                    data: allData[secondIndex],
-                                    isNext: state.upcomingData
-                                        .contains(allData[secondIndex]),
-                                    isFinished: state.pastData
-                                        .contains(allData[secondIndex]),
-                                  ),
-                                )
-                              else
-                                SizedBox(width: cardWidth),
-                            ],
-                          ),
-                        );
-                      },
+                              )
+                            else
+                              SizedBox(width: cardWidth),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            );
+          } else if (state is TodayGetDataIsEmpty) {
+            return Center(
+              child: Column(
+                children: [
+                  const SizedBox(height: 60),
+                  Container(
+                    height: 165,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image:
+                            AssetImage('asset/image/jesus-with-children.png'),
+                        fit: BoxFit.contain,
+                      ),
                     ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Tidak ada jadwal kegiatan hari ini",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: black,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return Skeletonizer(
+              enabled: true,
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: 3 / 2,
+                ),
+                itemCount: 6,
+                itemBuilder: (context, index) {
+                  return Container(
+                    height: 400,
+                    width: double.infinity,
+                    color: lightPurple,
                   );
                 },
-              );
-            } else if (state is TodayGetDataIsEmpty) {
-              return SizedBox(
-                height: MediaQuery.of(context).size.height - 280,
-                child: Center(
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 60),
-                      Container(
-                        height: 165,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage(
-                                'asset/image/jesus-with-children.png'),
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "Tidak ada jadwal kegiatan hari ini",
-                        style: GoogleFonts.montserrat(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          color: black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            } else {
-              return Skeletonizer(
-                enabled: true,
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 3 / 2,
-                  ),
-                  itemCount: 6,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      height: 400,
-                      width: double.infinity,
-                      color: lightPurple,
-                    );
-                  },
-                ),
-              );
-            }
-          },
-        )
-      ],
-    ),
+              ),
+            );
+          }
+        },
+      )
+    ],
   );
 }

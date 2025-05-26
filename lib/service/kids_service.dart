@@ -159,4 +159,29 @@ class KidsService {
       throw Exception('Gagal mengambil absen sisi anak: $e');
     }
   }
+
+  Future<bool> hapusAbsenDocsAnak(
+    String kidId,
+    String attendanceId,
+  ) async {
+    try {
+      final snapshot = await _kidsRef.doc(kidId).get();
+      if (snapshot.exists) {
+        List<dynamic> attendanceList = snapshot.get('attendance');
+        final toRemove = attendanceList.firstWhere(
+          (entry) => entry is Map && entry['_id'] == attendanceId,
+          orElse: () => null,
+        );
+        if (toRemove != null) {
+          await _kidsRef.doc(kidId).update({
+            'attendance': FieldValue.arrayRemove([toRemove]),
+          });
+        }
+      }
+
+      return true;
+    } catch (e) {
+      throw Exception('Gagal menghapus absen anak sisi anak: $e');
+    }
+  }
 }

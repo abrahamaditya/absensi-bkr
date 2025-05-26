@@ -179,7 +179,10 @@ Widget semuaAnakWidget(BuildContext context) {
                                     child: SizedBox(
                                       width: 300,
                                       child: _fieldCariData(
-                                          context, namaAnakController),
+                                        context,
+                                        namaAnakController,
+                                        false,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -290,7 +293,10 @@ Widget semuaAnakWidget(BuildContext context) {
                                       child: SizedBox(
                                         width: 300,
                                         child: _fieldCariData(
-                                            context, namaAnakController),
+                                          context,
+                                          namaAnakController,
+                                          false,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -408,7 +414,7 @@ TableRow _barisTabel(BuildContext context, int index, Kid kid) {
     children: [
       _selTabel("$index.", isCenter: true),
       _selTabel(kid.id!),
-      _selTabel(kid.name!),
+      _selTabel(kid.name!, isCenter: true),
       _selTabel(kid.attendance!.length.toString()),
       _selTabel(
         kid.attendance!.length.toString(),
@@ -444,7 +450,7 @@ TableRow _barisTabel(BuildContext context, int index, Kid kid) {
 
 Widget _selTabel(String text, {bool isCenter = false, Widget? action}) {
   return Container(
-    height: 45,
+    height: 50,
     alignment: Alignment.center,
     padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
     child: action ??
@@ -460,20 +466,21 @@ Widget _selTabel(String text, {bool isCenter = false, Widget? action}) {
   );
 }
 
-Widget _fieldCariData(BuildContext context, TextEditingController controller) {
+Widget _fieldCariData(
+    BuildContext context, TextEditingController controller, bool isMobile) {
   return TextField(
     controller: controller,
     cursorColor: black,
     keyboardType: TextInputType.text,
     style: GoogleFonts.montserrat(
-      fontSize: 14,
+      fontSize: isMobile == true ? 12 : 14,
       fontWeight: FontWeight.w400,
       color: black,
     ),
     decoration: InputDecoration(
       hintText: 'Cari nama anak',
       hintStyle: GoogleFonts.montserrat(
-        fontSize: 14,
+        fontSize: isMobile == true ? 12 : 14,
         fontWeight: FontWeight.w400,
         color: textFieldGrey,
       ),
@@ -516,6 +523,7 @@ Widget _fieldCariData(BuildContext context, TextEditingController controller) {
 }
 
 Widget mobileLayout(BuildContext context) {
+  final double screenWidth = MediaQuery.of(context).size.width;
   TextEditingController namaAnakController = TextEditingController();
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -529,7 +537,7 @@ Widget mobileLayout(BuildContext context) {
               Text(
                 "Semua Anak",
                 style: GoogleFonts.montserrat(
-                  fontSize: 22,
+                  fontSize: 20,
                   fontWeight: FontWeight.w800,
                   color: black,
                 ),
@@ -537,7 +545,7 @@ Widget mobileLayout(BuildContext context) {
               Text(
                 "${kelasOptions[1]} - ${kelasOptions.last}",
                 style: GoogleFonts.montserrat(
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: FontWeight.w600,
                   color: black,
                 ),
@@ -561,25 +569,31 @@ Widget mobileLayout(BuildContext context) {
                   horizontal: 14,
                 ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.add,
-                    color: white,
-                    size: 12,
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    "Tambah Anak",
-                    style: GoogleFonts.montserrat(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+              child: screenWidth < 430
+                  ? Icon(
+                      Icons.add,
                       color: white,
+                      size: 12,
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.add,
+                          color: white,
+                          size: 12,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          "Tambah Anak",
+                          style: GoogleFonts.montserrat(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: white,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
             ),
           ),
         ],
@@ -623,7 +637,7 @@ Widget mobileLayout(BuildContext context) {
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
-                  child: _fieldCariData(context, namaAnakController),
+                  child: _fieldCariData(context, namaAnakController, true),
                 ),
                 SizedBox(height: 15),
                 ListView.builder(
@@ -639,8 +653,7 @@ Widget mobileLayout(BuildContext context) {
                           color: lightGrey,
                           width: 1.0,
                         ),
-                        borderRadius: BorderRadius.circular(
-                            4), // Adjusted to make it square
+                        borderRadius: BorderRadius.circular(4),
                       ),
                       margin: EdgeInsets.symmetric(vertical: 4),
                       child: ListTile(
@@ -650,15 +663,17 @@ Widget mobileLayout(BuildContext context) {
                         ),
                         leading: CircleAvatar(
                           backgroundColor: purple,
+                          radius: 18,
                           child: Icon(
                             Icons.person,
                             color: white,
+                            size: 19,
                           ),
                         ),
                         title: Text(
                           kid.name!,
                           style: GoogleFonts.montserrat(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w700,
                             color: black,
                           ),
@@ -678,7 +693,7 @@ Widget mobileLayout(BuildContext context) {
                               "${kid.attendance!.length}",
                               style: GoogleFonts.montserrat(
                                 fontSize: 12,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w500,
                                 color: textFieldGrey,
                               ),
                             ),
@@ -687,7 +702,7 @@ Widget mobileLayout(BuildContext context) {
                         trailing: Icon(
                           Icons.arrow_forward_ios,
                           color: purple,
-                          size: 16,
+                          size: 14,
                         ),
                         onTap: () {
                           context.read<SidebarMenuBloc>().add(
@@ -705,9 +720,10 @@ Widget mobileLayout(BuildContext context) {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    // Tombol pertama untuk ke halaman pertama
                     IconButton(
-                      icon:
-                          Icon(Icons.keyboard_double_arrow_left, color: purple),
+                      icon: Icon(Icons.keyboard_double_arrow_left,
+                          color: state.currentPage > 1 ? purple : Colors.grey),
                       onPressed: state.currentPage > 1
                           ? () {
                               selectedPaginationNumberOfAllAnakPage = 1;
@@ -716,16 +732,23 @@ Widget mobileLayout(BuildContext context) {
                                     searchNameQuery: namaAnakController.text,
                                   ));
                             }
-                          : null,
-                      padding: EdgeInsets.all(
-                          8), // Adjusted padding for square shape
+                          : null, // Disabled jika di halaman pertama
+                      padding: EdgeInsets.all(8),
                       constraints: BoxConstraints(
                         minWidth: 36,
                         minHeight: 36,
                       ),
+                      // Menghilangkan efek hover dan splash
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      mouseCursor: SystemMouseCursors
+                          .click, // Menghilangkan cursor hover default
                     ),
+                    // Tombol sebelumnya
                     IconButton(
-                      icon: Icon(Icons.keyboard_arrow_left, color: purple),
+                      icon: Icon(Icons.keyboard_arrow_left,
+                          color: state.currentPage > 1 ? purple : Colors.grey),
                       onPressed: state.currentPage > 1
                           ? () {
                               selectedPaginationNumberOfAllAnakPage =
@@ -735,16 +758,24 @@ Widget mobileLayout(BuildContext context) {
                                     searchNameQuery: namaAnakController.text,
                                   ));
                             }
-                          : null,
-                      padding: EdgeInsets.all(
-                          8), // Adjusted padding for square shape
+                          : null, // Disabled jika di halaman pertama
+                      padding: EdgeInsets.all(8),
                       constraints: BoxConstraints(
                         minWidth: 36,
                         minHeight: 36,
                       ),
+                      // Menghilangkan efek hover dan splash
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      mouseCursor: SystemMouseCursors.click,
                     ),
+                    // Tombol berikutnya
                     IconButton(
-                      icon: Icon(Icons.keyboard_arrow_right, color: purple),
+                      icon: Icon(Icons.keyboard_arrow_right,
+                          color: state.currentPage < state.totalPage
+                              ? purple
+                              : Colors.grey),
                       onPressed: state.currentPage < state.totalPage
                           ? () {
                               selectedPaginationNumberOfAllAnakPage =
@@ -754,17 +785,24 @@ Widget mobileLayout(BuildContext context) {
                                     searchNameQuery: namaAnakController.text,
                                   ));
                             }
-                          : null,
-                      padding: EdgeInsets.all(
-                          8), // Adjusted padding for square shape
+                          : null, // Disabled jika di halaman terakhir
+                      padding: EdgeInsets.all(8),
                       constraints: BoxConstraints(
                         minWidth: 36,
                         minHeight: 36,
                       ),
+                      // Menghilangkan efek hover dan splash
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      mouseCursor: SystemMouseCursors.click,
                     ),
+                    // Tombol terakhir untuk ke halaman terakhir
                     IconButton(
                       icon: Icon(Icons.keyboard_double_arrow_right,
-                          color: purple),
+                          color: state.currentPage < state.totalPage
+                              ? purple
+                              : Colors.grey),
                       onPressed: state.currentPage < state.totalPage
                           ? () {
                               selectedPaginationNumberOfAllAnakPage =
@@ -774,13 +812,17 @@ Widget mobileLayout(BuildContext context) {
                                     searchNameQuery: namaAnakController.text,
                                   ));
                             }
-                          : null,
-                      padding: EdgeInsets.all(
-                          8), // Adjusted padding for square shape
+                          : null, // Disabled jika di halaman terakhir
+                      padding: EdgeInsets.all(8),
                       constraints: BoxConstraints(
                         minWidth: 36,
                         minHeight: 36,
                       ),
+                      // Menghilangkan efek hover dan splash
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      mouseCursor: SystemMouseCursors.click,
                     ),
                   ],
                 ),
@@ -788,12 +830,19 @@ Widget mobileLayout(BuildContext context) {
             );
           } else if (state is KidsGetDataIsEmpty) {
             if (isDataActuallyThere == false) {
-              return Text(
-                "Data anak tidak ditemukan.",
-                style: GoogleFonts.montserrat(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: lightGrey,
+              return Center(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 60),
+                    Text(
+                      "Data anak tidak ditemukan.",
+                      style: GoogleFonts.montserrat(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: lightGrey,
+                      ),
+                    ),
+                  ],
                 ),
               );
             } else {
@@ -804,7 +853,7 @@ Widget mobileLayout(BuildContext context) {
                   Text(
                     "Pencarian \"${namaAnakController.text}\" tidak ditemukan",
                     style: GoogleFonts.montserrat(
-                      fontSize: 14,
+                      fontSize: 12,
                       fontWeight: FontWeight.w500,
                       color: black,
                     ),
@@ -812,7 +861,11 @@ Widget mobileLayout(BuildContext context) {
                   const SizedBox(height: 8),
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    child: _fieldCariData(context, namaAnakController),
+                    child: _fieldCariData(
+                      context,
+                      namaAnakController,
+                      true,
+                    ),
                   ),
                 ],
               );

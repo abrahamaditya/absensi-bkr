@@ -59,6 +59,20 @@ class ServicesCreateDataFailed extends ServicesState {
   List<Object> get props => [];
 }
 
+// Hapus Absensi dari Kegiatan
+
+class DeleteAttendanceChildByServiceSuccess extends ServicesState {
+  const DeleteAttendanceChildByServiceSuccess();
+  @override
+  List<Object> get props => [];
+}
+
+class DeleteAttendanceChildByServiceFailed extends ServicesState {
+  const DeleteAttendanceChildByServiceFailed();
+  @override
+  List<Object> get props => [];
+}
+
 // Lainnya (form) Services
 
 class LainnyaServicesTrue extends ServicesState {

@@ -76,10 +76,30 @@ class TakeAttendanceEvent extends ServicesEvent {
       ];
 }
 
+// Hapus Absen di Kegiatan
+
+class InitDeleteAttendanceChildbyServiceEvent extends ServicesEvent {
+  InitDeleteAttendanceChildbyServiceEvent();
+  @override
+  List<Object?> get props => [];
+}
+
+class DeleteAttendanceChildbyServiceEvent extends ServicesEvent {
+  final String? serviceId;
+  final String? attendanceId;
+  final String? kidId;
+  DeleteAttendanceChildbyServiceEvent(
+      {required this.serviceId,
+      required this.attendanceId,
+      required this.kidId});
+  @override
+  List<Object?> get props => [];
+}
+
 // Ambil ID dari QR Code
 
-class InitServiceByIDvent extends ServicesEvent {
-  InitServiceByIDvent();
+class InitServiceByIDEvent extends ServicesEvent {
+  InitServiceByIDEvent();
   @override
   List<Object?> get props => [];
 }

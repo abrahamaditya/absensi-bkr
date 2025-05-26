@@ -16,7 +16,7 @@ import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_event.dart';
 import 'package:absensi_bkr/bloc/camera_scan_absen_bloc/camera_scan_absen_bloc.dart';
 import 'package:absensi_bkr/bloc/camera_scan_absen_bloc/camera_scan_absen_event.dart';
 
-Widget sidebarNormalWidget(BuildContext context, SidebarMenuSuccess state) {
+Widget sidebarWebWidget(BuildContext context, SidebarMenuSuccess state) {
   return Container(
     width: 275,
     color: purple,
@@ -34,37 +34,42 @@ Widget sidebarNormalWidget(BuildContext context, SidebarMenuSuccess state) {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 5),
-            child: Row(
-              children: [
-                Image.asset(
-                  'asset/logo/logo-bkr.png',
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.contain,
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Absensi BKR",
-                      style: GoogleFonts.montserrat(
-                        color: white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+            child: InkWell(
+              onTap: () {
+                Navigator.pushReplacementNamed(context, '/');
+              },
+              child: Row(
+                children: [
+                  Image.asset(
+                    'asset/logo/logo-bkr.png',
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.contain,
+                  ),
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Absensi BKR",
+                        style: GoogleFonts.montserrat(
+                          color: white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                    Text(
-                      "Modernland",
-                      style: GoogleFonts.montserrat(
-                        color: white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                      Text(
+                        "Modernland",
+                        style: GoogleFonts.montserrat(
+                          color: white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 25),

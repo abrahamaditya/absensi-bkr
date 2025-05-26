@@ -183,4 +183,29 @@ class ServicesService {
       throw Exception('Gagal mengambil data anak: $e');
     }
   }
+
+  Future<bool> hapusAbsenDocsKegiatan(
+    String serviceId,
+    String attendanceId,
+  ) async {
+    try {
+      final snapshot = await _servicesRef.doc(serviceId).get();
+      if (snapshot.exists) {
+        List<dynamic> attendanceList = snapshot.get('attendance');
+        final toRemove = attendanceList.firstWhere(
+          (entry) => entry is Map && entry['_id'] == attendanceId,
+          orElse: () => null,
+        );
+        if (toRemove != null) {
+          await _servicesRef.doc(serviceId).update({
+            'attendance': FieldValue.arrayRemove([toRemove]),
+          });
+        }
+      }
+
+      return true;
+    } catch (e) {
+      throw Exception('Gagal menghapus absen anak sisi kegiatan: $e');
+    }
+  }
 }

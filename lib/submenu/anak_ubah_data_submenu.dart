@@ -174,7 +174,7 @@ Widget anakUbahDataSubmenu(BuildContext context, dynamic data) {
                                   content: Text(
                                     "Pastikan semua data terisi dengan benar",
                                     style: GoogleFonts.montserrat(
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.w600,
                                       color: white,
                                     ),
@@ -220,7 +220,7 @@ Widget anakUbahDataSubmenu(BuildContext context, dynamic data) {
                                   content: Text(
                                     "Data berhasil diperbaharui!",
                                     style: GoogleFonts.montserrat(
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.w600,
                                       color: white,
                                     ),
@@ -244,7 +244,7 @@ Widget anakUbahDataSubmenu(BuildContext context, dynamic data) {
                                   content: Text(
                                     "Gagal memperbaharui data anak",
                                     style: GoogleFonts.montserrat(
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.w600,
                                       color: white,
                                     ),
@@ -309,7 +309,7 @@ Widget _fieldFormInputTeks(
         decoration: InputDecoration(
           hintText: 'Masukkan $labelText',
           hintStyle: GoogleFonts.montserrat(
-            fontSize: isMobile == true ? 14 : 16,
+            fontSize: isMobile == true ? 13 : 16,
             fontWeight: FontWeight.w400,
             color: textFieldGrey,
           ),
@@ -334,8 +334,8 @@ Widget _fieldFormInputTeks(
         ),
         style: GoogleFonts.montserrat(
           fontSize: controller.text.isNotEmpty
-              ? (isMobile == true ? 14 : 16)
-              : (isMobile == true ? 14 : 16),
+              ? (isMobile == true ? 13 : 16)
+              : (isMobile == true ? 13 : 16),
           fontWeight: FontWeight.w400,
           color: black,
         ),
@@ -363,7 +363,7 @@ Widget _fieldDropdownFormKelas(
         decoration: InputDecoration(
           hintText: 'Pilih $labelText',
           hintStyle: GoogleFonts.montserrat(
-            fontSize: isMobile == true ? 14 : 16,
+            fontSize: isMobile == true ? 13 : 16,
             fontWeight: FontWeight.w400,
             color: textFieldGrey,
           ),
@@ -392,7 +392,7 @@ Widget _fieldDropdownFormKelas(
                   child: Text(
                     kelas,
                     style: GoogleFonts.montserrat(
-                      fontSize: isMobile == true ? 14 : 16,
+                      fontSize: isMobile == true ? 13 : 16,
                       fontWeight: FontWeight.w400,
                       color: kelas == "Pilih Kelas" ? textFieldGrey : black,
                     ),
@@ -462,7 +462,7 @@ Widget _fieldDatePickerTanggal(String labelText,
         decoration: InputDecoration(
           hintText: 'Pilih $labelText',
           hintStyle: GoogleFonts.montserrat(
-            fontSize: isMobile == true ? 14 : 16,
+            fontSize: isMobile == true ? 13 : 16,
             fontWeight: FontWeight.w400,
             color: textFieldGrey,
           ),
@@ -487,8 +487,8 @@ Widget _fieldDatePickerTanggal(String labelText,
         ),
         style: GoogleFonts.montserrat(
           fontSize: controller.text.isNotEmpty
-              ? (isMobile == true ? 14 : 16)
-              : (isMobile == true ? 14 : 16),
+              ? (isMobile == true ? 13 : 16)
+              : (isMobile == true ? 13 : 16),
           fontWeight: FontWeight.w400,
           color: black,
         ),
@@ -539,8 +539,8 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-              width: 35,
-              height: 35,
+              width: 30,
+              height: 30,
               decoration: BoxDecoration(
                 color: purple,
                 shape: BoxShape.circle,
@@ -553,14 +553,16 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
                 icon: Icon(
                   Icons.arrow_back,
                   color: white,
-                  size: 20,
+                  size: 15,
                 ),
+                hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
               ),
             ),
             Text(
               "Ubah Data Anak",
               style: GoogleFonts.montserrat(
-                fontSize: 22,
+                fontSize: 20,
                 fontWeight: FontWeight.w800,
                 color: black,
               ),
@@ -604,7 +606,7 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
                 ),
               ],
             ),
-            const SizedBox(height: 35),
+            const SizedBox(height: 25),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -628,7 +630,7 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
                   child: Text(
                     "Batal",
                     style: GoogleFonts.montserrat(
-                      fontSize: 14,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: orange,
                     ),
@@ -655,7 +657,7 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
                           content: Text(
                             "Pastikan semua data terisi dengan benar",
                             style: GoogleFonts.montserrat(
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
                               color: white,
                             ),
@@ -699,7 +701,7 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
                           content: Text(
                             "Data berhasil diperbaharui!",
                             style: GoogleFonts.montserrat(
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
                               color: white,
                             ),
@@ -722,7 +724,7 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
                           content: Text(
                             "Gagal memperbaharui data anak",
                             style: GoogleFonts.montserrat(
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
                               color: white,
                             ),
@@ -745,7 +747,7 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
                   child: Text(
                     "Simpan Data",
                     style: GoogleFonts.montserrat(
-                      fontSize: 14,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: white,
                     ),

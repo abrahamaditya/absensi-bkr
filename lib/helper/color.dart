@@ -17,7 +17,7 @@ Color middlePurple = const Color(0xFF7C77A3);
 
 Color red = const Color(0xFFCF0606);
 Color lightRed = const Color(0xFFFFDDDD);
-Color green = Colors.green;
+Color green = const Color(0xFF4CAF50);
 
 Color veryLightGrey = const Color(0xFFededed);
 Color lightGrey = const Color(0xFFD7D7D7);

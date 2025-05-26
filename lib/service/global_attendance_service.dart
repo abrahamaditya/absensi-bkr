@@ -29,4 +29,13 @@ class GlobalAttendanceService {
       throw Exception('Gagal mengambil absen sisi global attendance: $e');
     }
   }
+
+  Future<bool> hapusAbsenDocsGlobalAttendance(String attendanceId) async {
+    try {
+      await _globalAttendanceRef.doc(attendanceId).delete();
+      return true;
+    } catch (e) {
+      throw Exception('Gagal menghapus absen sisi global attendance: $e');
+    }
+  }
 }

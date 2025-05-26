@@ -129,9 +129,49 @@ class TakeAttendanceBloc extends Bloc<ServicesEvent, ServicesState> {
   }
 }
 
+class DeleteAttendanceChildbyServiceBloc
+    extends Bloc<ServicesEvent, ServicesState> {
+  DeleteAttendanceChildbyServiceBloc() : super(ServicesInitial()) {
+    on<InitDeleteAttendanceChildbyServiceEvent>((data, emit) async {
+      emit(ServicesInitial());
+    });
+    on<DeleteAttendanceChildbyServiceEvent>((data, emit) async {
+      try {
+        bool resultAttendanceDeleteFromService = await _servicesService
+            .hapusAbsenDocsKegiatan(data.serviceId!, data.attendanceId!);
+
+        if (!resultAttendanceDeleteFromService) {
+          emit(DeleteAttendanceChildByServiceFailed());
+          return;
+        }
+
+        bool resultDeleteAttendanceFromKids = await _kidsService
+            .hapusAbsenDocsAnak(data.kidId!, data.attendanceId!);
+
+        if (!resultDeleteAttendanceFromKids) {
+          emit(DeleteAttendanceChildByServiceFailed());
+          return;
+        }
+
+        bool resultDeleteAttendanceFromGlobal = await _globalAttendanceService
+            .hapusAbsenDocsGlobalAttendance(data.attendanceId!);
+
+        if (!resultDeleteAttendanceFromGlobal) {
+          emit(DeleteAttendanceChildByServiceFailed());
+          return;
+        }
+
+        emit(DeleteAttendanceChildByServiceSuccess());
+      } catch (e) {
+        emit(ServicesError(e.toString()));
+      }
+    });
+  }
+}
+
 class GetServiceByIdBloc extends Bloc<ServicesEvent, ServicesState> {
   GetServiceByIdBloc() : super(ServicesInitial()) {
-    on<InitServiceByIDvent>((data, emit) async {
+    on<InitServiceByIDEvent>((data, emit) async {
       emit(ServicesInitial());
     });
     on<FetchServiceByIDEvent>((data, emit) async {

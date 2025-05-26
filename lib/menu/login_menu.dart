@@ -67,7 +67,7 @@ class LoginMenu extends StatelessWidget {
                                   horizontal: screenWidth < 1000 ? 30 : 40,
                                   vertical: screenWidth < 1000 ? 35 : 45,
                                 ),
-                                width: screenWidth < 1000 ? 325 : 375,
+                                width: screenWidth < 1000 ? 275 : 375,
                                 decoration: BoxDecoration(
                                   color: black,
                                   borderRadius: BorderRadius.circular(2),
@@ -80,7 +80,8 @@ class LoginMenu extends StatelessWidget {
                                       child: Text(
                                         "Shalom,",
                                         style: GoogleFonts.montserrat(
-                                          fontSize: 18,
+                                          fontSize:
+                                              screenWidth < 1000 ? 16 : 18,
                                           fontWeight: FontWeight.w300,
                                           color: white,
                                         ),
@@ -91,14 +92,16 @@ class LoginMenu extends StatelessWidget {
                                       child: Text(
                                         "Masuk",
                                         style: GoogleFonts.montserrat(
-                                          fontSize: 32,
+                                          fontSize:
+                                              screenWidth < 1000 ? 30 : 32,
                                           fontWeight: FontWeight.w700,
                                           color: white,
                                         ),
                                       ),
                                     ),
                                     const SizedBox(height: 40),
-                                    _fieldFormInputUsername("Nama akun", false),
+                                    _fieldFormInputUsername(
+                                        context, "Nama akun", false),
                                     const SizedBox(height: 15),
                                     _fieldFormInputPassword(context),
                                     const SizedBox(height: 35),
@@ -128,15 +131,21 @@ class LoginMenu extends StatelessWidget {
                                             Text(
                                               "Masuk",
                                               style: GoogleFonts.montserrat(
-                                                fontSize: 16,
+                                                fontSize: screenWidth < 1000
+                                                    ? 14
+                                                    : 16,
                                                 fontWeight: FontWeight.w600,
                                                 color: white,
                                               ),
                                             ),
-                                            const SizedBox(width: 8),
+                                            SizedBox(
+                                              width: screenWidth < 1000 ? 4 : 6,
+                                            ),
                                             Icon(
                                               Icons.arrow_forward_rounded,
                                               color: white,
+                                              size:
+                                                  screenWidth < 1000 ? 18 : 22,
                                             ),
                                           ],
                                         ),
@@ -149,7 +158,7 @@ class LoginMenu extends StatelessWidget {
                               Text(
                                 "@2025. BKR MODERNLAND",
                                 style: GoogleFonts.montserrat(
-                                  fontSize: 12,
+                                  fontSize: screenWidth < 1000 ? 10 : 12,
                                   fontWeight: FontWeight.w500,
                                   color: white,
                                 ),
@@ -172,20 +181,22 @@ class LoginMenu extends StatelessWidget {
     );
   }
 
-  Widget _fieldFormInputUsername(String hintText, bool isPassword) {
+  Widget _fieldFormInputUsername(
+      BuildContext context, String hintText, bool isPassword) {
+    final double screenWidth = MediaQuery.of(context).size.width;
     return TextField(
       controller: emailController,
       obscureText: isPassword,
       cursorColor: black,
       style: GoogleFonts.montserrat(
-        fontSize: 16,
+        fontSize: screenWidth < 1000 ? 14 : 16,
         fontWeight: FontWeight.w400,
         color: black,
       ),
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: GoogleFonts.montserrat(
-          fontSize: 16,
+          fontSize: screenWidth < 1000 ? 14 : 16,
           fontWeight: FontWeight.w400,
           color: textFieldGrey,
         ),
@@ -212,6 +223,7 @@ class LoginMenu extends StatelessWidget {
   }
 
   Widget _fieldFormInputPassword(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
     return BlocBuilder<ObscurePasswordBloc, AuthState>(
       builder: (context, state) {
         if (state is ObscurePasswordShow) {
@@ -220,14 +232,14 @@ class LoginMenu extends StatelessWidget {
             obscureText: false,
             cursorColor: black,
             style: GoogleFonts.montserrat(
-              fontSize: 16,
+              fontSize: screenWidth < 1000 ? 14 : 16,
               fontWeight: FontWeight.w400,
               color: black,
             ),
             decoration: InputDecoration(
               hintText: "Sandi",
               hintStyle: GoogleFonts.montserrat(
-                fontSize: 16,
+                fontSize: screenWidth < 1000 ? 14 : 16,
                 fontWeight: FontWeight.w400,
                 color: lightGrey,
               ),
@@ -238,7 +250,7 @@ class LoginMenu extends StatelessWidget {
                 icon: Icon(
                   Icons.visibility,
                   color: textFieldGrey,
-                  size: 20,
+                  size: screenWidth < 1000 ? 18 : 20,
                 ),
                 onPressed: () {
                   context.read<ObscurePasswordBloc>().add(
@@ -270,14 +282,14 @@ class LoginMenu extends StatelessWidget {
             obscureText: true,
             cursorColor: black,
             style: GoogleFonts.montserrat(
-              fontSize: 16,
+              fontSize: screenWidth < 1000 ? 14 : 16,
               fontWeight: FontWeight.w400,
               color: black,
             ),
             decoration: InputDecoration(
               hintText: "Sandi",
               hintStyle: GoogleFonts.montserrat(
-                fontSize: 16,
+                fontSize: screenWidth < 1000 ? 14 : 16,
                 fontWeight: FontWeight.w400,
                 color: textFieldGrey,
               ),
@@ -288,7 +300,7 @@ class LoginMenu extends StatelessWidget {
                 icon: Icon(
                   Icons.visibility_off,
                   color: textFieldGrey,
-                  size: 20,
+                  size: screenWidth < 1000 ? 18 : 16,
                 ),
                 onPressed: () {
                   context.read<ObscurePasswordBloc>().add(

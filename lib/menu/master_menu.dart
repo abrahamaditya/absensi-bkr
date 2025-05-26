@@ -10,11 +10,11 @@ import 'package:absensi_bkr/bloc/kids_bloc/kids_bloc.dart';
 import 'package:absensi_bkr/bloc/auth_bloc/auth_event.dart';
 import 'package:absensi_bkr/bloc/kids_bloc/kids_event.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:absensi_bkr/widget/sidebar_web_widget.dart';
 import 'package:absensi_bkr/bloc/today_bloc/today_bloc.dart';
+import 'package:absensi_bkr/widget/topbar_mobile_widget.dart';
 import 'package:absensi_bkr/bloc/today_bloc/today_event.dart';
 import 'package:absensi_bkr/submenu/anak_detail_submenu.dart';
-import 'package:absensi_bkr/widget/sidebar_mobile_widget.dart';
-import 'package:absensi_bkr/widget/sidebar_normal_widget.dart';
 import 'package:absensi_bkr/submenu/anak_ubah_data_submenu.dart';
 import 'package:absensi_bkr/submenu/kegiatan_detail_submenu.dart';
 import 'package:absensi_bkr/bloc/services_bloc/services_bloc.dart';
@@ -80,6 +80,10 @@ class MasterMenu extends StatelessWidget {
           create: (_) => TakeAttendanceBloc()..add(InitTakeAttendanceEvent()),
         ),
         BlocProvider(
+          create: (_) => DeleteAttendanceChildbyServiceBloc()
+            ..add(InitDeleteAttendanceChildbyServiceEvent()),
+        ),
+        BlocProvider(
           create: (_) => CameraScanAbsenBloc()
             ..add(FetchCameraScanAbsenEvent(isOpened: false)),
         ),
@@ -87,7 +91,7 @@ class MasterMenu extends StatelessWidget {
           create: (_) => GetKidsByIdScanQRBloc()..add(InitIDScanQREvent()),
         ),
         BlocProvider(
-          create: (_) => GetServiceByIdBloc()..add(InitServiceByIDvent()),
+          create: (_) => GetServiceByIdBloc()..add(InitServiceByIDEvent()),
         ),
         BlocProvider(
           create: (_) => GetServicesBloc()
@@ -117,6 +121,9 @@ class MasterMenu extends StatelessWidget {
           create: (_) => AuthBloc()..add(InitLoginEvent()),
         ),
         BlocProvider(
+          create: (_) => TabToggleSwitchBloc()..add(InitTabToggleEvent()),
+        ),
+        BlocProvider(
           create: (_) => TodayBloc()
             ..add(FetchTodayEvent(
                 date: DateTime.now().toIso8601String().split('T')[0])),
@@ -128,7 +135,28 @@ class MasterMenu extends StatelessWidget {
                 body: BlocBuilder<SidebarMenuBloc, SidebarMenuState>(
                   builder: (context, state) {
                     if (state is SidebarMenuSuccess) {
-                      return sidebarMobileWidget(context, state);
+                      return SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            topbarMobileWidget(context, state),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                left: 20,
+                                right: 20,
+                                bottom: 20,
+                              ),
+                              child: ScreensView(
+                                context: context,
+                                menu: state.menu!,
+                                data: state.data,
+                                detailKegiatanPreviousMenu:
+                                    state.detailKegiatanPreviousMenu ?? "",
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
                     } else {
                       return const SizedBox.shrink();
                     }
@@ -142,7 +170,7 @@ class MasterMenu extends StatelessWidget {
                       return Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          sidebarNormalWidget(context, state),
+                          sidebarWebWidget(context, state),
                           Expanded(
                               child: ScreensView(
                             context: context,

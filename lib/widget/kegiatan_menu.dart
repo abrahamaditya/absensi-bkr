@@ -376,7 +376,7 @@ TableRow _barisTabel(BuildContext context, int index, Service service) {
     ),
     children: [
       _selTabel("$index.", isCenter: true),
-      _selTabel(service.name!),
+      _selTabel(service.name!, isCenter: true),
       _selTabel(service.time!),
       _selTabel(service.date!),
       _selTabel(service.attendance!.length.toString()),
@@ -430,7 +430,7 @@ TableRow _barisTabel(BuildContext context, int index, Service service) {
 
 Widget _selTabel(String text, {bool isCenter = false, Widget? action}) {
   return Container(
-    height: 45,
+    height: 50,
     alignment: Alignment.center,
     padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
     child: action ??
@@ -447,6 +447,7 @@ Widget _selTabel(String text, {bool isCenter = false, Widget? action}) {
 }
 
 Widget mobileLayout(BuildContext context) {
+  final double screenWidth = MediaQuery.of(context).size.width;
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -459,15 +460,15 @@ Widget mobileLayout(BuildContext context) {
               Text(
                 "Semua Kegiatan",
                 style: GoogleFonts.montserrat(
-                  fontSize: 22,
+                  fontSize: 20,
                   fontWeight: FontWeight.w800,
                   color: black,
                 ),
               ),
               Text(
-                "12 Januari 2025 - Hari Ini",
+                "Maret 2025 - Hari Ini",
                 style: GoogleFonts.montserrat(
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: FontWeight.w600,
                   color: black,
                 ),
@@ -494,25 +495,31 @@ Widget mobileLayout(BuildContext context) {
                   horizontal: 14,
                 ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.add,
-                    color: white,
-                    size: 12,
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    "Tambah Kegiatan",
-                    style: GoogleFonts.montserrat(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+              child: screenWidth < 430
+                  ? Icon(
+                      Icons.add,
                       color: white,
+                      size: 12,
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.add,
+                          color: white,
+                          size: 12,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          "Tambah Kegiatan",
+                          style: GoogleFonts.montserrat(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: white,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
             ),
           ),
         ],
@@ -556,7 +563,7 @@ Widget mobileLayout(BuildContext context) {
             );
           } else if (state is ServicesGetAllData) {
             return SizedBox(
-              height: MediaQuery.of(context).size.height - 250,
+              height: MediaQuery.of(context).size.height,
               child: GroupedListView<Service, String>(
                 elements: state.data,
                 groupBy: (Service element) {
@@ -587,7 +594,7 @@ Widget mobileLayout(BuildContext context) {
                       Text(
                         formatAwalanAngka(value),
                         style: GoogleFonts.montserrat(
-                          fontSize: 14,
+                          fontSize: 12,
                           fontWeight: FontWeight.w700,
                           color: black,
                         ),
@@ -621,17 +628,19 @@ Widget mobileLayout(BuildContext context) {
               ),
             );
           } else if (state is ServicesGetAllDataIsEmpty) {
-            return SizedBox(
-              height: MediaQuery.of(context).size.height / 2,
-              child: Center(
-                child: Text(
-                  "Data kegiatan tidak ditemukan.",
-                  style: GoogleFonts.montserrat(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: lightGrey,
+            return Center(
+              child: Column(
+                children: [
+                  const SizedBox(height: 60),
+                  Text(
+                    "Data kegiatan tidak ditemukan.",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: lightGrey,
+                    ),
                   ),
-                ),
+                ],
               ),
             );
           } else {
@@ -725,7 +734,7 @@ Widget _kartuMobile({
                         : isFinished
                             ? darkGrey
                             : white,
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -737,11 +746,11 @@ Widget _kartuMobile({
                         : isFinished
                             ? darkGrey
                             : white,
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
                 if (isNext == false) ...[
                   Row(
                     spacing: 3,
@@ -755,7 +764,7 @@ Widget _kartuMobile({
                         "${data.attendance!.length} Anak Hadir",
                         style: GoogleFonts.montserrat(
                           color: isFinished || isNext ? darkGrey : white,
-                          fontSize: 12,
+                          fontSize: 10,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -767,7 +776,7 @@ Widget _kartuMobile({
             Icon(
               Icons.arrow_forward_ios,
               color: isFinished == false ? (isNext ? purple : white) : darkGrey,
-              size: 16,
+              size: 14,
             ),
           ],
         ),
