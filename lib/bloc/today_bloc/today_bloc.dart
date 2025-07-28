@@ -34,7 +34,7 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
             final DateTime serviceTime =
                 DateTime.parse('${service.date} ${service.time}');
             return now.difference(serviceTime).inMinutes >
-                89; // Lewat lebih dari 1 jam 30 menit
+                104; // Lewat lebih dari 1 jam 45 menit
           }).toList();
 
           final upcomingServices = servicesToday.where((service) {
@@ -49,7 +49,7 @@ class TodayBloc extends Bloc<TodayEvent, TodayState> {
                 DateTime.parse('${service.date} ${service.time}');
             final int differenceInMinutes =
                 now.difference(serviceTime).inMinutes;
-            return differenceInMinutes <= 89 &&
+            return differenceInMinutes <= 104 &&
                 differenceInMinutes >= -29; // Live rentang waktu
           }).toList();
 

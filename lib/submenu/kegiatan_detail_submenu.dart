@@ -1876,7 +1876,8 @@ Widget mobileLayout(
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ScanMobileMenu(
+                            builder: (contextPopup) => ScanMobileMenu(
+                              parentContext: context,
                               serviceData: serviceData,
                             ),
                           ),
@@ -2244,7 +2245,7 @@ Widget mobileLayout(
                             ),
                           ),
                           baseStyle: GoogleFonts.montserrat(
-                            fontSize: 12,
+                            fontSize: 10,
                             fontWeight: FontWeight.w400,
                             color: black,
                           ),
@@ -2269,7 +2270,7 @@ Widget mobileLayout(
                           },
                           searchFieldProps: TextFieldProps(
                             style: GoogleFonts.montserrat(
-                              fontSize: 12,
+                              fontSize: 10,
                               fontWeight: FontWeight.w400,
                               color: black,
                             ),

@@ -9,7 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 void main() async {
   await initializeDateFormatting('id_ID', null);
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    options: await DefaultFirebaseOptions.currentPlatform,
   );
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: false,

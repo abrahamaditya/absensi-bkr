@@ -48,7 +48,7 @@ class LoginMenu extends StatelessWidget {
                       Container(
                         decoration: const BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage('asset/image/backround-raw.JPG'),
+                            image: AssetImage('asset/image/backround-low.jpg'),
                             fit: BoxFit.cover,
                           ),
                         ),

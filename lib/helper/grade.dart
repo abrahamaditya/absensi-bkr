@@ -4,11 +4,11 @@ List<String> kelasOptions = [
   "Balita",
   "TK A",
   "TK B",
-  "Kelas 1",
-  "Kelas 2",
-  "Kelas 3",
-  "Kelas 4",
-  "Kelas 5",
-  "Kelas 6",
-  "SMP"
+  "1 SD",
+  "2 SD",
+  "3 SD",
+  "4 SD",
+  "5 SD",
+  "6 SD",
+  "1 SMP"
 ];

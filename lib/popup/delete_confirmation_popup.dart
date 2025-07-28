@@ -112,7 +112,7 @@ class DeleteConfirmationPopup extends StatelessWidget {
                               kidId: attendanceData.kidsId,
                             ));
 
-                        Future.delayed(const Duration(milliseconds: 50), () {
+                        Future.delayed(const Duration(milliseconds: 400), () {
                           // ignore: use_build_context_synchronously
                           parentContext.read<GetServiceByIdBloc>().add(
                               FetchServiceByIDEvent(serviceId: serviceData.id));
@@ -137,6 +137,7 @@ class DeleteConfirmationPopup extends StatelessWidget {
                           ),
                         );
                         Navigator.of(parentContext).pop(false);
+                        // html.window.location.reload();
                       } catch (e) {
                         ScaffoldMessenger.of(parentContext).showSnackBar(
                           SnackBar(
