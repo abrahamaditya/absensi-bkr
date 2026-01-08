@@ -9,7 +9,7 @@ import 'package:absensi_bkr/helper/padding.dart';
 import 'package:absensi_bkr/menu/master_menu.dart';
 import 'package:absensi_bkr/helper/format_date.dart';
 import 'package:absensi_bkr/model/service_model.dart';
-import 'package:number_pagination/number_pagination.dart';
+import 'package:absensi_bkr/component/dynamic_pagination.dart';
 import 'package:absensi_bkr/bloc/services_bloc/services_bloc.dart';
 import 'package:absensi_bkr/bloc/services_bloc/services_event.dart';
 import 'package:absensi_bkr/bloc/services_bloc/services_state.dart';
@@ -217,54 +217,21 @@ Widget semuaKegiatanWidget(BuildContext context) {
                                         selectedPaginationNumberOfAllKegiatanPage,
                                         false),
                                 SizedBox(height: 20),
-                                NumberPagination(
+                                DynamicPagination(
+                                  totalPages: state.totalPage,
+                                  currentPage:
+                                      selectedPaginationNumberOfAllKegiatanPage,
                                   onPageChanged: (int pageNumber) {
                                     selectedPaginationNumberOfAllKegiatanPage =
                                         pageNumber;
                                     context.read<GetServicesBloc>().add(
                                           FetchServicesEvent(
-                                            page:
-                                                selectedPaginationNumberOfAllKegiatanPage,
+                                            page: pageNumber,
                                             searchNameQuery:
                                                 namaKegiatanController.text,
                                           ),
                                         );
                                   },
-                                  visiblePagesCount: state.totalPage,
-                                  totalPages: state.totalPage,
-                                  currentPage:
-                                      selectedPaginationNumberOfAllKegiatanPage,
-                                  selectedButtonColor: purple,
-                                  fontFamily: "Montserrat",
-                                  fontSize: 14,
-                                  buttonRadius: 2,
-                                  buttonElevation: 0,
-                                  betweenNumberButtonSpacing: 1,
-                                  controlButtonSize: Size(30, 34),
-                                  numberButtonSize: Size(30, 34),
-                                  buttonSelectedBorderColor: purple,
-                                  buttonUnSelectedBorderColor: lightGrey,
-                                  controlButtonColor: lightPurple,
-                                  firstPageIcon: Icon(
-                                    Icons.keyboard_double_arrow_left,
-                                    size: 15,
-                                    color: black,
-                                  ),
-                                  lastPageIcon: Icon(
-                                    Icons.keyboard_double_arrow_right,
-                                    size: 15,
-                                    color: black,
-                                  ),
-                                  nextPageIcon: Icon(
-                                    Icons.keyboard_arrow_right,
-                                    size: 15,
-                                    color: black,
-                                  ),
-                                  previousPageIcon: Icon(
-                                    Icons.keyboard_arrow_left,
-                                    size: 15,
-                                    color: black,
-                                  ),
                                 ),
                               ],
                             );
@@ -272,7 +239,7 @@ Widget semuaKegiatanWidget(BuildContext context) {
                             if (isDataActuallyThere == false) {
                               return Center(
                                 child: Text(
-                                  "Data kegiatan tidak ditemukan.",
+                                  "Data kegiatan belum ditambahkan",
                                   style: GoogleFonts.montserrat(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -283,7 +250,7 @@ Widget semuaKegiatanWidget(BuildContext context) {
                             } else {
                               return Center(
                                 child: Text(
-                                  "Data kegiatan tidak ditemukan.",
+                                  "Data kegiatan belum ditambahkan",
                                   style: GoogleFonts.montserrat(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -633,7 +600,7 @@ Widget mobileLayout(BuildContext context) {
                 children: [
                   const SizedBox(height: 60),
                   Text(
-                    "Data kegiatan tidak ditemukan.",
+                    "Data kegiatan belum ditambahkan",
                     style: GoogleFonts.montserrat(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,

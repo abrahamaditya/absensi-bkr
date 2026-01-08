@@ -43,6 +43,12 @@ Kid selected = Kid(
   address: null,
   grade: null,
   attendance: null,
+  school: null,
+  isDataComplete: null,
+  isDelivered: null,
+  isPrinted: null,
+  updatedAt: null,
+  createdAt: null,
 );
 
 final dropDownKey = GlobalKey<DropdownSearchState>();
@@ -882,7 +888,7 @@ Widget detailKegiatanSubmenu(
                                                   style: GoogleFonts.montserrat(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w600,
-                                                    color: orange,
+                                                    color: darkGrey,
                                                   ),
                                                 ),
                                               ),
@@ -2262,7 +2268,7 @@ Widget mobileLayout(
                                   style: GoogleFonts.montserrat(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
-                                    color: orange,
+                                    color: darkGrey,
                                   ),
                                 ),
                               ),

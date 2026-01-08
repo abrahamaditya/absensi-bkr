@@ -18,5 +18,5 @@ class FetchTodayEvent extends TodayEvent {
   final String date;
   FetchTodayEvent({required this.date});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [date];
 }

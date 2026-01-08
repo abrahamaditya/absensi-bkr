@@ -67,7 +67,7 @@ class LoginMenu extends StatelessWidget {
                                   horizontal: screenWidth < 1000 ? 30 : 40,
                                   vertical: screenWidth < 1000 ? 35 : 45,
                                 ),
-                                width: screenWidth < 1000 ? 275 : 375,
+                                width: screenWidth < 1000 ? 310 : 375,
                                 decoration: BoxDecoration(
                                   color: black,
                                   borderRadius: BorderRadius.circular(2),
@@ -156,7 +156,7 @@ class LoginMenu extends StatelessWidget {
                               ),
                               const SizedBox(height: 60),
                               Text(
-                                "@2025. BKR MODERNLAND",
+                                "@2026. BKR MODERNLAND",
                                 style: GoogleFonts.montserrat(
                                   fontSize: screenWidth < 1000 ? 10 : 12,
                                   fontWeight: FontWeight.w500,
@@ -216,7 +216,7 @@ class LoginMenu extends StatelessWidget {
         ),
         contentPadding: const EdgeInsets.symmetric(
           vertical: 18,
-          horizontal: 20,
+          horizontal: 15,
         ),
       ),
     );
@@ -250,7 +250,7 @@ class LoginMenu extends StatelessWidget {
                 icon: Icon(
                   Icons.visibility,
                   color: textFieldGrey,
-                  size: screenWidth < 1000 ? 18 : 20,
+                  size: screenWidth < 1000 ? 18 : 15,
                 ),
                 onPressed: () {
                   context.read<ObscurePasswordBloc>().add(
@@ -272,7 +272,7 @@ class LoginMenu extends StatelessWidget {
               ),
               contentPadding: const EdgeInsets.symmetric(
                 vertical: 18,
-                horizontal: 20,
+                horizontal: 15,
               ),
             ),
           );
@@ -322,7 +322,7 @@ class LoginMenu extends StatelessWidget {
               ),
               contentPadding: const EdgeInsets.symmetric(
                 vertical: 18,
-                horizontal: 20,
+                horizontal: 15,
               ),
             ),
             onSubmitted: (value) {

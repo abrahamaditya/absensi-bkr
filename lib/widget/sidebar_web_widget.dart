@@ -1,3 +1,4 @@
+import 'package:web/web.dart' as web;
 import 'package:flutter/material.dart';
 import 'package:absensi_bkr/helper/color.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +37,7 @@ Widget sidebarWebWidget(BuildContext context, SidebarMenuSuccess state) {
             padding: const EdgeInsets.only(left: 5),
             child: InkWell(
               onTap: () {
-                Navigator.pushReplacementNamed(context, '/');
+                web.window.location.assign('/');
               },
               child: Row(
                 children: [

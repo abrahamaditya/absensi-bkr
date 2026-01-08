@@ -20,7 +20,7 @@ class TodayGetData extends TodayState {
   const TodayGetData(
       this.pastData, this.liveData, this.upcomingData, this.date);
   @override
-  List<Object> get props => [pastData, upcomingData];
+  List<Object> get props => [pastData, liveData, upcomingData, date];
 }
 
 class TodayGetDataIsEmpty extends TodayState {

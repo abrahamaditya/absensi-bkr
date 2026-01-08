@@ -254,13 +254,48 @@ Widget detailAnakSubmenu(BuildContext context, dynamic data) {
                           _infoDetailAnak("ID", kidsData.id!, false),
                           _infoDetailAnak(
                               "Tanggal Lahir",
-                              formatJadiDDMMMMYYYYIndonesia(kidsData.birthdate),
+                              kidsData.birthdate == null ||
+                                      kidsData.birthdate!.isEmpty
+                                  ? null
+                                  : formatJadiDDMMMMYYYYIndonesia(
+                                      kidsData.birthdate),
                               false),
                           _infoDetailAnak("Alamat", kidsData.address, false),
                           _infoDetailAnak("No. Hp", kidsData.mobile, false),
                           _infoDetailAnak(
                               "Nama Orang Tua", kidsData.parentName, false),
+                          _infoDetailAnak("Sekolah", kidsData.school, false),
                           _infoDetailAnak("Kelas", kidsData.grade, false),
+                          const SizedBox(height: 3),
+                          Divider(
+                            color: lightGrey,
+                            thickness: 1,
+                          ),
+                          const SizedBox(height: 12),
+                          _infoDetailStatusDataAnak(
+                            context: context,
+                            label: "Kelengkapan Data",
+                            value: kidsData.isDataComplete.toString(),
+                            kidsData: kidsData,
+                            isMobile: false,
+                          ),
+                          _infoDetailStatusDataAnak(
+                            context: context,
+                            label: "Status Cetak Badge",
+                            value: kidsData.isPrinted.toString(),
+                            kidsData: kidsData,
+                            isMobile: false,
+                          ),
+                          Visibility(
+                            visible: kidsData.isPrinted == false ? false : true,
+                            child: _infoDetailStatusDataAnak(
+                              context: context,
+                              label: "Status Pengambilan Badge",
+                              value: kidsData.isDelivered.toString(),
+                              kidsData: kidsData,
+                              isMobile: false,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 5),
@@ -422,12 +457,12 @@ Widget _selTabel(String text, bool isMobile, {bool isCenter = false}) {
 
 Widget _infoDetailAnak(String label, String? value, bool isMobile) {
   Map<int, TableColumnWidth>? smallScreen = {
-    0: FixedColumnWidth(125), // Lebar kolom pertama sesuai teks
+    0: FixedColumnWidth(150), // Lebar kolom pertama sesuai teks
     1: FixedColumnWidth(10), // Lebar kolom ":" tetap
     2: FlexColumnWidth(), // Kolom terakhir fleksibel
   };
   Map<int, TableColumnWidth>? normalScreen = {
-    0: FixedColumnWidth(175), // Lebar kolom pertama sesuai teks
+    0: FixedColumnWidth(250), // Lebar kolom pertama sesuai teks
     1: FixedColumnWidth(10), // Lebar kolom ":" tetap
     2: FlexColumnWidth(), // Kolom terakhir fleksibel
   };
@@ -458,7 +493,7 @@ Widget _infoDetailAnak(String label, String? value, bool isMobile) {
               ),
             ),
             Text(
-              value ?? "-",
+              (value == null || value.isEmpty) ? "-" : value,
               style: GoogleFonts.montserrat(
                 fontSize: isMobile == true ? 12 : 16,
                 fontWeight: FontWeight.w600,
@@ -469,6 +504,244 @@ Widget _infoDetailAnak(String label, String? value, bool isMobile) {
         ),
       ],
     ),
+  );
+}
+
+Widget _infoDetailStatusDataAnak({
+  required BuildContext context,
+  required String label,
+  required String? value,
+  required bool isMobile,
+  required Kid kidsData,
+}) {
+  return StatefulBuilder(
+    builder: (BuildContext context, StateSetter setState) {
+      bool isTrue = value?.toLowerCase() == "true";
+      String displayValue = "-";
+      Color bgColor = white;
+      Color labelTextColor = black;
+
+      // 1. Logika Khusus Kelengkapan Data
+      if (label == "Kelengkapan Data") {
+        if (isTrue) {
+          // Cek apakah field wajib (selain sekolah) terisi
+          bool isOtherFieldsFilled =
+              (kidsData.id?.trim().isNotEmpty ?? false) &&
+                  (kidsData.birthdate?.trim().isNotEmpty ?? false) &&
+                  (kidsData.address?.trim().isNotEmpty ?? false) &&
+                  (kidsData.mobile?.trim().isNotEmpty ?? false) &&
+                  (kidsData.parentName?.trim().isNotEmpty ?? false) &&
+                  (kidsData.grade?.trim().isNotEmpty ?? false);
+
+          bool isSchoolFilled = kidsData.school?.trim().isNotEmpty ?? false;
+
+          if (isOtherFieldsFilled && isSchoolFilled) {
+            displayValue = "Data Lengkap";
+          } else if (isOtherFieldsFilled && !isSchoolFilled) {
+            displayValue = "Data Cukup Lengkap";
+          } else {
+            displayValue = "Data Lengkap"; // Fallback default jika true
+          }
+          bgColor = Colors.green.shade100;
+          labelTextColor = Colors.green.shade800;
+        } else {
+          displayValue = "Data Tidak Lengkap";
+          bgColor = Colors.red.shade100;
+          labelTextColor = Colors.red.shade800;
+        }
+      }
+      // 2. Status Cetak Badge (Sekarang Statis / Tidak bisa diubah)
+      else if (label == "Status Cetak Badge") {
+        displayValue = isTrue ? "Sudah Dicetak" : "Belum Dicetak";
+        bgColor = isTrue ? Colors.blue.shade100 : Colors.orange.shade100;
+        labelTextColor = isTrue ? Colors.blue.shade800 : Colors.orange.shade800;
+      }
+      // 3. Status Pengambilan Badge (Tetap Dropdown/Editable)
+      else if (label == "Status Pengambilan Badge") {
+        displayValue = isTrue ? "Sudah Diambil" : "Belum Diambil";
+        bgColor = isTrue ? Colors.teal.shade100 : Colors.grey.shade300;
+        labelTextColor = isTrue ? Colors.teal.shade800 : Colors.black54;
+      }
+
+      // Definisi mana yang boleh di-edit (Hanya Status Pengambilan)
+      bool isEditable = label == "Status Pengambilan Badge";
+
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Table(
+          columnWidths: isMobile
+              ? {
+                  0: FixedColumnWidth(150),
+                  1: FixedColumnWidth(10),
+                  2: FlexColumnWidth()
+                }
+              : {
+                  0: FixedColumnWidth(250),
+                  1: FixedColumnWidth(10),
+                  2: FlexColumnWidth()
+                },
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          children: [
+            TableRow(
+              children: [
+                Text(label,
+                    style: GoogleFonts.montserrat(
+                        fontSize: isMobile ? 12 : 16, color: black)),
+                Text(":",
+                    style: GoogleFonts.montserrat(
+                        fontSize: isMobile ? 12 : 16,
+                        fontWeight: FontWeight.bold)),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: isEditable
+                      ? Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: bgColor,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: value,
+                              isDense: true,
+                              icon: Icon(Icons.arrow_drop_down,
+                                  color: labelTextColor, size: 20),
+                              selectedItemBuilder: (BuildContext context) {
+                                return ["true", "false"]
+                                    .map<Widget>((String item) {
+                                  return Container(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      item == "true"
+                                          ? "Sudah Diambil"
+                                          : "Belum Diambil",
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: isMobile ? 11 : 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: labelTextColor,
+                                      ),
+                                    ),
+                                  );
+                                }).toList();
+                              },
+                              items: [
+                                DropdownMenuItem(
+                                  value: "true",
+                                  child: Text(
+                                    "Sudah Diambil",
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: isMobile ? 11 : 14,
+                                      color: black,
+                                    ),
+                                  ),
+                                ),
+                                DropdownMenuItem(
+                                  value: "false",
+                                  child: Text(
+                                    "Belum Diambil",
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: isMobile ? 11 : 14,
+                                      color: black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                              onChanged: (newValue) {
+                                if (newValue != null && newValue != value) {
+                                  setState(() {
+                                    value = newValue;
+                                  });
+
+                                  kidsData.isDelivered = newValue == "true";
+
+                                  try {
+                                    context.read<UpdateKidsBloc>().add(
+                                          UpdateKidsEvent(
+                                            id: kidsData.id!,
+                                            updatedData: {
+                                              'name': kidsData.name,
+                                              'birthDate': kidsData.birthdate,
+                                              'address': kidsData.address,
+                                              'mobile': kidsData.mobile,
+                                              'parents': kidsData.parentName,
+                                              'school': kidsData.school,
+                                              'grade': kidsData.grade,
+                                              'isDataComplete':
+                                                  kidsData.isDataComplete,
+                                              'isPrinted': kidsData.isPrinted,
+                                              'isDelivered':
+                                                  kidsData.isDelivered,
+                                            },
+                                          ),
+                                        );
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        backgroundColor: green,
+                                        duration: Duration(seconds: 3),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 10),
+                                        showCloseIcon: true,
+                                        closeIconColor: white,
+                                        content: Text(
+                                          "Data berhasil diperbaharui!",
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                            color: white,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        backgroundColor: red,
+                                        duration: Duration(seconds: 3),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 10),
+                                        showCloseIcon: true,
+                                        closeIconColor: white,
+                                        content: Text(
+                                          "Gagal memperbaharui data anak",
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                            color: white,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }
+                              },
+                            ),
+                          ),
+                        )
+                      : Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: bgColor,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: Text(
+                            displayValue,
+                            style: GoogleFonts.montserrat(
+                              fontSize: isMobile ? 11 : 14,
+                              fontWeight: FontWeight.w600,
+                              color: labelTextColor,
+                            ),
+                          ),
+                        ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    },
   );
 }
 
@@ -530,6 +803,7 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
           _infoDetailAnak("Alamat", kidsData.address, true),
           _infoDetailAnak("No. Hp", kidsData.mobile, true),
           _infoDetailAnak("Nama Orang Tua", kidsData.parentName, true),
+          _infoDetailAnak("Sekolah", kidsData.school, true),
           _infoDetailAnak("Kelas", kidsData.grade, true),
           const SizedBox(height: 15),
           Row(
@@ -601,9 +875,39 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
               ),
             ],
           ),
+          const SizedBox(height: 12),
+          Divider(
+            color: lightGrey,
+            thickness: 1,
+          ),
+          const SizedBox(height: 12),
+          _infoDetailStatusDataAnak(
+            context: context,
+            label: "Kelengkapan Data",
+            value: kidsData.isDataComplete.toString(),
+            kidsData: kidsData,
+            isMobile: true,
+          ),
+          _infoDetailStatusDataAnak(
+            context: context,
+            label: "Status Cetak Badge",
+            value: kidsData.isPrinted.toString(),
+            kidsData: kidsData,
+            isMobile: true,
+          ),
+          Visibility(
+            visible: kidsData.isPrinted == false ? false : true,
+            child: _infoDetailStatusDataAnak(
+              context: context,
+              label: "Status Pengambilan Badge",
+              value: kidsData.isDelivered.toString(),
+              kidsData: kidsData,
+              isMobile: true,
+            ),
+          ),
         ],
       ),
-      const SizedBox(height: 15),
+      const SizedBox(height: 5),
       Divider(
         color: lightGrey,
         thickness: 1,

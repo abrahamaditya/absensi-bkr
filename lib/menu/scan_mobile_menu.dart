@@ -80,6 +80,7 @@ class ScanMobileMenu extends StatelessWidget {
               SizedBox(
                 height: MediaQuery.of(context).size.height,
                 child: SingleChildScrollView(
+                  physics: const NeverScrollableScrollPhysics(),
                   child: Padding(
                     padding: EdgeInsets.only(
                       top: 20,

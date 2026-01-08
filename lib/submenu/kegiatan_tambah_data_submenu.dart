@@ -202,6 +202,14 @@ Widget kegiatanTambahDataSubmenu(BuildContext context) {
                                   .read<CreateServicesBloc>()
                                   .add(CreateServicesEvent(newData: newData));
 
+                              newData = {};
+                              idController = "";
+                              kegiatanController = "Pilih Kegiatan";
+                              selectedKegiatan = "Pilih Kegiatan";
+                              tanggalKegiatanController.clear();
+                              waktuKegiatanController.clear();
+                              lainnyaController.clear();
+
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   backgroundColor: green,
@@ -357,14 +365,29 @@ Widget _fieldDropdownFormWaktu(
           TimeOfDay? selectedTime = await showTimePicker(
             context: context,
             initialTime: TimeOfDay.now(),
+            initialEntryMode: TimePickerEntryMode.input,
             confirmText: "Pilih",
             cancelText: "Batal",
             helpText: "Pilih Waktu Kegiatan",
             builder: (context, childWidget) {
-              return MediaQuery(
-                data: MediaQuery.of(context)
-                    .copyWith(alwaysUse24HourFormat: true),
-                child: childWidget!,
+              return Theme(
+                data: Theme.of(context).copyWith(
+                  colorScheme: ColorScheme.light(
+                    primary: purple,
+                    onPrimary: white,
+                    onSurface: black,
+                  ),
+                  textButtonTheme: TextButtonThemeData(
+                    style: TextButton.styleFrom(
+                      foregroundColor: purple,
+                    ),
+                  ),
+                ),
+                child: MediaQuery(
+                  data: MediaQuery.of(context)
+                      .copyWith(alwaysUse24HourFormat: true),
+                  child: childWidget!,
+                ),
               );
             },
           );
@@ -422,6 +445,7 @@ Widget _fieldDropdownFormKegiatan(
     "Ibadah Reguler II",
     "Ibadah Reguler III",
     "Ibadah Reguler IV",
+    "Ibadah Reguler V",
     "English Service II",
     "English Service III",
     "Menara Doa",
@@ -522,9 +546,27 @@ Widget _fieldDatePickerTanggal(
             initialDate: DateTime.now(),
             firstDate: DateTime(2025),
             lastDate: DateTime(2030),
+            locale: const Locale("id", "ID"),
             cancelText: "Batal",
             confirmText: "Pilih",
-            helpText: "Pilih Tanggal",
+            helpText: "Pilih Tanggal Kegiatan",
+            builder: (context, child) {
+              return Theme(
+                data: Theme.of(context).copyWith(
+                  colorScheme: ColorScheme.light(
+                    primary: purple,
+                    onPrimary: white,
+                    onSurface: black,
+                  ),
+                  textButtonTheme: TextButtonThemeData(
+                    style: TextButton.styleFrom(
+                      foregroundColor: purple,
+                    ),
+                  ),
+                ),
+                child: child!,
+              );
+            },
           );
           if (selectedDate != null) {
             controller.text =

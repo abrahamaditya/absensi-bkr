@@ -6,7 +6,7 @@ class KeysService {
   Future<FirebaseOptions?> getKeys() async {
     try {
       final response = await http.get(
-        Uri.parse('https://bantenkidsrevival.org/middleware.php'),
+        Uri.parse('https://dev.bantenkidsrevival.org/middleware-prod.php'),
       );
 
       if (response.statusCode == 200) {

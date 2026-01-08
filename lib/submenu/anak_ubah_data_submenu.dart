@@ -5,6 +5,7 @@ import 'package:absensi_bkr/helper/color.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:absensi_bkr/model/kid_model.dart';
+import 'package:absensi_bkr/helper/format_date.dart';
 import 'package:absensi_bkr/bloc/kids_bloc/kids_bloc.dart';
 import 'package:absensi_bkr/bloc/kids_bloc/kids_event.dart';
 import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_bloc.dart';
@@ -12,6 +13,7 @@ import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_event.dart';
 
 String? kelasController;
 String? formattedDateForSubmit;
+bool isDataComplete = false;
 
 Widget anakUbahDataSubmenu(BuildContext context, dynamic data) {
   final kidsData = data as Kid;
@@ -22,10 +24,13 @@ Widget anakUbahDataSubmenu(BuildContext context, dynamic data) {
       TextEditingController(text: kidsData.birthdate);
   TextEditingController alamatController =
       TextEditingController(text: kidsData.address);
+  TextEditingController sekolahController =
+      TextEditingController(text: kidsData.school);
   TextEditingController noHpController =
       TextEditingController(text: kidsData.mobile);
   TextEditingController orangTuaController =
       TextEditingController(text: kidsData.parentName);
+
   kelasController = kidsData.grade;
 
   final double screenWidth = MediaQuery.of(context).size.width;
@@ -87,6 +92,7 @@ Widget anakUbahDataSubmenu(BuildContext context, dynamic data) {
                     const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
                           child: Column(
@@ -100,6 +106,9 @@ Widget anakUbahDataSubmenu(BuildContext context, dynamic data) {
                               const SizedBox(height: 18),
                               _fieldFormInputTeks(
                                   "Alamat", alamatController, false),
+                              const SizedBox(height: 18),
+                              _fieldDropdownFormKelas(
+                                  "Kelas", kelasController, false),
                             ],
                           ),
                         ),
@@ -115,8 +124,8 @@ Widget anakUbahDataSubmenu(BuildContext context, dynamic data) {
                               _fieldFormInputTeks(
                                   "Nama Orang Tua", orangTuaController, false),
                               const SizedBox(height: 18),
-                              _fieldDropdownFormKelas(
-                                  "Kelas", kelasController, false),
+                              _fieldFormInputTeks(
+                                  "Sekolah", sekolahController, false),
                             ],
                           ),
                         ),
@@ -157,12 +166,7 @@ Widget anakUbahDataSubmenu(BuildContext context, dynamic data) {
                         ElevatedButton(
                           onPressed: () async {
                             // Validasi
-                            if (namaController.text.isEmpty ||
-                                formattedDateForSubmit == null ||
-                                alamatController.text.isEmpty ||
-                                noHpController.text.isEmpty ||
-                                orangTuaController.text.isEmpty ||
-                                kelasController == "Pilih Kelas") {
+                            if (namaController.text.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   backgroundColor: red,
@@ -172,7 +176,7 @@ Widget anakUbahDataSubmenu(BuildContext context, dynamic data) {
                                   showCloseIcon: true,
                                   closeIconColor: white,
                                   content: Text(
-                                    "Pastikan semua data terisi dengan benar",
+                                    "Pastikan nama anak sudah terisi",
                                     style: GoogleFonts.montserrat(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
@@ -185,13 +189,31 @@ Widget anakUbahDataSubmenu(BuildContext context, dynamic data) {
                             }
 
                             // Validasi Berhasil
+
+                            if (namaController.text.isNotEmpty &&
+                                tanggalLahirController.text.isNotEmpty &&
+                                alamatController.text.isNotEmpty &&
+                                noHpController.text.isNotEmpty &&
+                                orangTuaController.text.isNotEmpty &&
+                                sekolahController.text.isNotEmpty &&
+                                kelasController != "Pilih Kelas") {
+                              isDataComplete = true;
+                            }
+
+                            if (kelasController == "Pilih Kelas") {
+                              kelasController = "";
+                            }
+
                             Map<String, dynamic> updatedData = {
                               'name': namaController.text,
                               'birthDate': formattedDateForSubmit,
                               'address': alamatController.text,
                               'mobile': noHpController.text,
                               'parents': orangTuaController.text,
+                              'school': sekolahController.text,
                               'grade': kelasController,
+                              'isDataComplete': isDataComplete,
+                              'updatedAt': ambilWaktuSekarang(),
                             };
 
                             // Ganti data anak dengan data yang telah diperbaharui (lokal) untuk kembali ke halaman detail
@@ -201,6 +223,8 @@ Widget anakUbahDataSubmenu(BuildContext context, dynamic data) {
                             kidsData.mobile = noHpController.text;
                             kidsData.parentName = orangTuaController.text;
                             kidsData.grade = kelasController;
+                            kidsData.school = sekolahController.text;
+                            kidsData.isDataComplete = isDataComplete;
 
                             try {
                               // Berhasil menambahkan data
@@ -359,7 +383,9 @@ Widget _fieldDropdownFormKelas(
       ),
       const SizedBox(height: 6),
       DropdownButtonFormField<String>(
-        value: selectedKelas ?? "Pilih Kelas",
+        value: (selectedKelas != null && selectedKelas.isNotEmpty)
+            ? selectedKelas
+            : "Pilih Kelas",
         decoration: InputDecoration(
           hintText: 'Pilih $labelText',
           hintStyle: GoogleFonts.montserrat(
@@ -400,10 +426,10 @@ Widget _fieldDropdownFormKelas(
                 ))
             .toList(),
         onChanged: (value) {
-          kelasController = value ?? selectedKelas;
+          kelasController = value;
         },
         onSaved: (newValue) {
-          kelasController = newValue ?? selectedKelas;
+          kelasController = newValue;
         },
       ),
     ],
@@ -442,9 +468,27 @@ Widget _fieldDatePickerTanggal(String labelText,
             initialDate: DateTime.now(),
             firstDate: DateTime(2000),
             lastDate: DateTime.now(),
+            locale: const Locale("id", "ID"),
             cancelText: "Batal",
             confirmText: "Pilih",
-            helpText: "Pilih Tanggal",
+            helpText: "Pilih Tanggal Lahir",
+            builder: (context, child) {
+              return Theme(
+                data: Theme.of(context).copyWith(
+                  colorScheme: ColorScheme.light(
+                    primary: purple,
+                    onPrimary: white,
+                    onSurface: black,
+                  ),
+                  textButtonTheme: TextButtonThemeData(
+                    style: TextButton.styleFrom(
+                      foregroundColor: purple,
+                    ),
+                  ),
+                ),
+                child: child!,
+              );
+            },
           );
           if (selectedDate != null) {
             // Format untuk ditampilkan di TextField (DD MM YYYY)
@@ -523,6 +567,8 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
       TextEditingController(text: kidsData.birthdate);
   TextEditingController alamatController =
       TextEditingController(text: kidsData.address);
+  TextEditingController sekolahController =
+      TextEditingController(text: kidsData.school);
   TextEditingController noHpController =
       TextEditingController(text: kidsData.mobile);
   TextEditingController orangTuaController =
@@ -575,6 +621,7 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: Column(
@@ -586,6 +633,8 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
                           tanggalLahirController, context, true),
                       const SizedBox(height: 18),
                       _fieldFormInputTeks("Alamat", alamatController, true),
+                      const SizedBox(height: 18),
+                      _fieldDropdownFormKelas("Kelas", kelasController, true),
                     ],
                   ),
                 ),
@@ -600,7 +649,7 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
                       _fieldFormInputTeks(
                           "Nama Orang Tua", orangTuaController, true),
                       const SizedBox(height: 18),
-                      _fieldDropdownFormKelas("Kelas", kelasController, true),
+                      _fieldFormInputTeks("Sekolah", sekolahController, true),
                     ],
                   ),
                 ),
@@ -640,12 +689,7 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
                 ElevatedButton(
                   onPressed: () async {
                     // Validasi
-                    if (namaController.text.isEmpty ||
-                        formattedDateForSubmit == null ||
-                        alamatController.text.isEmpty ||
-                        noHpController.text.isEmpty ||
-                        orangTuaController.text.isEmpty ||
-                        kelasController == "Pilih Kelas") {
+                    if (namaController.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           backgroundColor: red,
@@ -655,7 +699,7 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
                           showCloseIcon: true,
                           closeIconColor: white,
                           content: Text(
-                            "Pastikan semua data terisi dengan benar",
+                            "Pastikan nama anak sudah terisi",
                             style: GoogleFonts.montserrat(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -668,13 +712,31 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
                     }
 
                     // Validasi Berhasil
+
+                    if (namaController.text.isNotEmpty &&
+                        tanggalLahirController.text.isNotEmpty &&
+                        alamatController.text.isNotEmpty &&
+                        noHpController.text.isNotEmpty &&
+                        orangTuaController.text.isNotEmpty &&
+                        sekolahController.text.isNotEmpty &&
+                        kelasController != "Pilih Kelas") {
+                      isDataComplete = true;
+                    }
+
+                    if (kelasController == "Pilih Kelas") {
+                      kelasController = "";
+                    }
+
                     Map<String, dynamic> updatedData = {
                       'name': namaController.text,
                       'birthDate': formattedDateForSubmit,
                       'address': alamatController.text,
                       'mobile': noHpController.text,
                       'parents': orangTuaController.text,
+                      'school': sekolahController.text,
                       'grade': kelasController,
+                      'isDataComplete': isDataComplete,
+                      'updatedAt': ambilWaktuSekarang(),
                     };
 
                     // Ganti data anak dengan data yang telah diperbaharui (lokal) untuk kembali ke halaman detail
@@ -684,6 +746,8 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
                     kidsData.mobile = noHpController.text;
                     kidsData.parentName = orangTuaController.text;
                     kidsData.grade = kelasController;
+                    kidsData.school = sekolahController.text;
+                    kidsData.isDataComplete = isDataComplete;
 
                     try {
                       // Berhasil menambahkan data

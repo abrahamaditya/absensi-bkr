@@ -7,10 +7,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:absensi_bkr/helper/padding.dart';
 import 'package:absensi_bkr/model/kid_model.dart';
 import 'package:absensi_bkr/menu/master_menu.dart';
-import 'package:number_pagination/number_pagination.dart';
 import 'package:absensi_bkr/bloc/kids_bloc/kids_bloc.dart';
 import 'package:absensi_bkr/bloc/kids_bloc/kids_event.dart';
 import 'package:absensi_bkr/bloc/kids_bloc/kids_state.dart';
+import 'package:absensi_bkr/component/dynamic_pagination.dart';
 import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_bloc.dart';
 import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_event.dart';
 
@@ -210,53 +210,20 @@ Widget semuaAnakWidget(BuildContext context) {
                                     : _tabel(context, state.data,
                                         state.currentPage, false),
                                 SizedBox(height: 20),
-                                NumberPagination(
-                                  onPageChanged: (int pageNumber) {
+                                DynamicPagination(
+                                  currentPage: state.currentPage,
+                                  totalPages: state.totalPage,
+                                  onPageChanged: (pageNumber) {
                                     selectedPaginationNumberOfAllAnakPage =
                                         pageNumber;
-                                    context
-                                        .read<GetKidsBloc>()
-                                        .add(FetchKidsEvent(
-                                          page:
-                                              selectedPaginationNumberOfAllAnakPage,
-                                          searchNameQuery:
-                                              namaAnakController.text,
-                                        ));
+                                    context.read<GetKidsBloc>().add(
+                                          FetchKidsEvent(
+                                            page: pageNumber,
+                                            searchNameQuery:
+                                                namaAnakController.text,
+                                          ),
+                                        );
                                   },
-                                  visiblePagesCount: state.totalPage,
-                                  totalPages: state.totalPage,
-                                  currentPage: state.currentPage,
-                                  selectedButtonColor: purple,
-                                  fontFamily: "Montserrat",
-                                  fontSize: 14,
-                                  buttonRadius: 2,
-                                  buttonElevation: 0,
-                                  betweenNumberButtonSpacing: 1,
-                                  controlButtonSize: Size(30, 34),
-                                  numberButtonSize: Size(30, 34),
-                                  buttonSelectedBorderColor: purple,
-                                  buttonUnSelectedBorderColor: lightGrey,
-                                  controlButtonColor: lightPurple,
-                                  firstPageIcon: Icon(
-                                    Icons.keyboard_double_arrow_left,
-                                    size: 15,
-                                    color: black,
-                                  ),
-                                  lastPageIcon: Icon(
-                                    Icons.keyboard_double_arrow_right,
-                                    size: 15,
-                                    color: black,
-                                  ),
-                                  nextPageIcon: Icon(
-                                    Icons.keyboard_arrow_right,
-                                    size: 15,
-                                    color: black,
-                                  ),
-                                  previousPageIcon: Icon(
-                                    Icons.keyboard_arrow_left,
-                                    size: 15,
-                                    color: black,
-                                  ),
                                 ),
                               ],
                             );

@@ -1,3 +1,4 @@
+import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:absensi_bkr/helper/color.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,6 +47,12 @@ Kid defaultKid = Kid(
   address: null,
   grade: null,
   attendance: null,
+  school: null,
+  isDataComplete: null,
+  isDelivered: null,
+  isPrinted: null,
+  updatedAt: null,
+  createdAt: null,
 );
 
 class MasterMenu extends StatelessWidget {

@@ -1,3 +1,4 @@
+import 'package:web/web.dart' as web;
 import 'package:flutter/material.dart';
 import 'package:absensi_bkr/helper/color.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,7 +41,7 @@ Widget topbarMobileWidget(BuildContext context, SidebarMenuSuccess state) {
               children: [
                 InkWell(
                   onTap: () {
-                    Navigator.pushReplacementNamed(context, '/');
+                    web.window.location.assign('/');
                   },
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
