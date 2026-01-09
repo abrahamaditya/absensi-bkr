@@ -7,11 +7,11 @@ import 'package:absensi_bkr/model/attendance_model.dart';
 import 'package:absensi_bkr/bloc/services_bloc/services_bloc.dart';
 import 'package:absensi_bkr/bloc/services_bloc/services_event.dart';
 
-class DeleteConfirmationPopup extends StatelessWidget {
+class DeleteConfirmationAttendancePopup extends StatelessWidget {
   final BuildContext parentContext;
   final Service serviceData;
   final AttendanceService attendanceData;
-  const DeleteConfirmationPopup({
+  const DeleteConfirmationAttendancePopup({
     super.key,
     required this.parentContext,
     required this.attendanceData,

@@ -466,7 +466,7 @@ Widget mobileLayout(BuildContext context) {
                   ? Icon(
                       Icons.add,
                       color: white,
-                      size: 12,
+                      size: 16,
                     )
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.start,

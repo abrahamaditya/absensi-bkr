@@ -51,3 +51,17 @@ class CreateKidsEvent extends KidsEvent {
   @override
   List<Object?> get props => [newData];
 }
+
+// Delete Kids
+class InitDeleteKidsEvent extends KidsEvent {
+  InitDeleteKidsEvent();
+  @override
+  List<Object?> get props => [];
+}
+
+class DeleteKidsEvent extends KidsEvent {
+  final String id;
+  DeleteKidsEvent({required this.id});
+  @override
+  List<Object?> get props => [id];
+}

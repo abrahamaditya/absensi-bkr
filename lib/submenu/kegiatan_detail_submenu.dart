@@ -16,7 +16,7 @@ import 'package:absensi_bkr/model/attendance_model.dart';
 import 'package:qrcode_reader_web/qrcode_reader_web.dart';
 import 'package:absensi_bkr/bloc/today_bloc/today_bloc.dart';
 import 'package:absensi_bkr/bloc/today_bloc/today_event.dart';
-import 'package:absensi_bkr/popup/delete_confirmation_popup.dart';
+import 'package:absensi_bkr/popup/delete_confirmation_attendance_popup.dart';
 import 'package:absensi_bkr/bloc/services_bloc/services_bloc.dart';
 import 'package:absensi_bkr/bloc/services_bloc/services_state.dart';
 import 'package:absensi_bkr/bloc/services_bloc/services_event.dart';
@@ -1493,7 +1493,7 @@ TableRow _barisTabel(BuildContext parentContext, int index,
                   showDialog(
                     context: parentContext,
                     builder: (context) {
-                      return DeleteConfirmationPopup(
+                      return DeleteConfirmationAttendancePopup(
                         parentContext: parentContext,
                         attendanceData: attendance,
                         serviceData: service,
@@ -1515,7 +1515,7 @@ TableRow _barisTabel(BuildContext parentContext, int index,
                   showDialog(
                     context: parentContext,
                     builder: (context) {
-                      return DeleteConfirmationPopup(
+                      return DeleteConfirmationAttendancePopup(
                         parentContext: parentContext,
                         attendanceData: attendance,
                         serviceData: service,

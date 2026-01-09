@@ -78,12 +78,13 @@ Widget sidebarWebWidget(BuildContext context, SidebarMenuSuccess state) {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                context.read<TodayBloc>().add(InitTodayEvent());
-                context.read<TodayBloc>().add(FetchTodayEvent(
-                    date: DateTime.now().toIso8601String().split('T')[0]));
-                context.read<SidebarMenuBloc>().add(
-                    FetchSidebarMenuEvent(menu: "Hari Ini", data: Object()));
-                context.read<GetKidsByIdScanQRBloc>().add(InitIDScanQREvent());
+                // context.read<TodayBloc>().add(InitTodayEvent());
+                // context.read<TodayBloc>().add(FetchTodayEvent(
+                //     date: DateTime.now().toIso8601String().split('T')[0]));
+                // context.read<SidebarMenuBloc>().add(
+                //     FetchSidebarMenuEvent(menu: "Hari Ini", data: Object()));
+                // context.read<GetKidsByIdScanQRBloc>().add(InitIDScanQREvent());
+                web.window.location.assign('/');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor:

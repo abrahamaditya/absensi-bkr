@@ -74,3 +74,17 @@ class KidsCreateDataFailed extends KidsState {
   @override
   List<Object> get props => [];
 }
+
+//
+
+class KidsDeleteDataSuccess extends KidsState {
+  const KidsDeleteDataSuccess();
+  @override
+  List<Object> get props => [];
+}
+
+class KidsDeleteDataFailed extends KidsState {
+  const KidsDeleteDataFailed();
+  @override
+  List<Object> get props => [];
+}

@@ -88,6 +88,7 @@ class LainnyaServicesBloc extends Bloc<ServicesEvent, ServicesState> {
   }
 }
 
+// Metode 1: Multi insert data via BLoC
 class TakeAttendanceBloc extends Bloc<ServicesEvent, ServicesState> {
   TakeAttendanceBloc() : super(ServicesInitial()) {
     on<InitTakeAttendanceEvent>((data, emit) async {
@@ -129,6 +130,7 @@ class TakeAttendanceBloc extends Bloc<ServicesEvent, ServicesState> {
   }
 }
 
+// Metode 1: Multi delete data via BLoC
 class DeleteAttendanceChildbyServiceBloc
     extends Bloc<ServicesEvent, ServicesState> {
   DeleteAttendanceChildbyServiceBloc() : super(ServicesInitial()) {

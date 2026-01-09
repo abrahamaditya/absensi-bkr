@@ -100,17 +100,18 @@ Widget topbarMobileWidget(BuildContext context, SidebarMenuSuccess state) {
                       Expanded(
                         child: InkWell(
                           onTap: () {
-                            context.read<TodayBloc>().add(FetchTodayEvent(
-                                date: DateTime.now()
-                                    .toIso8601String()
-                                    .split('T')[0]));
-                            context.read<TodayBloc>().add(InitTodayEvent());
-                            context.read<SidebarMenuBloc>().add(
-                                FetchSidebarMenuEvent(
-                                    menu: "Hari Ini", data: Object()));
-                            context
-                                .read<GetKidsByIdScanQRBloc>()
-                                .add(InitIDScanQREvent());
+                            // context.read<TodayBloc>().add(FetchTodayEvent(
+                            //     date: DateTime.now()
+                            //         .toIso8601String()
+                            //         .split('T')[0]));
+                            // context.read<TodayBloc>().add(InitTodayEvent());
+                            // context.read<SidebarMenuBloc>().add(
+                            //     FetchSidebarMenuEvent(
+                            //         menu: "Hari Ini", data: Object()));
+                            // context
+                            //     .read<GetKidsByIdScanQRBloc>()
+                            //     .add(InitIDScanQREvent());
+                            web.window.location.assign('/');
                           },
                           child: Container(
                             width: 75,

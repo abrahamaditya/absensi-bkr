@@ -3,12 +3,13 @@ import 'package:absensi_bkr/helper/color.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:absensi_bkr/model/kid_model.dart';
-import 'package:absensi_bkr/popup/anak_qr_popup.dart';
 import 'package:absensi_bkr/menu/master_menu.dart';
 import 'package:absensi_bkr/helper/format_date.dart';
+import 'package:absensi_bkr/popup/anak_qr_popup.dart';
 import 'package:absensi_bkr/model/attendance_model.dart';
 import 'package:absensi_bkr/bloc/kids_bloc/kids_bloc.dart';
 import 'package:absensi_bkr/bloc/kids_bloc/kids_event.dart';
+import 'package:absensi_bkr/popup/delete_confirmation_anak_popup.dart';
 import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_bloc.dart';
 import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_event.dart';
 
@@ -73,12 +74,14 @@ Widget detailAnakSubmenu(BuildContext context, dynamic data) {
                               ? Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      kidsData.name!,
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.w800,
-                                        color: black,
+                                    SelectionArea(
+                                      child: Text(
+                                        kidsData.name!,
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.w800,
+                                          color: black,
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(height: 10),
@@ -143,7 +146,7 @@ Widget detailAnakSubmenu(BuildContext context, dynamic data) {
                                             ),
                                           ),
                                           child: Text(
-                                            "Ubah Data",
+                                            "Ubah Data Anak",
                                             style: GoogleFonts.montserrat(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
@@ -161,16 +164,18 @@ Widget detailAnakSubmenu(BuildContext context, dynamic data) {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Expanded(
-                                      child: Text(
-                                        kidsData.name!,
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.w800,
-                                          color: black,
+                                      child: SelectionArea(
+                                        child: Text(
+                                          kidsData.name!,
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.w800,
+                                            color: black,
+                                          ),
+                                          maxLines: 3,
+                                          overflow: TextOverflow.visible,
+                                          softWrap: true,
                                         ),
-                                        maxLines: 3,
-                                        overflow: TextOverflow.visible,
-                                        softWrap: true,
                                       ),
                                     ),
                                     Row(
@@ -233,7 +238,7 @@ Widget detailAnakSubmenu(BuildContext context, dynamic data) {
                                             ),
                                           ),
                                           child: Text(
-                                            "Ubah Data",
+                                            "Ubah Data Anak",
                                             style: GoogleFonts.montserrat(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
@@ -271,7 +276,7 @@ Widget detailAnakSubmenu(BuildContext context, dynamic data) {
                             color: lightGrey,
                             thickness: 1,
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 10),
                           _infoDetailStatusDataAnak(
                             context: context,
                             label: "Kelengkapan Data",
@@ -476,30 +481,36 @@ Widget _infoDetailAnak(String label, String? value, bool isMobile) {
       children: [
         TableRow(
           children: [
-            Text(
-              label,
-              style: GoogleFonts.montserrat(
-                fontSize: isMobile == true ? 12 : 16,
-                fontWeight: FontWeight.w400,
-                color: black,
+            SelectionArea(
+              child: Text(
+                label,
+                style: GoogleFonts.montserrat(
+                  fontSize: isMobile == true ? 12 : 16,
+                  fontWeight: FontWeight.w400,
+                  color: black,
+                ),
               ),
             ),
-            Text(
-              ":",
-              style: GoogleFonts.montserrat(
-                fontSize: isMobile == true ? 12 : 16,
-                fontWeight: FontWeight.w600,
-                color: black,
+            SelectionArea(
+              child: Text(
+                ":",
+                style: GoogleFonts.montserrat(
+                  fontSize: isMobile == true ? 12 : 16,
+                  fontWeight: FontWeight.w600,
+                  color: black,
+                ),
               ),
             ),
-            Text(
-              (value == null || value.isEmpty) ? "-" : value,
-              style: GoogleFonts.montserrat(
-                fontSize: isMobile == true ? 12 : 16,
-                fontWeight: FontWeight.w600,
-                color: black,
+            SelectionArea(
+              child: Text(
+                (value == null || value.isEmpty) ? "-" : value,
+                style: GoogleFonts.montserrat(
+                  fontSize: isMobile == true ? 12 : 16,
+                  fontWeight: FontWeight.w600,
+                  color: black,
+                ),
               ),
-            ),
+            )
           ],
         ),
       ],
@@ -523,28 +534,36 @@ Widget _infoDetailStatusDataAnak({
 
       // 1. Logika Khusus Kelengkapan Data
       if (label == "Kelengkapan Data") {
-        if (isTrue) {
-          // Cek apakah field wajib (selain sekolah) terisi
-          bool isOtherFieldsFilled =
-              (kidsData.id?.trim().isNotEmpty ?? false) &&
-                  (kidsData.birthdate?.trim().isNotEmpty ?? false) &&
-                  (kidsData.address?.trim().isNotEmpty ?? false) &&
-                  (kidsData.mobile?.trim().isNotEmpty ?? false) &&
-                  (kidsData.parentName?.trim().isNotEmpty ?? false) &&
-                  (kidsData.grade?.trim().isNotEmpty ?? false);
+        // 1. Cek apakah semua field utama (selain school) sudah terisi
+        bool isOtherFieldsFilled = (kidsData.id?.trim().isNotEmpty ?? false) &&
+            (kidsData.id?.trim() != "-") &&
+            (kidsData.birthdate?.trim().isNotEmpty ?? false) &&
+            (kidsData.birthdate?.trim() != "-") &&
+            (kidsData.address?.trim().isNotEmpty ?? false) &&
+            (kidsData.address?.trim() != "-") &&
+            (kidsData.mobile?.trim().isNotEmpty ?? false) &&
+            (kidsData.mobile?.trim() != "-") &&
+            (kidsData.parentName?.trim().isNotEmpty ?? false) &&
+            (kidsData.parentName?.trim() != "-") &&
+            (kidsData.grade?.trim().isNotEmpty ?? false) &&
+            (kidsData.grade?.trim() != "-");
 
-          bool isSchoolFilled = kidsData.school?.trim().isNotEmpty ?? false;
+        // 2. Cek apakah school terisi
+        bool isSchoolFilled = (kidsData.school?.trim().isNotEmpty ?? false) &&
+            (kidsData.school?.trim() != "-");
 
-          if (isOtherFieldsFilled && isSchoolFilled) {
+        if (isOtherFieldsFilled) {
+          if (isSchoolFilled) {
+            // Poin 2: Field lain ada + School ada = Lengkap
             displayValue = "Data Lengkap";
-          } else if (isOtherFieldsFilled && !isSchoolFilled) {
-            displayValue = "Data Cukup Lengkap";
           } else {
-            displayValue = "Data Lengkap"; // Fallback default jika true
+            // Poin 3: Field lain ada + School kosong = Cukup Lengkap
+            displayValue = "Data Cukup Lengkap";
           }
           bgColor = Colors.green.shade100;
           labelTextColor = Colors.green.shade800;
         } else {
+          // Poin 4: Field lain ada yang kosong (meskipun school ada) = Tidak Lengkap
           displayValue = "Data Tidak Lengkap";
           bgColor = Colors.red.shade100;
           labelTextColor = Colors.red.shade800;
@@ -590,7 +609,7 @@ Widget _infoDetailStatusDataAnak({
                 Text(":",
                     style: GoogleFonts.montserrat(
                         fontSize: isMobile ? 12 : 16,
-                        fontWeight: FontWeight.bold)),
+                        fontWeight: FontWeight.w600)),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: isEditable
@@ -628,22 +647,46 @@ Widget _infoDetailStatusDataAnak({
                               items: [
                                 DropdownMenuItem(
                                   value: "true",
-                                  child: Text(
-                                    "Sudah Diambil",
-                                    style: GoogleFonts.montserrat(
-                                      fontSize: isMobile ? 11 : 14,
-                                      color: black,
-                                    ),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.check_circle,
+                                        color: green,
+                                        size: isMobile ? 18 : 22,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        "Sudah Diambil",
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: isMobile ? 11 : 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 DropdownMenuItem(
                                   value: "false",
-                                  child: Text(
-                                    "Belum Diambil",
-                                    style: GoogleFonts.montserrat(
-                                      fontSize: isMobile ? 11 : 14,
-                                      color: black,
-                                    ),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.pending,
+                                        color: darkGrey,
+                                        size: isMobile ? 18 : 22,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        "Belum Diambil",
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: isMobile ? 11 : 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
@@ -745,50 +788,163 @@ Widget _infoDetailStatusDataAnak({
   );
 }
 
-Widget mobileLayout(BuildContext context, Kid kidsData) {
+Widget mobileLayout(BuildContext parentContext, Kid kidsData) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       SizedBox(
         width: double.infinity,
         child: Row(
-          spacing: 10,
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                color: purple,
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                onPressed: () {
-                  context.read<SidebarMenuBloc>().add(
-                        FetchSidebarMenuEvent(menu: "Anak", data: Object()),
-                      );
-                },
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: white,
-                  size: 15,
-                ),
-                hoverColor: Colors.transparent,
-                highlightColor: Colors.transparent,
+            // SISI KIRI: Tombol Back + Nama Anak
+            Expanded(
+              child: Row(
+                children: [
+                  // Tombol Back Bulat
+                  Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color:
+                          purple, // Pastikan variabel 'purple' sudah didefinisikan
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        parentContext.read<SidebarMenuBloc>().add(
+                              FetchSidebarMenuEvent(
+                                  menu: "Anak", data: Object()),
+                            );
+                      },
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color:
+                            white, // Pastikan variabel 'white' sudah didefinisikan
+                        size: 15,
+                      ),
+                      // Menghilangkan efek hover/klik pada tombol back
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      tooltip: '',
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  // Nama Anak dengan proteksi overflow
+                  Expanded(
+                    child: SelectionArea(
+                      child: Text(
+                        kidsData.name!,
+                        style: GoogleFonts.montserrat(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                          color:
+                              black, // Pastikan variabel 'black' sudah didefinisikan
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            Flexible(
-              child: Text(
-                kidsData.name!,
-                style: GoogleFonts.montserrat(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                  color: black,
-                ),
-                overflow: TextOverflow.visible,
-                softWrap: true,
+
+            // SISI KANAN: Menu Titik Tiga (Popup Menu)
+            PopupMenuButton<String>(
+              padding: EdgeInsets.zero,
+              tooltip: '', // Menghilangkan tooltip
+              splashRadius:
+                  0.1, // Mengecilkan radius splash hingga hampir tidak terlihat
+              style: ButtonStyle(
+                // Menghilangkan efek hover dan klik secara total
+                overlayColor: WidgetStateProperty.all(Colors.transparent),
               ),
+              icon: const Icon(
+                Icons.more_vert,
+                color: Colors.grey,
+              ),
+              onSelected: (value) {
+                if (value == 'qr') {
+                  showDialog(
+                    context: parentContext,
+                    builder: (context) => QRCodePopup(
+                      id: kidsData.id!,
+                      name: kidsData.name!,
+                    ),
+                  );
+                } else if (value == 'edit') {
+                  parentContext.read<SidebarMenuBloc>().add(
+                        FetchSidebarMenuEvent(
+                            menu: "Anak Ubah Data", data: kidsData),
+                      );
+                } else if (value == 'delete') {
+                  showDialog(
+                    context: parentContext,
+                    builder: (context) => DeleteConfirmationAnakPopup(
+                      parentContext: parentContext,
+                      kidData: kidsData,
+                    ),
+                  );
+                }
+              },
+              itemBuilder: (BuildContext context) => [
+                PopupMenuItem(
+                  value: 'qr',
+                  child: Row(
+                    children: [
+                      Icon(Icons.qr_code, size: 18, color: black),
+                      const SizedBox(width: 10),
+                      Text(
+                        "Lihat QR Code",
+                        style: GoogleFonts.montserrat(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: black,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 'edit',
+                  child: Row(
+                    children: [
+                      Icon(Icons.mode_edit_outline_outlined,
+                          size: 18, color: black),
+                      const SizedBox(width: 10),
+                      Text(
+                        "Ubah Data Anak",
+                        style: GoogleFonts.montserrat(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: black,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 'delete',
+                  child: Row(
+                    children: [
+                      Icon(Icons.delete_outline_rounded, size: 18, color: red),
+                      const SizedBox(width: 10),
+                      Text(
+                        "Hapus Anak",
+                        style: GoogleFonts.montserrat(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: red,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -805,91 +961,21 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
           _infoDetailAnak("Nama Orang Tua", kidsData.parentName, true),
           _infoDetailAnak("Sekolah", kidsData.school, true),
           _infoDetailAnak("Kelas", kidsData.grade, true),
-          const SizedBox(height: 15),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return QRCodePopup(
-                          id: kidsData.id!,
-                          name: kidsData.name!,
-                        );
-                      },
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(2),
-                      side: BorderSide(color: orange, width: 1),
-                    ),
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 18,
-                      horizontal: 20,
-                    ),
-                  ),
-                  child: Text(
-                    "Lihat QR Code",
-                    style: GoogleFonts.montserrat(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: orange,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10), // Space between buttons
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.read<SidebarMenuBloc>().add(FetchSidebarMenuEvent(
-                        menu: "Anak Ubah Data", data: kidsData));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(2),
-                      side: BorderSide(color: orange, width: 1),
-                    ),
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 18,
-                      horizontal: 20,
-                    ),
-                  ),
-                  child: Text(
-                    "Ubah Data",
-                    style: GoogleFonts.montserrat(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: orange,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 4),
           Divider(
             color: lightGrey,
             thickness: 1,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 7),
           _infoDetailStatusDataAnak(
-            context: context,
+            context: parentContext,
             label: "Kelengkapan Data",
             value: kidsData.isDataComplete.toString(),
             kidsData: kidsData,
             isMobile: true,
           ),
           _infoDetailStatusDataAnak(
-            context: context,
+            context: parentContext,
             label: "Status Cetak Badge",
             value: kidsData.isPrinted.toString(),
             kidsData: kidsData,
@@ -898,7 +984,7 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
           Visibility(
             visible: kidsData.isPrinted == false ? false : true,
             child: _infoDetailStatusDataAnak(
-              context: context,
+              context: parentContext,
               label: "Status Pengambilan Badge",
               value: kidsData.isDelivered.toString(),
               kidsData: kidsData,
@@ -907,12 +993,11 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
           ),
         ],
       ),
-      const SizedBox(height: 5),
       Divider(
         color: lightGrey,
         thickness: 1,
       ),
-      const SizedBox(height: 10),
+      const SizedBox(height: 12),
       if (kidsData.attendance!.isNotEmpty) ...[
         Wrap(
           spacing: 2,

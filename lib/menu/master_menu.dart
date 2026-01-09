@@ -1,4 +1,3 @@
-import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:absensi_bkr/helper/color.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -89,6 +88,9 @@ class MasterMenu extends StatelessWidget {
         BlocProvider(
           create: (_) => DeleteAttendanceChildbyServiceBloc()
             ..add(InitDeleteAttendanceChildbyServiceEvent()),
+        ),
+        BlocProvider(
+          create: (_) => DeleteKidsBloc()..add(InitDeleteKidsEvent()),
         ),
         BlocProvider(
           create: (_) => CameraScanAbsenBloc()

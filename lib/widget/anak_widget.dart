@@ -11,6 +11,7 @@ import 'package:absensi_bkr/bloc/kids_bloc/kids_bloc.dart';
 import 'package:absensi_bkr/bloc/kids_bloc/kids_event.dart';
 import 'package:absensi_bkr/bloc/kids_bloc/kids_state.dart';
 import 'package:absensi_bkr/component/dynamic_pagination.dart';
+import 'package:absensi_bkr/popup/delete_confirmation_anak_popup.dart';
 import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_bloc.dart';
 import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_event.dart';
 
@@ -203,12 +204,14 @@ Widget semuaAnakWidget(BuildContext context) {
                                             controller: scrollController,
                                             scrollDirection: Axis.horizontal,
                                             child: _tabel(context, state.data,
-                                                state.currentPage, true),
+                                                state.currentPage, true,
+                                                isMobile: false),
                                           ),
                                         ),
                                       )
                                     : _tabel(context, state.data,
-                                        state.currentPage, false),
+                                        state.currentPage, false,
+                                        isMobile: false),
                                 SizedBox(height: 20),
                                 DynamicPagination(
                                   currentPage: state.currentPage,
@@ -284,10 +287,12 @@ Widget semuaAnakWidget(BuildContext context) {
                                               controller: scrollController,
                                               scrollDirection: Axis.horizontal,
                                               child: _tabel(
-                                                  context,
-                                                  data,
-                                                  selectedPaginationNumberOfAllAnakPage,
-                                                  true),
+                                                context,
+                                                data,
+                                                selectedPaginationNumberOfAllAnakPage,
+                                                true,
+                                                isMobile: true,
+                                              ),
                                             ),
                                           ),
                                         )
@@ -295,7 +300,9 @@ Widget semuaAnakWidget(BuildContext context) {
                                           context,
                                           data,
                                           selectedPaginationNumberOfAllAnakPage,
-                                          false)
+                                          false,
+                                          isMobile: false,
+                                        )
                                 ],
                               );
                             }
@@ -314,20 +321,23 @@ Widget semuaAnakWidget(BuildContext context) {
 }
 
 Widget _tabel(
-    BuildContext context, List<Kid> data, int currentPage, bool isSmallScreen) {
+    BuildContext context, List<Kid> data, int currentPage, bool isSmallScreen,
+    {required bool isMobile}) {
   Map<int, TableColumnWidth>? smallScreen = {
     0: FixedColumnWidth(60), // Kolom "No."
     1: FixedColumnWidth(150), // Kolom "ID"
     2: FixedColumnWidth(300), // Kolom "Nama"
     3: FixedColumnWidth(120), // Kolom "Jumlah Kehadiran"
     4: FixedColumnWidth(240), // Kolom "Aksi"
+    5: FixedColumnWidth(100), // Kolom "Aksi"
   };
   Map<int, TableColumnWidth>? normalScreen = {
     0: FractionColumnWidth(0.065), // 6,5%
-    1: FractionColumnWidth(0.2), // 20%
+    1: FractionColumnWidth(0.15), // 15%
     2: FractionColumnWidth(0.3), // 30%
     3: FractionColumnWidth(0.15), // 15%
-    4: FractionColumnWidth(0.285), // 28,5%
+    4: FractionColumnWidth(0.235), // 23,5%
+    5: FractionColumnWidth(0.1), // 10%
   };
   return Table(
     columnWidths: {
@@ -338,11 +348,12 @@ Widget _tabel(
       TableRow(
         decoration: BoxDecoration(color: purple),
         children: [
-          _headerTabel(context, "No."),
-          _headerTabel(context, "ID"),
-          _headerTabel(context, "Nama"),
-          _headerTabel(context, "Jumlah Kehadiran"),
-          _headerTabel(context, ""),
+          _headerTabel(context, "No.", isMobile),
+          _headerTabel(context, "ID", isMobile),
+          _headerTabel(context, "Nama", isMobile),
+          _headerTabel(context, "Jumlah Kehadiran", isMobile),
+          _headerTabel(context, "", isMobile),
+          _headerTabel(context, "", isMobile),
         ],
       ),
       // Data Baris Tabel
@@ -351,14 +362,15 @@ Widget _tabel(
           context,
           ((currentPage - 1) * 20) + (i + 1), // Perhitungan nomor
           data[i],
+          isMobile,
         ), // Ambil data[i] untuk setiap baris
     ],
   );
 }
 
-Widget _headerTabel(BuildContext context, title) {
+Widget _headerTabel(BuildContext context, title, bool isMobile) {
   return Container(
-    height: 75,
+    height: isMobile == true ? 50 : 75,
     alignment: Alignment.center,
     padding: const EdgeInsets.symmetric(horizontal: 10),
     child: Text(
@@ -373,7 +385,8 @@ Widget _headerTabel(BuildContext context, title) {
   );
 }
 
-TableRow _barisTabel(BuildContext context, int index, Kid kid) {
+TableRow _barisTabel(
+    BuildContext parentContext, int index, Kid kid, bool isMobile) {
   return TableRow(
     decoration: BoxDecoration(
       color: index % 2 == 0 ? fillFieldGrey : white,
@@ -389,7 +402,7 @@ TableRow _barisTabel(BuildContext context, int index, Kid kid) {
           width: double.infinity,
           child: TextButton(
             onPressed: () {
-              context
+              parentContext
                   .read<SidebarMenuBloc>()
                   .add(FetchSidebarMenuEvent(menu: "Anak Detail", data: kid));
             },
@@ -401,7 +414,7 @@ TableRow _barisTabel(BuildContext context, int index, Kid kid) {
               padding: const EdgeInsets.symmetric(vertical: 10),
             ),
             child: Text(
-              "Lihat Profil & Daftar Kehadiran",
+              "Lihat Profil & Kehadiran",
               style: GoogleFonts.montserrat(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
@@ -411,6 +424,61 @@ TableRow _barisTabel(BuildContext context, int index, Kid kid) {
           ),
         ),
       ),
+      isMobile == true
+          ? Container(
+              height: 50,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+              child: IconButton(
+                onPressed: () {
+                  showDialog(
+                    context: parentContext,
+                    builder: (context) {
+                      return DeleteConfirmationAnakPopup(
+                        parentContext: parentContext,
+                        kidData: kid,
+                      );
+                    },
+                  );
+                },
+                icon: Icon(Icons.delete_outline_rounded),
+                iconSize: 14,
+                color: red,
+              ),
+            )
+          : Container(
+              height: 50,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+              child: TextButton(
+                onPressed: () {
+                  showDialog(
+                    context: parentContext,
+                    builder: (context) {
+                      return DeleteConfirmationAnakPopup(
+                        parentContext: parentContext,
+                        kidData: kid,
+                      );
+                    },
+                  );
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                ),
+                child: Text(
+                  "Hapus",
+                  style: GoogleFonts.montserrat(
+                    fontSize: isMobile == true ? 10 : 14,
+                    fontWeight: FontWeight.w600,
+                    color: red,
+                  ),
+                ),
+              ),
+            ),
     ],
   );
 }
@@ -540,7 +608,7 @@ Widget mobileLayout(BuildContext context) {
                   ? Icon(
                       Icons.add,
                       color: white,
-                      size: 12,
+                      size: 16,
                     )
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.start,

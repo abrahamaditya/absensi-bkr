@@ -190,12 +190,21 @@ Widget anakUbahDataSubmenu(BuildContext context, dynamic data) {
 
                             // Validasi Berhasil
 
-                            if (namaController.text.isNotEmpty &&
-                                tanggalLahirController.text.isNotEmpty &&
-                                alamatController.text.isNotEmpty &&
-                                noHpController.text.isNotEmpty &&
-                                orangTuaController.text.isNotEmpty &&
-                                sekolahController.text.isNotEmpty &&
+                            if ((namaController.text.isNotEmpty &&
+                                    namaController.text != "" &&
+                                    namaController.text != "-") &&
+                                (tanggalLahirController.text.isNotEmpty &&
+                                    tanggalLahirController.text != "" &&
+                                    tanggalLahirController.text != "-") &&
+                                (alamatController.text.isNotEmpty &&
+                                    alamatController.text != "" &&
+                                    alamatController.text != "-") &&
+                                (noHpController.text.isNotEmpty &&
+                                    noHpController.text != "" &&
+                                    noHpController.text != "-") &&
+                                (orangTuaController.text.isNotEmpty &&
+                                    orangTuaController.text != "" &&
+                                    orangTuaController.text != "-") &&
                                 kelasController != "Pilih Kelas") {
                               isDataComplete = true;
                             }
@@ -251,6 +260,15 @@ Widget anakUbahDataSubmenu(BuildContext context, dynamic data) {
                                   ),
                                 ),
                               );
+
+                              namaController.clear();
+                              tanggalLahirController.clear();
+                              alamatController.clear();
+                              noHpController.clear();
+                              orangTuaController.clear();
+                              sekolahController.clear();
+                              kelasController = null;
+                              formattedDateForSubmit = null;
 
                               context.read<SidebarMenuBloc>().add(
                                   FetchSidebarMenuEvent(
@@ -713,12 +731,21 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
 
                     // Validasi Berhasil
 
-                    if (namaController.text.isNotEmpty &&
-                        tanggalLahirController.text.isNotEmpty &&
-                        alamatController.text.isNotEmpty &&
-                        noHpController.text.isNotEmpty &&
-                        orangTuaController.text.isNotEmpty &&
-                        sekolahController.text.isNotEmpty &&
+                    if ((namaController.text.isNotEmpty &&
+                            namaController.text != "" &&
+                            namaController.text != "-") &&
+                        (tanggalLahirController.text.isNotEmpty &&
+                            tanggalLahirController.text != "" &&
+                            tanggalLahirController.text != "-") &&
+                        (alamatController.text.isNotEmpty &&
+                            alamatController.text != "" &&
+                            alamatController.text != "-") &&
+                        (noHpController.text.isNotEmpty &&
+                            noHpController.text != "" &&
+                            noHpController.text != "-") &&
+                        (orangTuaController.text.isNotEmpty &&
+                            orangTuaController.text != "" &&
+                            orangTuaController.text != "-") &&
                         kelasController != "Pilih Kelas") {
                       isDataComplete = true;
                     }
@@ -772,6 +799,15 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
                           ),
                         ),
                       );
+
+                      namaController.clear();
+                      tanggalLahirController.clear();
+                      alamatController.clear();
+                      noHpController.clear();
+                      orangTuaController.clear();
+                      sekolahController.clear();
+                      kelasController = null;
+                      formattedDateForSubmit = null;
 
                       context.read<SidebarMenuBloc>().add(FetchSidebarMenuEvent(
                           menu: "Anak Detail", data: kidsData));

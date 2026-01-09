@@ -92,3 +92,23 @@ class CreateKidsBloc extends Bloc<KidsEvent, KidsState> {
     });
   }
 }
+
+class DeleteKidsBloc extends Bloc<KidsEvent, KidsState> {
+  DeleteKidsBloc() : super(KidsInitial()) {
+    on<InitDeleteKidsEvent>((data, emit) async {
+      emit(KidsInitial());
+    });
+    on<DeleteKidsEvent>((data, emit) async {
+      try {
+        bool result = await _kidsService.deleteDataAnak(data.id);
+        if (result == false) {
+          emit(KidsDeleteDataFailed());
+          return;
+        }
+        emit(KidsDeleteDataSuccess());
+      } catch (e) {
+        emit(KidsError(e.toString()));
+      }
+    });
+  }
+}
