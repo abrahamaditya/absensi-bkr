@@ -66,7 +66,7 @@ Widget semuaKegiatanWidget(BuildContext context) {
                                 ),
                               ),
                               Text(
-                                "Maret 2025 - Hari Ini",
+                                "Januari 2026 - Hari Ini",
                                 style: GoogleFonts.montserrat(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
