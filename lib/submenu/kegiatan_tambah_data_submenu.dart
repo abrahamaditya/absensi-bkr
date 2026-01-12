@@ -825,6 +825,14 @@ Widget mobileLayout(BuildContext context) {
                         .read<CreateServicesBloc>()
                         .add(CreateServicesEvent(newData: newData));
 
+                    newData = {};
+                    idController = "";
+                    kegiatanController = "Pilih Kegiatan";
+                    selectedKegiatan = "Pilih Kegiatan";
+                    tanggalKegiatanController.clear();
+                    waktuKegiatanController.clear();
+                    lainnyaController.clear();
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         backgroundColor: green,
@@ -847,6 +855,10 @@ Widget mobileLayout(BuildContext context) {
                     context
                         .read<GetServicesBloc>()
                         .add(FetchServicesEvent(page: 1, searchNameQuery: ""));
+
+                    context
+                        .read<GetAllServicesBloc>()
+                        .add(FetchAllServicesEvent());
 
                     context.read<SidebarMenuBloc>().add(
                           FetchSidebarMenuEvent(
