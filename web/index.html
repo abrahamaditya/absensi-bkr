@@ -50,11 +50,6 @@
           transform: rotate(360deg);
         }
       }
-      .fade-out {
-        opacity: 0 !important;
-        pointer-events: none;
-        transition: opacity 0.5s ease;
-      }
     </style>
   </head>
   <body>
@@ -62,55 +57,44 @@
       <div class="loader"></div>
     </div>
 
+    <script src="flutter_bootstrap.js" async></script>
+
     <script>
-      // 1. Force update Service Worker
+      // LOGIKA ANTI CACHE: Paksa Update Service Worker
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
           navigator.serviceWorker
             .getRegistrations()
             .then(function (registrations) {
               for (let registration of registrations) {
+                // Jika ada versi baru, service worker akan langsung diupdate
                 registration.update();
+                console.log("Checking for updates...");
               }
             });
         });
       }
 
-      // 2. Load Flutter Bootstrap dengan Cache Buster
-      // PENTING: Gunakan mekanisme penambahan script yang lebih aman
-      var script = document.createElement("script");
-      script.src = "flutter_bootstrap.js?v=" + new Date().getTime();
-      script.defer = true;
-      document.body.appendChild(script);
+      // LOGIKA PENGHAPUS LOADING (Sesuai cara kerja Flutter)
+      window.addEventListener("load", function () {
+        var isRemoved = false;
+        var checkFlutterInterval = setInterval(function () {
+          var flutterRoot =
+            document.querySelector("flt-glass-pane") ||
+            document.querySelector("canvas") ||
+            document.querySelector("flt-scene-host");
 
-      // 3. Logika penghapusan loading indicator yang lebih akurat
-      window.addEventListener("flutter-first-frame", function () {
-        var loader = document.getElementById("loading-indicator");
-        if (loader) {
-          loader.classList.add("fade-out");
-          setTimeout(function () {
-            loader.remove();
-          }, 500);
-        }
-      });
-
-      // Fallback: Jika event 'flutter-first-frame' tidak terpanggil
-      var checkInterval = setInterval(function () {
-        var flutterRoot =
-          document.querySelector("flt-glass-pane") ||
-          document.querySelector("canvas") ||
-          document.querySelector("flt-scene-host");
-        if (flutterRoot) {
-          clearInterval(checkInterval);
-          var loader = document.getElementById("loading-indicator");
-          if (loader && !loader.classList.contains("fade-out")) {
-            loader.classList.add("fade-out");
-            setTimeout(function () {
+          if (flutterRoot && !isRemoved) {
+            isRemoved = true;
+            clearInterval(checkFlutterInterval);
+            var loader = document.getElementById("loading-indicator");
+            if (loader) {
+              loader.style.display = "none";
               loader.remove();
-            }, 500);
+            }
           }
-        }
-      }, 500);
+        }, 100);
+      });
     </script>
   </body>
 </html>

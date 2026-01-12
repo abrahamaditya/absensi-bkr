@@ -18,8 +18,8 @@ TextEditingController waktuKegiatanController = TextEditingController();
 
 Widget kegiatanTambahDataSubmenu(BuildContext context) {
   final double screenWidth = MediaQuery.of(context).size.width;
-  idController = "";
-  kegiatanController = "Pilih Kegiatan";
+  idController ??= "";
+  kegiatanController ??= "Pilih Kegiatan";
 
   return screenWidth < 1000
       ? mobileLayout(context)
@@ -58,6 +58,12 @@ Widget kegiatanTambahDataSubmenu(BuildContext context) {
                                 FetchSidebarMenuEvent(
                                     menu: "Kegiatan", data: Object()),
                               );
+
+                          idController = "";
+                          kegiatanController = "Pilih Kegiatan";
+                          tanggalKegiatanController.clear();
+                          waktuKegiatanController.clear();
+                          lainnyaController.clear();
                         },
                         icon: Icon(Icons.arrow_back, color: white),
                       ),
@@ -679,6 +685,12 @@ Widget mobileLayout(BuildContext context) {
                 context.read<SidebarMenuBloc>().add(
                       FetchSidebarMenuEvent(menu: "Kegiatan", data: Object()),
                     );
+
+                idController = "";
+                kegiatanController = "Pilih Kegiatan";
+                tanggalKegiatanController.clear();
+                waktuKegiatanController.clear();
+                lainnyaController.clear();
               },
               icon: Icon(
                 Icons.arrow_back,
@@ -737,6 +749,12 @@ Widget mobileLayout(BuildContext context) {
                   context.read<SidebarMenuBloc>().add(
                         FetchSidebarMenuEvent(menu: "Kegiatan", data: Object()),
                       );
+
+                  idController = "";
+                  kegiatanController = "Pilih Kegiatan";
+                  tanggalKegiatanController.clear();
+                  waktuKegiatanController.clear();
+                  lainnyaController.clear();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: white,
