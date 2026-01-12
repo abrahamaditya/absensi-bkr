@@ -5,7 +5,10 @@
     <meta charset="UTF-8" />
     <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
 
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 
@@ -13,15 +16,6 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-
-    <meta name="description" content="Absensi BKR Modernland" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="apple-mobile-web-app-title" content="Absensi BKR Modernland" />
-    
-    <link rel="apple-touch-icon" href="icons/Icon-192.png" />
-    <link rel="icon" type="image/png" href="favicon.png" />
-
     <title>Absensi BKR Modernland</title>
     <link rel="manifest" href="manifest.json" />
 
@@ -39,9 +33,7 @@
         justify-content: center;
         align-items: center;
         z-index: 9999;
-        transition: opacity 0.5s ease;
       }
-
       .loader {
         width: 50px;
         height: 50px;
@@ -50,15 +42,18 @@
         border-radius: 50%;
         animation: spin 1s linear infinite;
       }
-
       @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
-
       .fade-out {
         opacity: 0 !important;
         pointer-events: none;
+        transition: opacity 0.5s ease;
       }
     </style>
   </head>
@@ -68,50 +63,54 @@
     </div>
 
     <script>
-      // 1. Mekanisme Force Update Service Worker
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function () {
-          navigator.serviceWorker.getRegistrations().then(function (registrations) {
-            for (let registration of registrations) {
-              registration.update(); 
-              console.log('Service Worker Updated');
-            }
-          });
+      // 1. Force update Service Worker
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker
+            .getRegistrations()
+            .then(function (registrations) {
+              for (let registration of registrations) {
+                registration.update();
+              }
+            });
         });
       }
 
-      // 2. Load Flutter dengan Cache Buster (Timestamp)
-      // Ini menggantikan <script src="flutter_bootstrap.js" async></script>
-      (function() {
-        var script = document.createElement('script');
-        // Menambahkan query string timestamp agar browser mendownload file JS baru
-        script.src = "flutter_bootstrap.js?v=" + new Date().getTime();
-        script.async = true;
-        document.body.appendChild(script);
-      })();
+      // 2. Load Flutter Bootstrap dengan Cache Buster
+      // PENTING: Gunakan mekanisme penambahan script yang lebih aman
+      var script = document.createElement("script");
+      script.src = "flutter_bootstrap.js?v=" + new Date().getTime();
+      script.defer = true;
+      document.body.appendChild(script);
 
-      // 3. Logika penghapusan loading indicator setelah Flutter siap
-      (function () {
-        var isRemoved = false;
-        var checkFlutterInterval = setInterval(function () {
-          var flutterRoot =
-            document.querySelector("flt-glass-pane") ||
-            document.querySelector("canvas") ||
-            document.querySelector("flt-scene-host");
+      // 3. Logika penghapusan loading indicator yang lebih akurat
+      window.addEventListener("flutter-first-frame", function () {
+        var loader = document.getElementById("loading-indicator");
+        if (loader) {
+          loader.classList.add("fade-out");
+          setTimeout(function () {
+            loader.remove();
+          }, 500);
+        }
+      });
 
-          if (flutterRoot && !isRemoved) {
-            isRemoved = true;
-            clearInterval(checkFlutterInterval);
+      // Fallback: Jika event 'flutter-first-frame' tidak terpanggil
+      var checkInterval = setInterval(function () {
+        var flutterRoot =
+          document.querySelector("flt-glass-pane") ||
+          document.querySelector("canvas") ||
+          document.querySelector("flt-scene-host");
+        if (flutterRoot) {
+          clearInterval(checkInterval);
+          var loader = document.getElementById("loading-indicator");
+          if (loader && !loader.classList.contains("fade-out")) {
+            loader.classList.add("fade-out");
             setTimeout(function () {
-              var loader = document.getElementById("loading-indicator");
-              if (loader) {
-                loader.classList.add("fade-out");
-                setTimeout(function() { loader.remove(); }, 500);
-              }
+              loader.remove();
             }, 500);
           }
-        }, 100);
-      })();
+        }
+      }, 500);
     </script>
   </body>
 </html>
