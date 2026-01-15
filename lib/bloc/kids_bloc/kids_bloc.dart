@@ -39,7 +39,7 @@ class GetKidsBloc extends Bloc<KidsEvent, KidsState> {
         final currentPage = get.page;
 
         if (kids.isEmpty) {
-          emit(KidsGetDataIsEmpty());
+          emit(KidsGetDataIsEmpty(get.searchNameQuery));
           return;
         } else {
           emit(KidsGetData(kids, totalData, totalPages, currentPage));

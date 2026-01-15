@@ -246,7 +246,7 @@ Widget semuaAnakWidget(BuildContext context) {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Pencarian \"${namaAnakController.text}\" tidak ditemukan",
+                                    "Pencarian \"${state.searchNameQuery}\" tidak ditemukan",
                                     style: GoogleFonts.montserrat(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -634,281 +634,305 @@ Widget mobileLayout(BuildContext context) {
         ],
       ),
       const SizedBox(height: 25),
-      BlocBuilder<GetKidsBloc, KidsState>(
-        builder: (context, state) {
-          if (tableLoadingAnak == false) {
-            tableLoadingAnak = true;
-            return Skeletonizer(
-              enabled: true,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 30,
-                    width: double.infinity,
-                    color: lightGrey,
-                  ),
-                  const SizedBox(height: 15),
-                  ...List.generate(
-                    5,
-                    (index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 7),
-                        child: Container(
-                          height: 75,
-                          width: double.infinity,
-                          color: lightGrey,
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            );
-          } else if (state is KidsGetData) {
-            isDataActuallyThere = true;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: _fieldCariData(context, namaAnakController, true),
-                ),
-                SizedBox(height: 15),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: state.data.length,
-                  itemBuilder: (context, index) {
-                    final kid = state.data[index];
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: white,
-                        border: Border.all(
-                          color: lightGrey,
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      margin: EdgeInsets.symmetric(vertical: 4),
-                      child: ListTile(
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 6,
-                          horizontal: 16,
-                        ),
-                        leading: CircleAvatar(
-                          backgroundColor: purple,
-                          radius: 18,
-                          child: Icon(
-                            Icons.person,
-                            color: white,
-                            size: 19,
-                          ),
-                        ),
-                        title: Text(
-                          kid.name!,
-                          style: GoogleFonts.montserrat(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: black,
-                          ),
-                        ),
-                        subtitle: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Jumlah Kehadiran: ",
-                              style: GoogleFonts.montserrat(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: textFieldGrey,
-                              ),
-                            ),
-                            Text(
-                              "${kid.attendance!.length}",
-                              style: GoogleFonts.montserrat(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: textFieldGrey,
-                              ),
-                            ),
-                          ],
-                        ),
-                        trailing: Icon(
-                          Icons.arrow_forward_ios,
-                          color: purple,
-                          size: 14,
-                        ),
-                        onTap: () {
-                          context.read<SidebarMenuBloc>().add(
-                                FetchSidebarMenuEvent(
-                                  menu: "Anak Detail",
-                                  data: kid,
-                                ),
-                              );
-                        },
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Tombol pertama untuk ke halaman pertama
-                    IconButton(
-                      icon: Icon(Icons.keyboard_double_arrow_left,
-                          color: state.currentPage > 1 ? purple : Colors.grey),
-                      onPressed: state.currentPage > 1
-                          ? () {
-                              selectedPaginationNumberOfAllAnakPage = 1;
-                              context.read<GetKidsBloc>().add(FetchKidsEvent(
-                                    page: selectedPaginationNumberOfAllAnakPage,
-                                    searchNameQuery: namaAnakController.text,
-                                  ));
-                            }
-                          : null, // Disabled jika di halaman pertama
-                      padding: EdgeInsets.all(8),
-                      constraints: BoxConstraints(
-                        minWidth: 36,
-                        minHeight: 36,
-                      ),
-                      // Menghilangkan efek hover dan splash
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      mouseCursor: SystemMouseCursors
-                          .click, // Menghilangkan cursor hover default
-                    ),
-                    // Tombol sebelumnya
-                    IconButton(
-                      icon: Icon(Icons.keyboard_arrow_left,
-                          color: state.currentPage > 1 ? purple : Colors.grey),
-                      onPressed: state.currentPage > 1
-                          ? () {
-                              selectedPaginationNumberOfAllAnakPage =
-                                  state.currentPage - 1;
-                              context.read<GetKidsBloc>().add(FetchKidsEvent(
-                                    page: selectedPaginationNumberOfAllAnakPage,
-                                    searchNameQuery: namaAnakController.text,
-                                  ));
-                            }
-                          : null, // Disabled jika di halaman pertama
-                      padding: EdgeInsets.all(8),
-                      constraints: BoxConstraints(
-                        minWidth: 36,
-                        minHeight: 36,
-                      ),
-                      // Menghilangkan efek hover dan splash
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      mouseCursor: SystemMouseCursors.click,
-                    ),
-                    // Tombol berikutnya
-                    IconButton(
-                      icon: Icon(Icons.keyboard_arrow_right,
-                          color: state.currentPage < state.totalPage
-                              ? purple
-                              : Colors.grey),
-                      onPressed: state.currentPage < state.totalPage
-                          ? () {
-                              selectedPaginationNumberOfAllAnakPage =
-                                  state.currentPage + 1;
-                              context.read<GetKidsBloc>().add(FetchKidsEvent(
-                                    page: selectedPaginationNumberOfAllAnakPage,
-                                    searchNameQuery: namaAnakController.text,
-                                  ));
-                            }
-                          : null, // Disabled jika di halaman terakhir
-                      padding: EdgeInsets.all(8),
-                      constraints: BoxConstraints(
-                        minWidth: 36,
-                        minHeight: 36,
-                      ),
-                      // Menghilangkan efek hover dan splash
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      mouseCursor: SystemMouseCursors.click,
-                    ),
-                    // Tombol terakhir untuk ke halaman terakhir
-                    IconButton(
-                      icon: Icon(Icons.keyboard_double_arrow_right,
-                          color: state.currentPage < state.totalPage
-                              ? purple
-                              : Colors.grey),
-                      onPressed: state.currentPage < state.totalPage
-                          ? () {
-                              selectedPaginationNumberOfAllAnakPage =
-                                  state.totalPage;
-                              context.read<GetKidsBloc>().add(FetchKidsEvent(
-                                    page: selectedPaginationNumberOfAllAnakPage,
-                                    searchNameQuery: namaAnakController.text,
-                                  ));
-                            }
-                          : null, // Disabled jika di halaman terakhir
-                      padding: EdgeInsets.all(8),
-                      constraints: BoxConstraints(
-                        minWidth: 36,
-                        minHeight: 36,
-                      ),
-                      // Menghilangkan efek hover dan splash
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      mouseCursor: SystemMouseCursors.click,
-                    ),
-                  ],
-                ),
-              ],
-            );
-          } else if (state is KidsGetDataIsEmpty) {
-            if (isDataActuallyThere == false) {
-              return Center(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 60),
-                    Text(
-                      "Data anak tidak ditemukan.",
-                      style: GoogleFonts.montserrat(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
+      ScrollConfiguration(
+        behavior: const ScrollBehavior().copyWith(overscroll: false),
+        child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: BlocBuilder<GetKidsBloc, KidsState>(
+            builder: (context, state) {
+              if (tableLoadingAnak == false) {
+                tableLoadingAnak = true;
+                return Skeletonizer(
+                  enabled: true,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 30,
+                        width: double.infinity,
                         color: lightGrey,
                       ),
+                      const SizedBox(height: 15),
+                      ...List.generate(
+                        5,
+                        (index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 7),
+                            child: Container(
+                              height: 75,
+                              width: double.infinity,
+                              color: lightGrey,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              } else if (state is KidsGetData) {
+                isDataActuallyThere = true;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: _fieldCariData(context, namaAnakController, true),
+                    ),
+                    SizedBox(height: 15),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: state.data.length,
+                      itemBuilder: (context, index) {
+                        final kid = state.data[index];
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: white,
+                            border: Border.all(
+                              color: lightGrey,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          margin: EdgeInsets.symmetric(vertical: 4),
+                          child: ListTile(
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 6,
+                              horizontal: 16,
+                            ),
+                            leading: CircleAvatar(
+                              backgroundColor: purple,
+                              radius: 18,
+                              child: Icon(
+                                Icons.person,
+                                color: white,
+                                size: 19,
+                              ),
+                            ),
+                            title: Text(
+                              kid.name!,
+                              style: GoogleFonts.montserrat(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: black,
+                              ),
+                            ),
+                            subtitle: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Jumlah Kehadiran: ",
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                    color: textFieldGrey,
+                                  ),
+                                ),
+                                Text(
+                                  "${kid.attendance!.length}",
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: textFieldGrey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            trailing: Icon(
+                              Icons.arrow_forward_ios,
+                              color: purple,
+                              size: 14,
+                            ),
+                            onTap: () {
+                              context.read<SidebarMenuBloc>().add(
+                                    FetchSidebarMenuEvent(
+                                      menu: "Anak Detail",
+                                      data: kid,
+                                    ),
+                                  );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Tombol pertama untuk ke halaman pertama
+                        IconButton(
+                          icon: Icon(Icons.keyboard_double_arrow_left,
+                              color:
+                                  state.currentPage > 1 ? purple : Colors.grey),
+                          onPressed: state.currentPage > 1
+                              ? () {
+                                  selectedPaginationNumberOfAllAnakPage = 1;
+                                  context
+                                      .read<GetKidsBloc>()
+                                      .add(FetchKidsEvent(
+                                        page:
+                                            selectedPaginationNumberOfAllAnakPage,
+                                        searchNameQuery:
+                                            namaAnakController.text,
+                                      ));
+                                }
+                              : null, // Disabled jika di halaman pertama
+                          padding: EdgeInsets.all(8),
+                          constraints: BoxConstraints(
+                            minWidth: 36,
+                            minHeight: 36,
+                          ),
+                          // Menghilangkan efek hover dan splash
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          mouseCursor: SystemMouseCursors
+                              .click, // Menghilangkan cursor hover default
+                        ),
+                        // Tombol sebelumnya
+                        IconButton(
+                          icon: Icon(Icons.keyboard_arrow_left,
+                              color:
+                                  state.currentPage > 1 ? purple : Colors.grey),
+                          onPressed: state.currentPage > 1
+                              ? () {
+                                  selectedPaginationNumberOfAllAnakPage =
+                                      state.currentPage - 1;
+                                  context
+                                      .read<GetKidsBloc>()
+                                      .add(FetchKidsEvent(
+                                        page:
+                                            selectedPaginationNumberOfAllAnakPage,
+                                        searchNameQuery:
+                                            namaAnakController.text,
+                                      ));
+                                }
+                              : null, // Disabled jika di halaman pertama
+                          padding: EdgeInsets.all(8),
+                          constraints: BoxConstraints(
+                            minWidth: 36,
+                            minHeight: 36,
+                          ),
+                          // Menghilangkan efek hover dan splash
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          mouseCursor: SystemMouseCursors.click,
+                        ),
+                        // Tombol berikutnya
+                        IconButton(
+                          icon: Icon(Icons.keyboard_arrow_right,
+                              color: state.currentPage < state.totalPage
+                                  ? purple
+                                  : Colors.grey),
+                          onPressed: state.currentPage < state.totalPage
+                              ? () {
+                                  selectedPaginationNumberOfAllAnakPage =
+                                      state.currentPage + 1;
+                                  context
+                                      .read<GetKidsBloc>()
+                                      .add(FetchKidsEvent(
+                                        page:
+                                            selectedPaginationNumberOfAllAnakPage,
+                                        searchNameQuery:
+                                            namaAnakController.text,
+                                      ));
+                                }
+                              : null, // Disabled jika di halaman terakhir
+                          padding: EdgeInsets.all(8),
+                          constraints: BoxConstraints(
+                            minWidth: 36,
+                            minHeight: 36,
+                          ),
+                          // Menghilangkan efek hover dan splash
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          mouseCursor: SystemMouseCursors.click,
+                        ),
+                        // Tombol terakhir untuk ke halaman terakhir
+                        IconButton(
+                          icon: Icon(Icons.keyboard_double_arrow_right,
+                              color: state.currentPage < state.totalPage
+                                  ? purple
+                                  : Colors.grey),
+                          onPressed: state.currentPage < state.totalPage
+                              ? () {
+                                  selectedPaginationNumberOfAllAnakPage =
+                                      state.totalPage;
+                                  context
+                                      .read<GetKidsBloc>()
+                                      .add(FetchKidsEvent(
+                                        page:
+                                            selectedPaginationNumberOfAllAnakPage,
+                                        searchNameQuery:
+                                            namaAnakController.text,
+                                      ));
+                                }
+                              : null, // Disabled jika di halaman terakhir
+                          padding: EdgeInsets.all(8),
+                          constraints: BoxConstraints(
+                            minWidth: 36,
+                            minHeight: 36,
+                          ),
+                          // Menghilangkan efek hover dan splash
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          mouseCursor: SystemMouseCursors.click,
+                        ),
+                      ],
                     ),
                   ],
-                ),
-              );
-            } else {
-              // List<Kid> data = [];
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Pencarian \"${namaAnakController.text}\" tidak ditemukan",
-                    style: GoogleFonts.montserrat(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: black,
+                );
+              } else if (state is KidsGetDataIsEmpty) {
+                if (isDataActuallyThere == false) {
+                  return Center(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 60),
+                        Text(
+                          "Data anak tidak ditemukan.",
+                          style: GoogleFonts.montserrat(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: lightGrey,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: _fieldCariData(
-                      context,
-                      namaAnakController,
-                      true,
-                    ),
-                  ),
-                ],
-              );
-            }
-          } else {
-            return SizedBox.shrink();
-          }
-        },
+                  );
+                } else {
+                  // List<Kid> data = [];
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Pencarian \"${state.searchNameQuery}\" tidak ditemukan",
+                        style: GoogleFonts.montserrat(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: black,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: _fieldCariData(
+                          context,
+                          namaAnakController,
+                          true,
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              } else {
+                return SizedBox.shrink();
+              }
+            },
+          ),
+        ),
       ),
     ],
   );

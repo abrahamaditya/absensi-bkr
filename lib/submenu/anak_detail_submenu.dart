@@ -950,91 +950,97 @@ Widget mobileLayout(BuildContext parentContext, Kid kidsData) {
         ),
       ),
       const SizedBox(height: 18),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _infoDetailAnak("ID", kidsData.id!, true),
-          _infoDetailAnak("Tanggal Lahir",
-              formatJadiDDMMMMYYYYIndonesia(kidsData.birthdate), true),
-          _infoDetailAnak("Alamat", kidsData.address, true),
-          _infoDetailAnak("No. Hp", kidsData.mobile, true),
-          _infoDetailAnak("Nama Orang Tua", kidsData.parentName, true),
-          _infoDetailAnak("Sekolah", kidsData.school, true),
-          _infoDetailAnak("Kelas", kidsData.grade, true),
-          const SizedBox(height: 4),
-          Divider(
-            color: lightGrey,
-            thickness: 1,
-          ),
-          const SizedBox(height: 7),
-          _infoDetailStatusDataAnak(
-            context: parentContext,
-            label: "Kelengkapan Data",
-            value: kidsData.isDataComplete.toString(),
-            kidsData: kidsData,
-            isMobile: true,
-          ),
-          _infoDetailStatusDataAnak(
-            context: parentContext,
-            label: "Status Cetak Badge",
-            value: kidsData.isPrinted.toString(),
-            kidsData: kidsData,
-            isMobile: true,
-          ),
-          Visibility(
-            visible: kidsData.isPrinted == false ? false : true,
-            child: _infoDetailStatusDataAnak(
-              context: parentContext,
-              label: "Status Pengambilan Badge",
-              value: kidsData.isDelivered.toString(),
-              kidsData: kidsData,
-              isMobile: true,
-            ),
-          ),
-        ],
-      ),
-      Divider(
-        color: lightGrey,
-        thickness: 1,
-      ),
-      const SizedBox(height: 12),
-      if (kidsData.attendance!.isNotEmpty) ...[
-        Wrap(
-          spacing: 2,
-          runSpacing: 0,
-          children: [
-            Text(
-              "Data Absen Kegiatan ",
-              style: GoogleFonts.montserrat(
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
-                color: black,
+      ScrollConfiguration(
+        behavior: const ScrollBehavior().copyWith(overscroll: false),
+        child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _infoDetailAnak("ID", kidsData.id!, true),
+              _infoDetailAnak("Tanggal Lahir",
+                  formatJadiDDMMMMYYYYIndonesia(kidsData.birthdate), true),
+              _infoDetailAnak("Alamat", kidsData.address, true),
+              _infoDetailAnak("No. Hp", kidsData.mobile, true),
+              _infoDetailAnak("Nama Orang Tua", kidsData.parentName, true),
+              _infoDetailAnak("Sekolah", kidsData.school, true),
+              _infoDetailAnak("Kelas", kidsData.grade, true),
+              const SizedBox(height: 4),
+              Divider(
+                color: lightGrey,
+                thickness: 1,
               ),
-            ),
-            Text(
-              "(Total: ${kidsData.attendance!.length} kegiatan)",
-              style: GoogleFonts.montserrat(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: black,
+              const SizedBox(height: 7),
+              _infoDetailStatusDataAnak(
+                context: parentContext,
+                label: "Kelengkapan Data",
+                value: kidsData.isDataComplete.toString(),
+                kidsData: kidsData,
+                isMobile: true,
               ),
-            ),
-            const SizedBox(height: 25),
-            _tabel(kidsData.attendance!, false, isMobile: true),
-          ],
-        ),
-      ] else ...[
-        Center(
-          child: Text(
-            "${kidsData.name!.split(' ').first} belum melakukan absen kegiatan apapun",
-            style: GoogleFonts.montserrat(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: lightGrey,
-            ),
+              _infoDetailStatusDataAnak(
+                context: parentContext,
+                label: "Status Cetak Badge",
+                value: kidsData.isPrinted.toString(),
+                kidsData: kidsData,
+                isMobile: true,
+              ),
+              Visibility(
+                visible: kidsData.isPrinted == false ? false : true,
+                child: _infoDetailStatusDataAnak(
+                  context: parentContext,
+                  label: "Status Pengambilan Badge",
+                  value: kidsData.isDelivered.toString(),
+                  kidsData: kidsData,
+                  isMobile: true,
+                ),
+              ),
+              Divider(
+                color: lightGrey,
+                thickness: 1,
+              ),
+              const SizedBox(height: 12),
+              if (kidsData.attendance!.isNotEmpty) ...[
+                Wrap(
+                  spacing: 2,
+                  runSpacing: 0,
+                  children: [
+                    Text(
+                      "Data Absen Kegiatan ",
+                      style: GoogleFonts.montserrat(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: black,
+                      ),
+                    ),
+                    Text(
+                      "(Total: ${kidsData.attendance!.length} kegiatan)",
+                      style: GoogleFonts.montserrat(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: black,
+                      ),
+                    ),
+                    const SizedBox(height: 25),
+                    _tabel(kidsData.attendance!, false, isMobile: true),
+                  ],
+                ),
+              ] else ...[
+                Center(
+                  child: Text(
+                    "${kidsData.name!.split(' ').first} belum melakukan absen kegiatan apapun",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: lightGrey,
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
         ),
-      ],
+      ),
     ],
   );
 }

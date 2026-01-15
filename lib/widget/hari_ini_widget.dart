@@ -590,115 +590,121 @@ Widget mobileLayout(BuildContext context) {
         ),
       ),
       const SizedBox(height: 16),
-      BlocBuilder<TodayBloc, TodayState>(
-        builder: (context, state) {
-          if (state is TodayGetData) {
-            return LayoutBuilder(
-              builder: (context, constraints) {
-                double maxWidth = constraints.maxWidth;
-                double cardWidth = (maxWidth / 2) - 6;
-                final allData = [
-                  ...state.liveData,
-                  ...state.upcomingData,
-                  ...state.pastData
-                ];
-                return Column(
-                  children: List.generate(
-                    (allData.length / 2).ceil(),
-                    (index) {
-                      int firstIndex = index * 2;
-                      int secondIndex = firstIndex + 1;
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: cardWidth,
-                              child: _kartuMobile(
-                                context: context,
-                                data: allData[firstIndex],
-                                isNext: state.upcomingData
-                                    .contains(allData[firstIndex]),
-                                isFinished: state.pastData
-                                    .contains(allData[firstIndex]),
-                              ),
-                            ),
-                            if (secondIndex < allData.length)
-                              SizedBox(
-                                width: cardWidth,
-                                child: _kartuMobile(
-                                  context: context,
-                                  data: allData[secondIndex],
-                                  isNext: state.upcomingData
-                                      .contains(allData[secondIndex]),
-                                  isFinished: state.pastData
-                                      .contains(allData[secondIndex]),
+      ScrollConfiguration(
+        behavior: const ScrollBehavior().copyWith(overscroll: false),
+        child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: BlocBuilder<TodayBloc, TodayState>(
+            builder: (context, state) {
+              if (state is TodayGetData) {
+                return LayoutBuilder(
+                  builder: (context, constraints) {
+                    double maxWidth = constraints.maxWidth;
+                    double cardWidth = (maxWidth / 2) - 6;
+                    final allData = [
+                      ...state.liveData,
+                      ...state.upcomingData,
+                      ...state.pastData
+                    ];
+                    return Column(
+                      children: List.generate(
+                        (allData.length / 2).ceil(),
+                        (index) {
+                          int firstIndex = index * 2;
+                          int secondIndex = firstIndex + 1;
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width: cardWidth,
+                                  child: _kartuMobile(
+                                    context: context,
+                                    data: allData[firstIndex],
+                                    isNext: state.upcomingData
+                                        .contains(allData[firstIndex]),
+                                    isFinished: state.pastData
+                                        .contains(allData[firstIndex]),
+                                  ),
                                 ),
-                              )
-                            else
-                              SizedBox(width: cardWidth),
-                          ],
+                                if (secondIndex < allData.length)
+                                  SizedBox(
+                                    width: cardWidth,
+                                    child: _kartuMobile(
+                                      context: context,
+                                      data: allData[secondIndex],
+                                      isNext: state.upcomingData
+                                          .contains(allData[secondIndex]),
+                                      isFinished: state.pastData
+                                          .contains(allData[secondIndex]),
+                                    ),
+                                  )
+                                else
+                                  SizedBox(width: cardWidth),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                );
+              } else if (state is TodayGetDataIsEmpty) {
+                return Center(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 60),
+                      Container(
+                        height: 165,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(
+                                'asset/image/jesus-with-children.png'),
+                            fit: BoxFit.contain,
+                          ),
                         ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "Tidak ada jadwal kegiatan hari ini",
+                        style: GoogleFonts.montserrat(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: black,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return Skeletonizer(
+                  enabled: true,
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      childAspectRatio: 3 / 2,
+                    ),
+                    itemCount: 6,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        height: 400,
+                        width: double.infinity,
+                        color: lightPurple,
                       );
                     },
                   ),
                 );
-              },
-            );
-          } else if (state is TodayGetDataIsEmpty) {
-            return Center(
-              child: Column(
-                children: [
-                  const SizedBox(height: 60),
-                  Container(
-                    height: 165,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image:
-                            AssetImage('asset/image/jesus-with-children.png'),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    "Tidak ada jadwal kegiatan hari ini",
-                    style: GoogleFonts.montserrat(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: black,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return Skeletonizer(
-              enabled: true,
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 3 / 2,
-                ),
-                itemCount: 6,
-                itemBuilder: (context, index) {
-                  return Container(
-                    height: 400,
-                    width: double.infinity,
-                    color: lightPurple,
-                  );
-                },
-              ),
-            );
-          }
-        },
-      )
+              }
+            },
+          ),
+        ),
+      ),
     ],
   );
 }

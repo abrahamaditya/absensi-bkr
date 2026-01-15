@@ -593,271 +593,276 @@ Widget mobileLayout(BuildContext context, Kid kidsData) {
       TextEditingController(text: kidsData.parentName);
   kelasController = kidsData.grade;
 
-  return SizedBox(
-    height: MediaQuery.of(context).size.height - 225,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          spacing: 10,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                color: purple,
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                onPressed: () {
-                  context.read<SidebarMenuBloc>().add(FetchSidebarMenuEvent(
-                      menu: "Anak Detail", data: kidsData));
-                },
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: white,
-                  size: 15,
-                ),
-                hoverColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-              ),
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        spacing: 10,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              color: purple,
+              shape: BoxShape.circle,
             ),
-            Text(
-              "Ubah Data Anak",
-              style: GoogleFonts.montserrat(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-                color: black,
+            child: IconButton(
+              onPressed: () {
+                context.read<SidebarMenuBloc>().add(
+                    FetchSidebarMenuEvent(menu: "Anak Detail", data: kidsData));
+              },
+              icon: Icon(
+                Icons.arrow_back,
+                color: white,
+                size: 15,
               ),
+              hoverColor: Colors.transparent,
+              highlightColor: Colors.transparent,
             ),
-          ],
-        ),
-        const SizedBox(height: 25),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _fieldFormInputTeks("Nama lengkap", namaController, true),
-                      const SizedBox(height: 18),
-                      _fieldDatePickerTanggal("Tanggal Lahir",
-                          tanggalLahirController, context, true),
-                      const SizedBox(height: 18),
-                      _fieldFormInputTeks("Alamat", alamatController, true),
-                      const SizedBox(height: 18),
-                      _fieldDropdownFormKelas("Kelas", kelasController, true),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 20),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _fieldFormInputTeks("No. HP", noHpController, true,
-                          isNumber: true),
-                      const SizedBox(height: 18),
-                      _fieldFormInputTeks(
-                          "Nama Orang Tua", orangTuaController, true),
-                      const SizedBox(height: 18),
-                      _fieldFormInputTeks("Sekolah", sekolahController, true),
-                    ],
-                  ),
-                ),
-              ],
+          ),
+          Text(
+            "Ubah Data Anak",
+            style: GoogleFonts.montserrat(
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+              color: black,
             ),
-            const SizedBox(height: 25),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    context.read<SidebarMenuBloc>().add(FetchSidebarMenuEvent(
-                        menu: "Anak Detail", data: kidsData));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(2),
-                      side: BorderSide(color: orange, width: 1),
-                    ),
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 18,
-                      horizontal: 20,
+          ),
+        ],
+      ),
+      const SizedBox(height: 25),
+      ScrollConfiguration(
+        behavior: const ScrollBehavior().copyWith(overscroll: false),
+        child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _fieldFormInputTeks(
+                            "Nama lengkap", namaController, true),
+                        const SizedBox(height: 18),
+                        _fieldDatePickerTanggal("Tanggal Lahir",
+                            tanggalLahirController, context, true),
+                        const SizedBox(height: 18),
+                        _fieldFormInputTeks("Alamat", alamatController, true),
+                        const SizedBox(height: 18),
+                        _fieldDropdownFormKelas("Kelas", kelasController, true),
+                      ],
                     ),
                   ),
-                  child: Text(
-                    "Batal",
-                    style: GoogleFonts.montserrat(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: orange,
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _fieldFormInputTeks("No. HP", noHpController, true,
+                            isNumber: true),
+                        const SizedBox(height: 18),
+                        _fieldFormInputTeks(
+                            "Nama Orang Tua", orangTuaController, true),
+                        const SizedBox(height: 18),
+                        _fieldFormInputTeks("Sekolah", sekolahController, true),
+                      ],
                     ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () async {
-                    // Validasi
-                    if (namaController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: red,
-                          duration: Duration(seconds: 3),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          showCloseIcon: true,
-                          closeIconColor: white,
-                          content: Text(
-                            "Pastikan nama anak sudah terisi",
-                            style: GoogleFonts.montserrat(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: white,
-                            ),
-                          ),
-                        ),
-                      );
-                      return;
-                    }
-
-                    // Validasi Berhasil
-
-                    if ((namaController.text.isNotEmpty &&
-                            namaController.text != "" &&
-                            namaController.text != "-") &&
-                        (tanggalLahirController.text.isNotEmpty &&
-                            tanggalLahirController.text != "" &&
-                            tanggalLahirController.text != "-") &&
-                        (alamatController.text.isNotEmpty &&
-                            alamatController.text != "" &&
-                            alamatController.text != "-") &&
-                        (noHpController.text.isNotEmpty &&
-                            noHpController.text != "" &&
-                            noHpController.text != "-") &&
-                        (orangTuaController.text.isNotEmpty &&
-                            orangTuaController.text != "" &&
-                            orangTuaController.text != "-") &&
-                        kelasController != "Pilih Kelas") {
-                      isDataComplete = true;
-                    }
-
-                    if (kelasController == "Pilih Kelas") {
-                      kelasController = "";
-                    }
-
-                    Map<String, dynamic> updatedData = {
-                      'name': namaController.text,
-                      'birthDate': formattedDateForSubmit,
-                      'address': alamatController.text,
-                      'mobile': noHpController.text,
-                      'parents': orangTuaController.text,
-                      'school': sekolahController.text,
-                      'grade': kelasController,
-                      'isDataComplete': isDataComplete,
-                      'updatedAt': ambilWaktuSekarang(),
-                    };
-
-                    // Ganti data anak dengan data yang telah diperbaharui (lokal) untuk kembali ke halaman detail
-                    kidsData.name = namaController.text;
-                    kidsData.birthdate = formattedDateForSubmit;
-                    kidsData.address = alamatController.text;
-                    kidsData.mobile = noHpController.text;
-                    kidsData.parentName = orangTuaController.text;
-                    kidsData.grade = kelasController;
-                    kidsData.school = sekolahController.text;
-                    kidsData.isDataComplete = isDataComplete;
-
-                    try {
-                      // Berhasil menambahkan data
-                      context.read<UpdateKidsBloc>().add(UpdateKidsEvent(
-                          id: kidsData.id!, updatedData: updatedData));
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: green,
-                          duration: Duration(seconds: 3),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          showCloseIcon: true,
-                          closeIconColor: white,
-                          content: Text(
-                            "Data berhasil diperbaharui!",
-                            style: GoogleFonts.montserrat(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: white,
-                            ),
-                          ),
-                        ),
-                      );
-
-                      namaController.clear();
-                      tanggalLahirController.clear();
-                      alamatController.clear();
-                      noHpController.clear();
-                      orangTuaController.clear();
-                      sekolahController.clear();
-                      kelasController = null;
-                      formattedDateForSubmit = null;
-
+                ],
+              ),
+              const SizedBox(height: 25),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
                       context.read<SidebarMenuBloc>().add(FetchSidebarMenuEvent(
                           menu: "Anak Detail", data: kidsData));
-                    } catch (e) {
-                      // Gagal menambahkan data
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: red,
-                          duration: Duration(seconds: 3),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          showCloseIcon: true,
-                          closeIconColor: white,
-                          content: Text(
-                            "Gagal memperbaharui data anak",
-                            style: GoogleFonts.montserrat(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: white,
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(2),
+                        side: BorderSide(color: orange, width: 1),
+                      ),
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 18,
+                        horizontal: 20,
+                      ),
+                    ),
+                    child: Text(
+                      "Batal",
+                      style: GoogleFonts.montserrat(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: orange,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () async {
+                      // Validasi
+                      if (namaController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: red,
+                            duration: Duration(seconds: 3),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            showCloseIcon: true,
+                            closeIconColor: white,
+                            content: Text(
+                              "Pastikan nama anak sudah terisi",
+                              style: GoogleFonts.montserrat(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: white,
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: orange,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(2),
+                        );
+                        return;
+                      }
+
+                      // Validasi Berhasil
+
+                      if ((namaController.text.isNotEmpty &&
+                              namaController.text != "" &&
+                              namaController.text != "-") &&
+                          (tanggalLahirController.text.isNotEmpty &&
+                              tanggalLahirController.text != "" &&
+                              tanggalLahirController.text != "-") &&
+                          (alamatController.text.isNotEmpty &&
+                              alamatController.text != "" &&
+                              alamatController.text != "-") &&
+                          (noHpController.text.isNotEmpty &&
+                              noHpController.text != "" &&
+                              noHpController.text != "-") &&
+                          (orangTuaController.text.isNotEmpty &&
+                              orangTuaController.text != "" &&
+                              orangTuaController.text != "-") &&
+                          kelasController != "Pilih Kelas") {
+                        isDataComplete = true;
+                      }
+
+                      if (kelasController == "Pilih Kelas") {
+                        kelasController = "";
+                      }
+
+                      Map<String, dynamic> updatedData = {
+                        'name': namaController.text,
+                        'birthDate': formattedDateForSubmit,
+                        'address': alamatController.text,
+                        'mobile': noHpController.text,
+                        'parents': orangTuaController.text,
+                        'school': sekolahController.text,
+                        'grade': kelasController,
+                        'isDataComplete': isDataComplete,
+                        'updatedAt': ambilWaktuSekarang(),
+                      };
+
+                      // Ganti data anak dengan data yang telah diperbaharui (lokal) untuk kembali ke halaman detail
+                      kidsData.name = namaController.text;
+                      kidsData.birthdate = formattedDateForSubmit;
+                      kidsData.address = alamatController.text;
+                      kidsData.mobile = noHpController.text;
+                      kidsData.parentName = orangTuaController.text;
+                      kidsData.grade = kelasController;
+                      kidsData.school = sekolahController.text;
+                      kidsData.isDataComplete = isDataComplete;
+
+                      try {
+                        // Berhasil menambahkan data
+                        context.read<UpdateKidsBloc>().add(UpdateKidsEvent(
+                            id: kidsData.id!, updatedData: updatedData));
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: green,
+                            duration: Duration(seconds: 3),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            showCloseIcon: true,
+                            closeIconColor: white,
+                            content: Text(
+                              "Data berhasil diperbaharui!",
+                              style: GoogleFonts.montserrat(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: white,
+                              ),
+                            ),
+                          ),
+                        );
+
+                        namaController.clear();
+                        tanggalLahirController.clear();
+                        alamatController.clear();
+                        noHpController.clear();
+                        orangTuaController.clear();
+                        sekolahController.clear();
+                        kelasController = null;
+                        formattedDateForSubmit = null;
+
+                        context.read<SidebarMenuBloc>().add(
+                            FetchSidebarMenuEvent(
+                                menu: "Anak Detail", data: kidsData));
+                      } catch (e) {
+                        // Gagal menambahkan data
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: red,
+                            duration: Duration(seconds: 3),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            showCloseIcon: true,
+                            closeIconColor: white,
+                            content: Text(
+                              "Gagal memperbaharui data anak",
+                              style: GoogleFonts.montserrat(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: white,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: orange,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 18,
+                        horizontal: 20,
+                      ),
                     ),
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 18,
-                      horizontal: 20,
+                    child: Text(
+                      "Simpan Data",
+                      style: GoogleFonts.montserrat(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: white,
+                      ),
                     ),
                   ),
-                  child: Text(
-                    "Simpan Data",
-                    style: GoogleFonts.montserrat(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
-      ],
-    ),
+      ),
+    ],
   );
 }

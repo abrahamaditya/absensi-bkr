@@ -35,9 +35,10 @@ class KidsGetAllDataIsEmpty extends KidsState {
 }
 
 class KidsGetDataIsEmpty extends KidsState {
-  const KidsGetDataIsEmpty();
+  final String searchNameQuery;
+  const KidsGetDataIsEmpty(this.searchNameQuery);
   @override
-  List<Object> get props => [];
+  List<Object> get props => [searchNameQuery];
 }
 
 class KidsError extends KidsState {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:absensi_bkr/helper/color.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -398,6 +399,9 @@ class ScanMobileMenu extends StatelessWidget {
                                                     );
                                                   }
                                                 : () {
+                                                    HapticFeedback
+                                                        .mediumImpact();
+
                                                     final id = membuatAbsenId();
                                                     final dateNow =
                                                         ambilWaktuSekarang();

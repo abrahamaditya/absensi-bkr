@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:absensi_bkr/helper/color.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -1731,988 +1732,1122 @@ Widget mobileLayout(
           ],
         ),
       ),
-      if (_apakahKegiatannyaItuBisaAbsenAtauLive(
-          formatJadiYYYYMMDD(serviceData.date!), serviceData.time!)) ...[
-        BlocBuilder<TabToggleSwitchBloc, ToggleSwitchAbsenState>(
-          builder: (context, state) {
-            if (state is TabToggleSwitch) {
-              return Column(
-                children: [
-                  const SizedBox(height: 25),
-                  Row(
-                    spacing: 6,
-                    children: [
-                      InkWell(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 22, vertical: 12),
-                          decoration: BoxDecoration(
-                            color: state.index == 0 ? orange : lightGrey,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(8),
-                              topRight: Radius.circular(8),
-                            ),
-                          ),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Absen melalui:",
-                                  style: GoogleFonts.montserrat(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w300,
-                                    color: state.index == 0 ? white : darkGrey,
+      ScrollConfiguration(
+        behavior: const ScrollBehavior().copyWith(overscroll: false),
+        child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (_apakahKegiatannyaItuBisaAbsenAtauLive(
+                  formatJadiYYYYMMDD(serviceData.date!),
+                  serviceData.time!)) ...[
+                BlocBuilder<TabToggleSwitchBloc, ToggleSwitchAbsenState>(
+                  builder: (context, state) {
+                    if (state is TabToggleSwitch) {
+                      return Column(
+                        children: [
+                          const SizedBox(height: 25),
+                          Row(
+                            spacing: 6,
+                            children: [
+                              InkWell(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 22, vertical: 12),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        state.index == 0 ? orange : lightGrey,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(8),
+                                      topRight: Radius.circular(8),
+                                    ),
                                   ),
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Absen melalui:",
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w300,
+                                            color: state.index == 0
+                                                ? white
+                                                : darkGrey,
+                                          ),
+                                        ),
+                                        Text(
+                                          "Scan QR Code",
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w700,
+                                            color: state.index == 0
+                                                ? white
+                                                : darkGrey,
+                                          ),
+                                        ),
+                                      ]),
                                 ),
-                                Text(
-                                  "Scan QR Code",
-                                  style: GoogleFonts.montserrat(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700,
-                                    color: state.index == 0 ? white : darkGrey,
-                                  ),
-                                ),
-                              ]),
-                        ),
-                        onTap: () {
-                          selected = defaultKid;
-                          context
-                              .read<SelectInputManualDataAbsenBloc>()
-                              .add(InitialInputManualDataAbsenEvent());
-                          context.read<SelectDataAbsenBloc>().add(
-                              FetchSelectDataAbsenEvent(isSelected: false));
-                          context
-                              .read<CameraScanAbsenBloc>()
-                              .add(FetchCameraScanAbsenEvent(isOpened: false));
-                          context
-                              .read<ToggleSwitchAbsenBloc>()
-                              .add(FetchToggleSwitchAbsenEvent(index: 0));
-                          context
-                              .read<TabToggleSwitchBloc>()
-                              .add(FetchTabToggleSwitchEvent(index: 0));
+                                onTap: () {
+                                  selected = defaultKid;
+                                  context
+                                      .read<SelectInputManualDataAbsenBloc>()
+                                      .add(InitialInputManualDataAbsenEvent());
+                                  context.read<SelectDataAbsenBloc>().add(
+                                      FetchSelectDataAbsenEvent(
+                                          isSelected: false));
+                                  context.read<CameraScanAbsenBloc>().add(
+                                      FetchCameraScanAbsenEvent(
+                                          isOpened: false));
+                                  context.read<ToggleSwitchAbsenBloc>().add(
+                                      FetchToggleSwitchAbsenEvent(index: 0));
+                                  context
+                                      .read<TabToggleSwitchBloc>()
+                                      .add(FetchTabToggleSwitchEvent(index: 0));
 
-                          context
-                              .read<GetKidsByIdScanQRBloc>()
-                              .add(InitIDScanQREvent());
-                        },
-                      ),
-                      InkWell(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 22, vertical: 12),
-                          decoration: BoxDecoration(
-                            color: state.index == 1 ? orange : lightGrey,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(8),
-                              topRight: Radius.circular(8),
-                            ),
-                          ),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Absen melalui:",
-                                  style: GoogleFonts.montserrat(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w300,
-                                    color: state.index == 1 ? white : darkGrey,
-                                  ),
-                                ),
-                                Text(
-                                  "Input Manual",
-                                  style: GoogleFonts.montserrat(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700,
-                                    color: state.index == 1 ? white : darkGrey,
-                                  ),
-                                ),
-                              ]),
-                        ),
-                        onTap: () {
-                          selected = defaultKid;
-
-                          context
-                              .read<SelectInputManualDataAbsenBloc>()
-                              .add(InitialInputManualDataAbsenEvent());
-                          context.read<SelectDataAbsenBloc>().add(
-                              FetchSelectDataAbsenEvent(isSelected: false));
-                          context
-                              .read<CameraScanAbsenBloc>()
-                              .add(FetchCameraScanAbsenEvent(isOpened: false));
-                          context
-                              .read<ToggleSwitchAbsenBloc>()
-                              .add(FetchToggleSwitchAbsenEvent(index: 1));
-                          context
-                              .read<TabToggleSwitchBloc>()
-                              .add(FetchTabToggleSwitchEvent(index: 1));
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              );
-            } else {
-              return const SizedBox.shrink();
-            }
-          },
-        ),
-        BlocBuilder<ToggleSwitchAbsenBloc, ToggleSwitchAbsenState>(
-          builder: (context, state) {
-            if (state is ToggleSwitchAbsenScanQRCode) {
-              return Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(2)),
-                  gradient: LinearGradient(
-                    colors: [orange, lightOrange],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        context
-                            .read<CameraScanAbsenBloc>()
-                            .add(FetchCameraScanAbsenEvent(isOpened: true));
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (contextPopup) => ScanMobileMenu(
-                              parentContext: context,
-                              serviceData: serviceData,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(2),
-                          color: darkOrange,
-                          border: Border.all(
-                            color: white,
-                            width: 1,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          spacing: 6,
-                          children: [
-                            Icon(
-                              Icons.camera_alt_outlined,
-                              size: 16,
-                              color: white,
-                            ),
-                            Text(
-                              "Aktifkan Scanner QR ID Anak",
-                              style: GoogleFonts.montserrat(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: white,
+                                  context
+                                      .read<GetKidsByIdScanQRBloc>()
+                                      .add(InitIDScanQREvent());
+                                },
                               ),
+                              InkWell(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 22, vertical: 12),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        state.index == 1 ? orange : lightGrey,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(8),
+                                      topRight: Radius.circular(8),
+                                    ),
+                                  ),
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Absen melalui:",
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w300,
+                                            color: state.index == 1
+                                                ? white
+                                                : darkGrey,
+                                          ),
+                                        ),
+                                        Text(
+                                          "Input Manual",
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w700,
+                                            color: state.index == 1
+                                                ? white
+                                                : darkGrey,
+                                          ),
+                                        ),
+                                      ]),
+                                ),
+                                onTap: () {
+                                  selected = defaultKid;
+
+                                  context
+                                      .read<SelectInputManualDataAbsenBloc>()
+                                      .add(InitialInputManualDataAbsenEvent());
+                                  context.read<SelectDataAbsenBloc>().add(
+                                      FetchSelectDataAbsenEvent(
+                                          isSelected: false));
+                                  context.read<CameraScanAbsenBloc>().add(
+                                      FetchCameraScanAbsenEvent(
+                                          isOpened: false));
+                                  context.read<ToggleSwitchAbsenBloc>().add(
+                                      FetchToggleSwitchAbsenEvent(index: 1));
+                                  context
+                                      .read<TabToggleSwitchBloc>()
+                                      .add(FetchTabToggleSwitchEvent(index: 1));
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                ),
+                BlocBuilder<ToggleSwitchAbsenBloc, ToggleSwitchAbsenState>(
+                  builder: (context, state) {
+                    if (state is ToggleSwitchAbsenScanQRCode) {
+                      return Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(2)),
+                          gradient: LinearGradient(
+                            colors: [orange, lightOrange],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                context.read<CameraScanAbsenBloc>().add(
+                                    FetchCameraScanAbsenEvent(isOpened: true));
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (contextPopup) => ScanMobileMenu(
+                                      parentContext: context,
+                                      serviceData: serviceData,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                width: double.infinity,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(2),
+                                  color: darkOrange,
+                                  border: Border.all(
+                                    color: white,
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  spacing: 6,
+                                  children: [
+                                    Icon(
+                                      Icons.camera_alt_outlined,
+                                      size: 16,
+                                      color: white,
+                                    ),
+                                    Text(
+                                      "Aktifkan Scanner QR ID Anak",
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            BlocBuilder<GetKidsByIdScanQRBloc,
+                                CameraScanAbsenState>(
+                              builder: (context, state) {
+                                if (state is GetIDScanQR) {
+                                  return SizedBox(
+                                    width: 500,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(height: 20),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            left: 30,
+                                            right: 30,
+                                            bottom: 5,
+                                          ),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              _infoDetailKegiatan(
+                                                  "Nama", state.data.name,
+                                                  isMobile: true),
+                                              _infoDetailKegiatan(
+                                                  "ID", state.data.id,
+                                                  isMobile: true),
+                                              _infoDetailKegiatan(
+                                                  "No. Hp", state.data.mobile,
+                                                  isMobile: true),
+                                              _infoDetailKegiatan(
+                                                  "Kelas", state.data.grade,
+                                                  isMobile: true),
+                                              SizedBox(height: 10),
+                                              ElevatedButton(
+                                                onPressed: state.alreadyExist ==
+                                                        true
+                                                    ? () {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                            backgroundColor:
+                                                                red,
+                                                            duration: Duration(
+                                                                seconds: 3),
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        20,
+                                                                    vertical:
+                                                                        10),
+                                                            showCloseIcon: true,
+                                                            closeIconColor:
+                                                                white,
+                                                            content: Text(
+                                                              "${state.data.name!.split(' ').first} sudah melakukan absen sebelumnya",
+                                                              style: GoogleFonts
+                                                                  .montserrat(
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                color: white,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
+                                                    : () {
+                                                        HapticFeedback
+                                                            .mediumImpact();
+
+                                                        final id =
+                                                            membuatAbsenId();
+                                                        final dateNow =
+                                                            ambilWaktuSekarang();
+
+                                                        Map<String, dynamic>
+                                                            dataAttendanceService =
+                                                            {
+                                                          '_id': id,
+                                                          'kidId':
+                                                              state.data.id,
+                                                          'kidName':
+                                                              state.data.name,
+                                                          'method': 'Scan QR',
+                                                          'timestamp': dateNow,
+                                                        };
+
+                                                        Map<String, dynamic>
+                                                            dataAttendanceKid =
+                                                            {
+                                                          '_id': id,
+                                                          'serviceId':
+                                                              serviceData.id,
+                                                          'serviceName':
+                                                              serviceData.name,
+                                                          'serviceDate':
+                                                              formatJadiYYYYMMDD(
+                                                                  serviceData
+                                                                      .date),
+                                                          'serviceTime':
+                                                              serviceData.time,
+                                                          'method': 'Scan QR',
+                                                          'timestamp': dateNow,
+                                                        };
+
+                                                        Map<String, dynamic>
+                                                            dataAttendanceGlobalAttendance =
+                                                            {
+                                                          '_id': id,
+                                                          'kidId':
+                                                              state.data.id,
+                                                          'kidName':
+                                                              state.data.name,
+                                                          'serviceId':
+                                                              serviceData.id,
+                                                          'serviceName':
+                                                              serviceData.name,
+                                                          'serviceDate':
+                                                              formatJadiYYYYMMDD(
+                                                                  serviceData
+                                                                      .date),
+                                                          'serviceTime':
+                                                              serviceData.time,
+                                                          'method': 'Scan QR',
+                                                          'timestamp': dateNow,
+                                                        };
+                                                        try {
+                                                          context
+                                                              .read<
+                                                                  TakeAttendanceBloc>()
+                                                              .add(
+                                                                TakeAttendanceEvent(
+                                                                  kidId: state
+                                                                      .data.id!,
+                                                                  serviceId:
+                                                                      serviceData
+                                                                          .id!,
+                                                                  dataAttendanceService:
+                                                                      dataAttendanceService,
+                                                                  dataAttendanceKid:
+                                                                      dataAttendanceKid,
+                                                                  dataAttendanceGlobalAttendance:
+                                                                      dataAttendanceGlobalAttendance,
+                                                                ),
+                                                              );
+
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            SnackBar(
+                                                              backgroundColor:
+                                                                  green,
+                                                              duration:
+                                                                  Duration(
+                                                                      seconds:
+                                                                          3),
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          20,
+                                                                      vertical:
+                                                                          10),
+                                                              showCloseIcon:
+                                                                  true,
+                                                              closeIconColor:
+                                                                  white,
+                                                              content: Text(
+                                                                "${state.data.name} berhasil diabsen!",
+                                                                style: GoogleFonts
+                                                                    .montserrat(
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  color: white,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          );
+                                                          context
+                                                              .read<
+                                                                  GetKidsByIdScanQRBloc>()
+                                                              .add(
+                                                                  InitIDScanQREvent());
+
+                                                          context
+                                                              .read<
+                                                                  GetServiceByIdBloc>()
+                                                              .add(FetchServiceByIDEvent(
+                                                                  serviceId:
+                                                                      serviceData
+                                                                          .id));
+                                                        } catch (e) {
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            SnackBar(
+                                                              backgroundColor:
+                                                                  red,
+                                                              duration:
+                                                                  Duration(
+                                                                      seconds:
+                                                                          3),
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          20,
+                                                                      vertical:
+                                                                          10),
+                                                              showCloseIcon:
+                                                                  true,
+                                                              closeIconColor:
+                                                                  white,
+                                                              content: Text(
+                                                                "Gagal melakukan absen",
+                                                                style: GoogleFonts
+                                                                    .montserrat(
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  color: white,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          );
+                                                        }
+                                                      },
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      state.alreadyExist == true
+                                                          ? darkGrey
+                                                          : darkOrange,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            2),
+                                                  ),
+                                                  elevation: 0,
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                    vertical: 18,
+                                                    horizontal: 20,
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                  state.alreadyExist == true
+                                                      ? "Sudah Absen"
+                                                      : "Absen",
+                                                  style: GoogleFonts.montserrat(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: white,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                } else if (state is CameraScanAbsenError) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                      bottom: 5,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(height: 15),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Error :  ",
+                                              style: GoogleFonts.montserrat(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w500,
+                                                fontStyle: FontStyle.italic,
+                                                color: white,
+                                              ),
+                                            ),
+                                            Text(
+                                              "QR Code tidak terdaftar.",
+                                              style: GoogleFonts.montserrat(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w700,
+                                                fontStyle: FontStyle.italic,
+                                                color: white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  return SizedBox.shrink();
+                                }
+                              },
                             ),
                           ],
                         ),
-                      ),
-                    ),
-                    BlocBuilder<GetKidsByIdScanQRBloc, CameraScanAbsenState>(
-                      builder: (context, state) {
-                        if (state is GetIDScanQR) {
-                          return SizedBox(
-                            width: 500,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(height: 20),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    left: 30,
-                                    right: 30,
-                                    bottom: 5,
+                      );
+                    } else if (state is ToggleSwitchAbsenManual) {
+                      return Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(2),
+                          gradient: LinearGradient(
+                            colors: [orange, lightOrange],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              height: 50,
+                              child: DropdownSearch<Kid>(
+                                key: dropDownKey,
+                                enabled: true,
+                                onChanged: (value) {
+                                  selected = value!;
+                                  context.read<SelectDataAbsenBloc>().add(
+                                      FetchSelectDataAbsenEvent(
+                                          isSelected: true));
+
+                                  if (selected.id != "-") {
+                                    context
+                                        .read<SelectInputManualDataAbsenBloc>()
+                                        .add(
+                                          FetchSelectInputManualDataAbsenEvent(
+                                              selectedKid: selected,
+                                              serviceId: serviceData.id),
+                                        );
+                                  }
+                                },
+                                selectedItem: selected,
+                                itemAsString: (item) {
+                                  return item.name!;
+                                },
+                                compareFn: (item1, item2) {
+                                  return item1.id == item2.id;
+                                },
+                                items: (filter, loadProps) async {
+                                  final kids =
+                                      await _kidsService.ambilSemuaDataAnak();
+                                  return kids;
+                                },
+                                decoratorProps: DropDownDecoratorProps(
+                                  decoration: InputDecoration(
+                                    suffixIconColor: darkGrey,
+                                    filled: true,
+                                    fillColor: white,
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        4,
+                                      ),
+                                      borderSide: BorderSide(
+                                        color: darkOrange,
+                                        width: 2,
+                                      ),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(4),
+                                      borderSide: BorderSide(
+                                        color: darkOrange,
+                                        width: 0.75,
+                                      ),
+                                    ),
                                   ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                  baseStyle: GoogleFonts.montserrat(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w400,
+                                    color: black,
+                                  ),
+                                ),
+                                popupProps: PopupProps.menu(
+                                  showSearchBox: true,
+                                  fit: FlexFit.loose,
+                                  emptyBuilder: (context, searchEntry) {
+                                    return SizedBox(
+                                      height: 60,
+                                      child: Center(
+                                        child: Text(
+                                          "Data anak tidak ditemukan",
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                            color: darkGrey,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  searchFieldProps: TextFieldProps(
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w400,
+                                      color: black,
+                                    ),
+                                    cursorColor: black,
+                                    decoration: InputDecoration(
+                                      hintText: "Cari ID atau Nama Anak",
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      filled: true,
+                                      fillColor: white,
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(4),
+                                        borderSide: BorderSide(
+                                          color: darkOrange,
+                                          width: 1,
+                                        ),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(4),
+                                        borderSide: BorderSide(
+                                          color: darkOrange,
+                                          width: 0.5,
+                                        ),
+                                      ),
+                                      constraints: BoxConstraints(
+                                        maxHeight: 45,
+                                      ),
+                                    ),
+                                  ),
+                                  itemBuilder:
+                                      (context, item, isDisabled, isSelected) {
+                                    return Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 8,
+                                        horizontal: 15,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: white,
+                                      ),
+                                      child: Row(
+                                        spacing: 5,
+                                        children: [
+                                          Flexible(
+                                            child: RichText(
+                                              text: TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                    text: item.name,
+                                                    style:
+                                                        GoogleFonts.montserrat(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: black,
+                                                    ),
+                                                  ),
+                                                  TextSpan(
+                                                    text: " [ID: ${item.id}]",
+                                                    style:
+                                                        GoogleFonts.montserrat(
+                                                      fontSize: 11,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: black,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            BlocBuilder<SelectInputManualDataAbsenBloc,
+                                SelectDataAbsenState>(
+                              builder: (context, state) {
+                                if (state is SelectInputManualDataAbsen) {
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      _infoDetailKegiatan(
-                                          "Nama", state.data.name,
-                                          isMobile: true),
-                                      _infoDetailKegiatan("ID", state.data.id,
-                                          isMobile: true),
-                                      _infoDetailKegiatan(
-                                          "No. Hp", state.data.mobile,
-                                          isMobile: true),
-                                      _infoDetailKegiatan(
-                                          "Kelas", state.data.grade,
-                                          isMobile: true),
-                                      SizedBox(height: 10),
-                                      ElevatedButton(
-                                        onPressed: state.alreadyExist == true
-                                            ? () {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    backgroundColor: red,
-                                                    duration:
-                                                        Duration(seconds: 3),
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 20,
-                                                            vertical: 10),
-                                                    showCloseIcon: true,
-                                                    closeIconColor: white,
-                                                    content: Text(
-                                                      "${state.data.name!.split(' ').first} sudah melakukan absen sebelumnya",
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 10,
+                                          right: 10,
+                                          bottom: 0,
+                                          top: 15,
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            _infoDetailKegiatan(
+                                                "Nama", state.selectedKid.name,
+                                                isMobile: true),
+                                            _infoDetailKegiatan(
+                                                "ID", state.selectedKid.id,
+                                                isMobile: true),
+                                            _infoDetailKegiatan("No. Hp",
+                                                state.selectedKid.mobile,
+                                                isMobile: true),
+                                            _infoDetailKegiatan("Kelas",
+                                                state.selectedKid.grade,
+                                                isMobile: true),
+                                            SizedBox(height: 10),
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: ElevatedButton(
+                                                    onPressed:
+                                                        state.alreadyExist ==
+                                                                true
+                                                            ? () {
+                                                                ScaffoldMessenger.of(
+                                                                        context)
+                                                                    .showSnackBar(
+                                                                  SnackBar(
+                                                                    backgroundColor:
+                                                                        red,
+                                                                    duration: Duration(
+                                                                        seconds:
+                                                                            3),
+                                                                    padding: EdgeInsets.symmetric(
+                                                                        horizontal:
+                                                                            20,
+                                                                        vertical:
+                                                                            10),
+                                                                    showCloseIcon:
+                                                                        true,
+                                                                    closeIconColor:
+                                                                        white,
+                                                                    content:
+                                                                        Text(
+                                                                      "${state.selectedKid.name!.split(' ').first} sudah melakukan absen sebelumnya",
+                                                                      style: GoogleFonts
+                                                                          .montserrat(
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                        color:
+                                                                            white,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              }
+                                                            : () {
+                                                                HapticFeedback
+                                                                    .mediumImpact();
+
+                                                                final id =
+                                                                    membuatAbsenId();
+                                                                final dateNow =
+                                                                    ambilWaktuSekarang();
+
+                                                                Map<String,
+                                                                        dynamic>
+                                                                    dataAttendanceService =
+                                                                    {
+                                                                  '_id': id,
+                                                                  'kidId': state
+                                                                      .selectedKid
+                                                                      .id,
+                                                                  'kidName': state
+                                                                      .selectedKid
+                                                                      .name,
+                                                                  'method':
+                                                                      'Manual',
+                                                                  'timestamp':
+                                                                      dateNow,
+                                                                };
+
+                                                                Map<String,
+                                                                        dynamic>
+                                                                    dataAttendanceKid =
+                                                                    {
+                                                                  '_id': id,
+                                                                  'serviceId':
+                                                                      serviceData
+                                                                          .id,
+                                                                  'serviceName':
+                                                                      serviceData
+                                                                          .name,
+                                                                  'serviceDate':
+                                                                      formatJadiYYYYMMDD(
+                                                                          serviceData
+                                                                              .date),
+                                                                  'serviceTime':
+                                                                      serviceData
+                                                                          .time,
+                                                                  'method':
+                                                                      'Manual',
+                                                                  'timestamp':
+                                                                      dateNow,
+                                                                };
+
+                                                                Map<String,
+                                                                        dynamic>
+                                                                    dataAttendanceGlobalAttendance =
+                                                                    {
+                                                                  '_id': id,
+                                                                  'kidId': state
+                                                                      .selectedKid
+                                                                      .id,
+                                                                  'kidName': state
+                                                                      .selectedKid
+                                                                      .name,
+                                                                  'serviceId':
+                                                                      serviceData
+                                                                          .id,
+                                                                  'serviceName':
+                                                                      serviceData
+                                                                          .name,
+                                                                  'serviceDate':
+                                                                      formatJadiYYYYMMDD(
+                                                                          serviceData
+                                                                              .date),
+                                                                  'serviceTime':
+                                                                      serviceData
+                                                                          .time,
+                                                                  'method':
+                                                                      'Manual',
+                                                                  'timestamp':
+                                                                      dateNow,
+                                                                };
+                                                                try {
+                                                                  context
+                                                                      .read<
+                                                                          TakeAttendanceBloc>()
+                                                                      .add(
+                                                                        TakeAttendanceEvent(
+                                                                            kidId: state
+                                                                                .selectedKid.id!,
+                                                                            serviceId: serviceData
+                                                                                .id!,
+                                                                            dataAttendanceService:
+                                                                                dataAttendanceService,
+                                                                            dataAttendanceKid:
+                                                                                dataAttendanceKid,
+                                                                            dataAttendanceGlobalAttendance:
+                                                                                dataAttendanceGlobalAttendance),
+                                                                      );
+
+                                                                  context
+                                                                      .read<
+                                                                          GetServiceByIdBloc>()
+                                                                      .add(FetchServiceByIDEvent(
+                                                                          serviceId:
+                                                                              serviceData.id));
+
+                                                                  ScaffoldMessenger.of(
+                                                                          context)
+                                                                      .showSnackBar(
+                                                                    SnackBar(
+                                                                      backgroundColor:
+                                                                          green,
+                                                                      duration: Duration(
+                                                                          seconds:
+                                                                              3),
+                                                                      padding: EdgeInsets.symmetric(
+                                                                          horizontal:
+                                                                              20,
+                                                                          vertical:
+                                                                              10),
+                                                                      showCloseIcon:
+                                                                          true,
+                                                                      closeIconColor:
+                                                                          white,
+                                                                      content:
+                                                                          Text(
+                                                                        "${state.selectedKid.name} berhasil diabsen!",
+                                                                        style: GoogleFonts
+                                                                            .montserrat(
+                                                                          fontSize:
+                                                                              14,
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                          color:
+                                                                              white,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  );
+
+                                                                  selected =
+                                                                      defaultKid;
+                                                                  dropDownKey
+                                                                      .currentState!
+                                                                      .changeSelectedItem(
+                                                                          selected);
+
+                                                                  context
+                                                                      .read<
+                                                                          SelectInputManualDataAbsenBloc>()
+                                                                      .add(
+                                                                          InitialInputManualDataAbsenEvent());
+                                                                } catch (e) {
+                                                                  ScaffoldMessenger.of(
+                                                                          context)
+                                                                      .showSnackBar(
+                                                                    SnackBar(
+                                                                      backgroundColor:
+                                                                          red,
+                                                                      duration: Duration(
+                                                                          seconds:
+                                                                              3),
+                                                                      padding: EdgeInsets.symmetric(
+                                                                          horizontal:
+                                                                              20,
+                                                                          vertical:
+                                                                              10),
+                                                                      showCloseIcon:
+                                                                          true,
+                                                                      closeIconColor:
+                                                                          white,
+                                                                      content:
+                                                                          Text(
+                                                                        "Gagal melakukan absen",
+                                                                        style: GoogleFonts
+                                                                            .montserrat(
+                                                                          fontSize:
+                                                                              14,
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                          color:
+                                                                              white,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                }
+                                                              },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          state.alreadyExist ==
+                                                                  true
+                                                              ? darkGrey
+                                                              : darkOrange,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(2),
+                                                      ),
+                                                      elevation: 0,
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        vertical: 18,
+                                                        horizontal: 20,
+                                                      ),
+                                                    ),
+                                                    child: Text(
+                                                      state.alreadyExist == true
+                                                          ? "Sudah Absen"
+                                                          : "Absen",
                                                       style: GoogleFonts
                                                           .montserrat(
-                                                        fontSize: 14,
+                                                        fontSize: 12,
                                                         fontWeight:
                                                             FontWeight.w600,
                                                         color: white,
                                                       ),
                                                     ),
                                                   ),
-                                                );
-                                              }
-                                            : () {
-                                                final id = membuatAbsenId();
-                                                final dateNow =
-                                                    ambilWaktuSekarang();
-
-                                                Map<String, dynamic>
-                                                    dataAttendanceService = {
-                                                  '_id': id,
-                                                  'kidId': state.data.id,
-                                                  'kidName': state.data.name,
-                                                  'method': 'Scan QR',
-                                                  'timestamp': dateNow,
-                                                };
-
-                                                Map<String, dynamic>
-                                                    dataAttendanceKid = {
-                                                  '_id': id,
-                                                  'serviceId': serviceData.id,
-                                                  'serviceName':
-                                                      serviceData.name,
-                                                  'serviceDate':
-                                                      formatJadiYYYYMMDD(
-                                                          serviceData.date),
-                                                  'serviceTime':
-                                                      serviceData.time,
-                                                  'method': 'Scan QR',
-                                                  'timestamp': dateNow,
-                                                };
-
-                                                Map<String, dynamic>
-                                                    dataAttendanceGlobalAttendance =
-                                                    {
-                                                  '_id': id,
-                                                  'kidId': state.data.id,
-                                                  'kidName': state.data.name,
-                                                  'serviceId': serviceData.id,
-                                                  'serviceName':
-                                                      serviceData.name,
-                                                  'serviceDate':
-                                                      formatJadiYYYYMMDD(
-                                                          serviceData.date),
-                                                  'serviceTime':
-                                                      serviceData.time,
-                                                  'method': 'Scan QR',
-                                                  'timestamp': dateNow,
-                                                };
-                                                try {
-                                                  context
-                                                      .read<
-                                                          TakeAttendanceBloc>()
-                                                      .add(
-                                                        TakeAttendanceEvent(
-                                                          kidId: state.data.id!,
-                                                          serviceId:
-                                                              serviceData.id!,
-                                                          dataAttendanceService:
-                                                              dataAttendanceService,
-                                                          dataAttendanceKid:
-                                                              dataAttendanceKid,
-                                                          dataAttendanceGlobalAttendance:
-                                                              dataAttendanceGlobalAttendance,
-                                                        ),
-                                                      );
-
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    SnackBar(
-                                                      backgroundColor: green,
-                                                      duration:
-                                                          Duration(seconds: 3),
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 20,
-                                                              vertical: 10),
-                                                      showCloseIcon: true,
-                                                      closeIconColor: white,
-                                                      content: Text(
-                                                        "${state.data.name} berhasil diabsen!",
-                                                        style: GoogleFonts
-                                                            .montserrat(
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          color: white,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  );
-                                                  context
-                                                      .read<
-                                                          GetKidsByIdScanQRBloc>()
-                                                      .add(InitIDScanQREvent());
-
-                                                  context
-                                                      .read<
-                                                          GetServiceByIdBloc>()
-                                                      .add(
-                                                          FetchServiceByIDEvent(
-                                                              serviceId:
-                                                                  serviceData
-                                                                      .id));
-                                                } catch (e) {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    SnackBar(
-                                                      backgroundColor: red,
-                                                      duration:
-                                                          Duration(seconds: 3),
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 20,
-                                                              vertical: 10),
-                                                      showCloseIcon: true,
-                                                      closeIconColor: white,
-                                                      content: Text(
-                                                        "Gagal melakukan absen",
-                                                        style: GoogleFonts
-                                                            .montserrat(
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          color: white,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              state.alreadyExist == true
-                                                  ? darkGrey
-                                                  : darkOrange,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(2),
-                                          ),
-                                          elevation: 0,
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 18,
-                                            horizontal: 20,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          state.alreadyExist == true
-                                              ? "Sudah Absen"
-                                              : "Absen",
-                                          style: GoogleFonts.montserrat(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                            color: white,
-                                          ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],
-                                  ),
-                                ),
-                              ],
+                                  );
+                                } else {
+                                  return SizedBox.shrink();
+                                }
+                              },
                             ),
-                          );
-                        } else if (state is CameraScanAbsenError) {
-                          return Padding(
-                            padding: EdgeInsets.only(
-                              bottom: 5,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(height: 15),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Error :  ",
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w500,
-                                        fontStyle: FontStyle.italic,
-                                        color: white,
-                                      ),
-                                    ),
-                                    Text(
-                                      "QR Code tidak terdaftar.",
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700,
-                                        fontStyle: FontStyle.italic,
-                                        color: white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
-                        } else {
-                          return SizedBox.shrink();
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              );
-            } else if (state is ToggleSwitchAbsenManual) {
-              return Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(2),
-                  gradient: LinearGradient(
-                    colors: [orange, lightOrange],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: 50,
-                      child: DropdownSearch<Kid>(
-                        key: dropDownKey,
-                        enabled: true,
-                        onChanged: (value) {
-                          selected = value!;
-                          context
-                              .read<SelectDataAbsenBloc>()
-                              .add(FetchSelectDataAbsenEvent(isSelected: true));
-
-                          if (selected.id != "-") {
-                            context.read<SelectInputManualDataAbsenBloc>().add(
-                                  FetchSelectInputManualDataAbsenEvent(
-                                      selectedKid: selected,
-                                      serviceId: serviceData.id),
-                                );
-                          }
-                        },
-                        selectedItem: selected,
-                        itemAsString: (item) {
-                          return item.name!;
-                        },
-                        compareFn: (item1, item2) {
-                          return item1.id == item2.id;
-                        },
-                        items: (filter, loadProps) async {
-                          final kids = await _kidsService.ambilSemuaDataAnak();
-                          return kids;
-                        },
-                        decoratorProps: DropDownDecoratorProps(
-                          decoration: InputDecoration(
-                            suffixIconColor: darkGrey,
-                            filled: true,
-                            fillColor: white,
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                4,
-                              ),
-                              borderSide: BorderSide(
-                                color: darkOrange,
-                                width: 2,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(4),
-                              borderSide: BorderSide(
-                                color: darkOrange,
-                                width: 0.75,
-                              ),
-                            ),
-                          ),
-                          baseStyle: GoogleFonts.montserrat(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w400,
-                            color: black,
-                          ),
+                          ],
                         ),
-                        popupProps: PopupProps.menu(
-                          showSearchBox: true,
-                          fit: FlexFit.loose,
-                          emptyBuilder: (context, searchEntry) {
-                            return SizedBox(
-                              height: 60,
-                              child: Center(
-                                child: Text(
-                                  "Data anak tidak ditemukan",
-                                  style: GoogleFonts.montserrat(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: darkGrey,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                          searchFieldProps: TextFieldProps(
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                ),
+                const SizedBox(height: 15),
+                Divider(
+                  color: lightGrey,
+                  thickness: 1,
+                ),
+              ],
+              const SizedBox(height: 15),
+              BlocBuilder<GetServiceByIdBloc, ServicesState>(
+                builder: (context, state) {
+                  if (state is GetDataByID &&
+                      state.data.attendance!.isEmpty &&
+                      _apakahKegiatannyaItuBisaAbsenAtauLive(
+                              formatJadiYYYYMMDD(serviceData.date!),
+                              serviceData.time!) ==
+                          false) {
+                    return Center(
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 100),
+                          Text(
+                            "Tidak ada data absen",
                             style: GoogleFonts.montserrat(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400,
-                              color: black,
-                            ),
-                            cursorColor: black,
-                            decoration: InputDecoration(
-                              hintText: "Cari ID atau Nama Anak",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              filled: true,
-                              fillColor: white,
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                borderSide: BorderSide(
-                                  color: darkOrange,
-                                  width: 1,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                                borderSide: BorderSide(
-                                  color: darkOrange,
-                                  width: 0.5,
-                                ),
-                              ),
-                              constraints: BoxConstraints(
-                                maxHeight: 45,
-                              ),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: lightGrey,
                             ),
                           ),
-                          itemBuilder: (context, item, isDisabled, isSelected) {
-                            return Container(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8,
-                                horizontal: 15,
-                              ),
-                              decoration: BoxDecoration(
-                                color: white,
-                              ),
-                              child: Row(
-                                spacing: 5,
-                                children: [
-                                  Flexible(
-                                    child: RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: item.name,
-                                            style: GoogleFonts.montserrat(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                              color: black,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: " [ID: ${item.id}]",
-                                            style: GoogleFonts.montserrat(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w400,
-                                              color: black,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
+                        ],
                       ),
-                    ),
-                    BlocBuilder<SelectInputManualDataAbsenBloc,
-                        SelectDataAbsenState>(
-                      builder: (context, state) {
-                        if (state is SelectInputManualDataAbsen) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                    );
+                  }
+                  if (state is GetDataByID) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 10),
+                        Wrap(
+                          spacing: 2,
+                          runSpacing: 0,
+                          children: [
+                            Text(
+                              "Daftar Nama Absen ",
+                              style: GoogleFonts.montserrat(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w800,
+                                color: black,
+                              ),
+                            ),
+                            Text(
+                              "(Total: ${state.data.attendance!.length} anak)",
+                              style: GoogleFonts.montserrat(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: black,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        _tabel(
+                            context, state.data.attendance!, serviceData, false,
+                            isMobile: true),
+                      ],
+                    );
+                  } else {
+                    return Skeletonizer(
+                      enabled: true,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Wrap(
+                            spacing: 2,
+                            runSpacing: 0,
                             children: [
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: 10,
-                                  right: 10,
-                                  bottom: 0,
-                                  top: 15,
+                              Text(
+                                "Daftar Nama Absen ",
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w800,
+                                  color: black,
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _infoDetailKegiatan(
-                                        "Nama", state.selectedKid.name,
-                                        isMobile: true),
-                                    _infoDetailKegiatan(
-                                        "ID", state.selectedKid.id,
-                                        isMobile: true),
-                                    _infoDetailKegiatan(
-                                        "No. Hp", state.selectedKid.mobile,
-                                        isMobile: true),
-                                    _infoDetailKegiatan(
-                                        "Kelas", state.selectedKid.grade,
-                                        isMobile: true),
-                                    SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: ElevatedButton(
-                                            onPressed: state.alreadyExist ==
-                                                    true
-                                                ? () {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        backgroundColor: red,
-                                                        duration: Duration(
-                                                            seconds: 3),
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 20,
-                                                                vertical: 10),
-                                                        showCloseIcon: true,
-                                                        closeIconColor: white,
-                                                        content: Text(
-                                                          "${state.selectedKid.name!.split(' ').first} sudah melakukan absen sebelumnya",
-                                                          style: GoogleFonts
-                                                              .montserrat(
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            color: white,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                : () {
-                                                    final id = membuatAbsenId();
-                                                    final dateNow =
-                                                        ambilWaktuSekarang();
-
-                                                    Map<String, dynamic>
-                                                        dataAttendanceService =
-                                                        {
-                                                      '_id': id,
-                                                      'kidId':
-                                                          state.selectedKid.id,
-                                                      'kidName': state
-                                                          .selectedKid.name,
-                                                      'method': 'Manual',
-                                                      'timestamp': dateNow,
-                                                    };
-
-                                                    Map<String, dynamic>
-                                                        dataAttendanceKid = {
-                                                      '_id': id,
-                                                      'serviceId':
-                                                          serviceData.id,
-                                                      'serviceName':
-                                                          serviceData.name,
-                                                      'serviceDate':
-                                                          formatJadiYYYYMMDD(
-                                                              serviceData.date),
-                                                      'serviceTime':
-                                                          serviceData.time,
-                                                      'method': 'Manual',
-                                                      'timestamp': dateNow,
-                                                    };
-
-                                                    Map<String, dynamic>
-                                                        dataAttendanceGlobalAttendance =
-                                                        {
-                                                      '_id': id,
-                                                      'kidId':
-                                                          state.selectedKid.id,
-                                                      'kidName': state
-                                                          .selectedKid.name,
-                                                      'serviceId':
-                                                          serviceData.id,
-                                                      'serviceName':
-                                                          serviceData.name,
-                                                      'serviceDate':
-                                                          formatJadiYYYYMMDD(
-                                                              serviceData.date),
-                                                      'serviceTime':
-                                                          serviceData.time,
-                                                      'method': 'Manual',
-                                                      'timestamp': dateNow,
-                                                    };
-                                                    try {
-                                                      context
-                                                          .read<
-                                                              TakeAttendanceBloc>()
-                                                          .add(
-                                                            TakeAttendanceEvent(
-                                                                kidId: state
-                                                                    .selectedKid
-                                                                    .id!,
-                                                                serviceId:
-                                                                    serviceData
-                                                                        .id!,
-                                                                dataAttendanceService:
-                                                                    dataAttendanceService,
-                                                                dataAttendanceKid:
-                                                                    dataAttendanceKid,
-                                                                dataAttendanceGlobalAttendance:
-                                                                    dataAttendanceGlobalAttendance),
-                                                          );
-
-                                                      context
-                                                          .read<
-                                                              GetServiceByIdBloc>()
-                                                          .add(FetchServiceByIDEvent(
-                                                              serviceId:
-                                                                  serviceData
-                                                                      .id));
-
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        SnackBar(
-                                                          backgroundColor:
-                                                              green,
-                                                          duration: Duration(
-                                                              seconds: 3),
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  horizontal:
-                                                                      20,
-                                                                  vertical: 10),
-                                                          showCloseIcon: true,
-                                                          closeIconColor: white,
-                                                          content: Text(
-                                                            "${state.selectedKid.name} berhasil diabsen!",
-                                                            style: GoogleFonts
-                                                                .montserrat(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              color: white,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      );
-
-                                                      selected = defaultKid;
-                                                      dropDownKey.currentState!
-                                                          .changeSelectedItem(
-                                                              selected);
-
-                                                      context
-                                                          .read<
-                                                              SelectInputManualDataAbsenBloc>()
-                                                          .add(
-                                                              InitialInputManualDataAbsenEvent());
-                                                    } catch (e) {
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        SnackBar(
-                                                          backgroundColor: red,
-                                                          duration: Duration(
-                                                              seconds: 3),
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  horizontal:
-                                                                      20,
-                                                                  vertical: 10),
-                                                          showCloseIcon: true,
-                                                          closeIconColor: white,
-                                                          content: Text(
-                                                            "Gagal melakukan absen",
-                                                            style: GoogleFonts
-                                                                .montserrat(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              color: white,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }
-                                                  },
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  state.alreadyExist == true
-                                                      ? darkGrey
-                                                      : darkOrange,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(2),
-                                              ),
-                                              elevation: 0,
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                vertical: 18,
-                                                horizontal: 20,
-                                              ),
-                                            ),
-                                            child: Text(
-                                              state.alreadyExist == true
-                                                  ? "Sudah Absen"
-                                                  : "Absen",
-                                              style: GoogleFonts.montserrat(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w600,
-                                                color: white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                              ),
+                              Text(
+                                "(Total:          anak)",
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: black,
                                 ),
                               ),
                             ],
-                          );
-                        } else {
-                          return SizedBox.shrink();
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              );
-            } else {
-              return const SizedBox.shrink();
-            }
-          },
-        ),
-        const SizedBox(height: 15),
-        Divider(
-          color: lightGrey,
-          thickness: 1,
-        ),
-      ],
-      const SizedBox(height: 15),
-      BlocBuilder<GetServiceByIdBloc, ServicesState>(
-        builder: (context, state) {
-          if (state is GetDataByID &&
-              state.data.attendance!.isEmpty &&
-              _apakahKegiatannyaItuBisaAbsenAtauLive(
-                      formatJadiYYYYMMDD(serviceData.date!),
-                      serviceData.time!) ==
-                  false) {
-            return Center(
-              child: Column(
-                children: [
-                  const SizedBox(height: 100),
-                  Text(
-                    "Tidak ada data absen",
-                    style: GoogleFonts.montserrat(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: lightGrey,
-                    ),
-                  ),
-                ],
+                          ),
+                          const SizedBox(height: 14),
+                          Container(
+                            height: 400,
+                            width: double.infinity,
+                            color: lightGrey,
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                },
               ),
-            );
-          }
-          if (state is GetDataByID) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10),
-                Wrap(
-                  spacing: 2,
-                  runSpacing: 0,
-                  children: [
-                    Text(
-                      "Daftar Nama Absen ",
-                      style: GoogleFonts.montserrat(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
-                        color: black,
-                      ),
-                    ),
-                    Text(
-                      "(Total: ${state.data.attendance!.length} anak)",
-                      style: GoogleFonts.montserrat(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: black,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                _tabel(context, state.data.attendance!, serviceData, false,
-                    isMobile: true),
-              ],
-            );
-          } else {
-            return Skeletonizer(
-              enabled: true,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Wrap(
-                    spacing: 2,
-                    runSpacing: 0,
-                    children: [
-                      Text(
-                        "Daftar Nama Absen ",
-                        style: GoogleFonts.montserrat(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w800,
-                          color: black,
-                        ),
-                      ),
-                      Text(
-                        "(Total:          anak)",
-                        style: GoogleFonts.montserrat(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: black,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 14),
-                  Container(
-                    height: 400,
-                    width: double.infinity,
-                    color: lightGrey,
-                  ),
-                ],
-              ),
-            );
-          }
-        },
+            ],
+          ),
+        ),
       ),
     ],
   );

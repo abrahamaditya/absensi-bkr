@@ -141,15 +141,16 @@ class MasterMenu extends StatelessWidget {
       child: ScreenUtilInit(
         builder: (BuildContext context, Widget? child) => (screenWidth < 1000
             ? Scaffold(
+                resizeToAvoidBottomInset: true,
                 body: BlocBuilder<SidebarMenuBloc, SidebarMenuState>(
                   builder: (context, state) {
                     if (state is SidebarMenuSuccess) {
-                      return SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            topbarMobileWidget(context, state),
-                            Padding(
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          topbarMobileWidget(context, state),
+                          Expanded(
+                            child: Padding(
                               padding: EdgeInsets.only(
                                 left: 20,
                                 right: 20,
@@ -163,8 +164,8 @@ class MasterMenu extends StatelessWidget {
                                     state.detailKegiatanPreviousMenu ?? "",
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       );
                     } else {
                       return const SizedBox.shrink();
@@ -173,6 +174,7 @@ class MasterMenu extends StatelessWidget {
                 ),
               )
             : Scaffold(
+                resizeToAvoidBottomInset: true,
                 body: BlocBuilder<SidebarMenuBloc, SidebarMenuState>(
                   builder: (context, state) {
                     if (state is SidebarMenuSuccess) {
