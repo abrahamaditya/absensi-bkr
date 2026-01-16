@@ -1652,91 +1652,93 @@ String membuatAbsenId() {
 
 Widget mobileLayout(
     BuildContext context, String previousMenu, Service serviceData) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      SizedBox(
-        width: double.infinity,
-        child: Row(
-          spacing: 10,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                color: purple,
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                onPressed: () {
-                  context.read<SidebarMenuBloc>().add(FetchSidebarMenuEvent(
-                      menu:
-                          previousMenu == "Kegiatan" ? "Kegiatan" : "Hari Ini",
-                      data: Object()));
-                  context.read<TodayBloc>().add(InitTodayEvent());
-                  context.read<TodayBloc>().add(FetchTodayEvent(
-                      date: DateTime.now().toIso8601String().split('T')[0]));
-                  context
-                      .read<GetKidsByIdScanQRBloc>()
-                      .add(InitIDScanQREvent());
-                },
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: white,
-                  size: 15,
-                ),
-                hoverColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-              ),
-            ),
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    serviceData.name!,
-                    style: GoogleFonts.montserrat(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800,
-                      color: black,
-                    ),
-                    overflow: TextOverflow.visible,
-                    softWrap: true,
+  return ScrollConfiguration(
+    behavior: const ScrollBehavior().copyWith(overscroll: false),
+    child: SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: Row(
+              spacing: 10,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: purple,
+                    shape: BoxShape.circle,
                   ),
-                  Row(
-                    spacing: 2,
+                  child: IconButton(
+                    onPressed: () {
+                      context.read<SidebarMenuBloc>().add(FetchSidebarMenuEvent(
+                          menu: previousMenu == "Kegiatan"
+                              ? "Kegiatan"
+                              : "Hari Ini",
+                          data: Object()));
+                      context.read<TodayBloc>().add(InitTodayEvent());
+                      context.read<TodayBloc>().add(FetchTodayEvent(
+                          date:
+                              DateTime.now().toIso8601String().split('T')[0]));
+                      context
+                          .read<GetKidsByIdScanQRBloc>()
+                          .add(InitIDScanQREvent());
+                    },
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: white,
+                      size: 15,
+                    ),
+                    hoverColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                  ),
+                ),
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "${serviceData.date!} • ",
+                        serviceData.name!,
                         style: GoogleFonts.montserrat(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
                           color: black,
                         ),
+                        overflow: TextOverflow.visible,
+                        softWrap: true,
                       ),
-                      Text(
-                        serviceData.time!,
-                        style: GoogleFonts.montserrat(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          color: black,
-                        ),
+                      Row(
+                        spacing: 2,
+                        children: [
+                          Text(
+                            "${serviceData.date!} • ",
+                            style: GoogleFonts.montserrat(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: black,
+                            ),
+                          ),
+                          Text(
+                            serviceData.time!,
+                            style: GoogleFonts.montserrat(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: black,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-      ScrollConfiguration(
-        behavior: const ScrollBehavior().copyWith(overscroll: false),
-        child: SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          child: Column(
+                )
+              ],
+            ),
+          ),
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (_apakahKegiatannyaItuBisaAbsenAtauLive(
@@ -2847,8 +2849,8 @@ Widget mobileLayout(
               ),
             ],
           ),
-        ),
+        ],
       ),
-    ],
+    ),
   );
 }

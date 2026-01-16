@@ -570,31 +570,31 @@ Widget _kartuMobile({
 }
 
 Widget mobileLayout(BuildContext context) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        "Jadwal Hari Ini",
-        style: GoogleFonts.montserrat(
-          fontSize: 20,
-          fontWeight: FontWeight.w800,
-          color: black,
-        ),
-      ),
-      Text(
-        dateNow,
-        style: GoogleFonts.montserrat(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          color: black,
-        ),
-      ),
-      const SizedBox(height: 16),
-      ScrollConfiguration(
-        behavior: const ScrollBehavior().copyWith(overscroll: false),
-        child: SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          child: BlocBuilder<TodayBloc, TodayState>(
+  return ScrollConfiguration(
+    behavior: const ScrollBehavior().copyWith(overscroll: false),
+    child: SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Jadwal Hari Ini",
+            style: GoogleFonts.montserrat(
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+              color: black,
+            ),
+          ),
+          Text(
+            dateNow,
+            style: GoogleFonts.montserrat(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: black,
+            ),
+          ),
+          const SizedBox(height: 16),
+          BlocBuilder<TodayBloc, TodayState>(
             builder: (context, state) {
               if (state is TodayGetData) {
                 return LayoutBuilder(
@@ -703,8 +703,8 @@ Widget mobileLayout(BuildContext context) {
               }
             },
           ),
-        ),
+        ],
       ),
-    ],
+    ),
   );
 }

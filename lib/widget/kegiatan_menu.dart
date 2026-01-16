@@ -492,136 +492,128 @@ Widget mobileLayout(BuildContext context) {
         ],
       ),
       const SizedBox(height: 2),
-      ScrollConfiguration(
-        behavior: const ScrollBehavior().copyWith(overscroll: false),
-        child: SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          child: BlocBuilder<GetAllServicesBloc, ServicesState>(
-            builder: (context, state) {
-              if (tableLoadingAnak == false) {
-                tableLoadingAnak = true;
-                return Skeletonizer(
-                  enabled: true,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: List.generate(2, (index) {
-                      return Column(
-                        children: [
-                          if (index == 0) const SizedBox(height: 22),
-                          Container(
-                            height: 15,
-                            width: double.infinity,
-                            color: lightGrey,
-                          ),
-                          const SizedBox(height: 8),
-                          ...List.generate(2, (_) {
-                            return Column(
-                              children: [
-                                Container(
-                                  height: 75,
-                                  width: double.infinity,
-                                  color: lightGrey,
-                                ),
-                                const SizedBox(height: 8),
-                              ],
-                            );
-                          }),
-                          if (index < 2) const SizedBox(height: 12),
-                        ],
-                      );
-                    }).expand((widget) => widget.children).toList(),
-                  ),
-                );
-              } else if (state is ServicesGetAllData) {
-                return SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  child: GroupedListView<Service, String>(
-                    elements: state.data,
-                    groupBy: (Service element) {
-                      return element.date!;
-                    },
-                    groupComparator: (value1, value2) {
-                      DateFormat dateFormat =
-                          DateFormat('EEEE, d MMMM yyyy', 'id_ID');
-                      DateTime date1 = dateFormat.parse(value1);
-                      DateTime date2 = dateFormat.parse(value2);
-                      return date2.compareTo(
-                          date1); // Tanggal paling baru muncul pertama
-                    },
-                    itemComparator: (item1, item2) {
-                      DateFormat timeFormat = DateFormat('HH:mm');
-                      DateTime time1 = timeFormat.parse(item1.time!);
-                      DateTime time2 = timeFormat.parse(item2.time!);
-                      return time2.compareTo(
-                          time1); // Urutkan dari waktu yang paling pagi
-                    },
-                    order:
-                        GroupedListOrder.ASC, // Urutkan grup dari yang terbaru
-                    useStickyGroupSeparators: true,
-                    groupSeparatorBuilder: (String value) => Container(
-                      padding: EdgeInsets.only(top: 20, bottom: 8),
-                      color: white,
-                      child: Row(
-                        children: [
-                          Text(
-                            formatAwalanAngka(value),
-                            style: GoogleFonts.montserrat(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: black,
-                            ),
-                          ),
-                          Expanded(
-                            child: Divider(
-                              color: black,
-                              thickness: 0.25,
-                              indent: 10,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    itemBuilder: (context, Service element) {
-                      final DateTime serviceTime =
-                          formatTimestamp(element.date!, element.time!);
-                      final DateTime now = DateTime.now();
-                      return Column(
-                        children: [
-                          _kartuMobile(
-                            context: context,
-                            data: element,
-                            isNext: serviceTime.difference(now).inMinutes > 29,
-                            isFinished:
-                                now.difference(serviceTime).inMinutes > 89,
-                          ),
-                          SizedBox(height: 7),
-                        ],
-                      );
-                    },
-                  ),
-                );
-              } else if (state is ServicesGetAllDataIsEmpty) {
-                return Center(
-                  child: Column(
+      BlocBuilder<GetAllServicesBloc, ServicesState>(
+        builder: (context, state) {
+          if (tableLoadingAnak == false) {
+            tableLoadingAnak = true;
+            return Skeletonizer(
+              enabled: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: List.generate(2, (index) {
+                  return Column(
                     children: [
-                      const SizedBox(height: 60),
+                      if (index == 0) const SizedBox(height: 22),
+                      Container(
+                        height: 15,
+                        width: double.infinity,
+                        color: lightGrey,
+                      ),
+                      const SizedBox(height: 8),
+                      ...List.generate(2, (_) {
+                        return Column(
+                          children: [
+                            Container(
+                              height: 75,
+                              width: double.infinity,
+                              color: lightGrey,
+                            ),
+                            const SizedBox(height: 8),
+                          ],
+                        );
+                      }),
+                      if (index < 2) const SizedBox(height: 12),
+                    ],
+                  );
+                }).expand((widget) => widget.children).toList(),
+              ),
+            );
+          } else if (state is ServicesGetAllData) {
+            return SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: GroupedListView<Service, String>(
+                elements: state.data,
+                groupBy: (Service element) {
+                  return element.date!;
+                },
+                groupComparator: (value1, value2) {
+                  DateFormat dateFormat =
+                      DateFormat('EEEE, d MMMM yyyy', 'id_ID');
+                  DateTime date1 = dateFormat.parse(value1);
+                  DateTime date2 = dateFormat.parse(value2);
+                  return date2
+                      .compareTo(date1); // Tanggal paling baru muncul pertama
+                },
+                itemComparator: (item1, item2) {
+                  DateFormat timeFormat = DateFormat('HH:mm');
+                  DateTime time1 = timeFormat.parse(item1.time!);
+                  DateTime time2 = timeFormat.parse(item2.time!);
+                  return time2
+                      .compareTo(time1); // Urutkan dari waktu yang paling pagi
+                },
+                order: GroupedListOrder.ASC, // Urutkan grup dari yang terbaru
+                useStickyGroupSeparators: true,
+                groupSeparatorBuilder: (String value) => Container(
+                  padding: EdgeInsets.only(top: 20, bottom: 8),
+                  color: white,
+                  child: Row(
+                    children: [
                       Text(
-                        "Data kegiatan belum ditambahkan",
+                        formatAwalanAngka(value),
                         style: GoogleFonts.montserrat(
                           fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: lightGrey,
+                          fontWeight: FontWeight.w700,
+                          color: black,
+                        ),
+                      ),
+                      Expanded(
+                        child: Divider(
+                          color: black,
+                          thickness: 0.25,
+                          indent: 10,
                         ),
                       ),
                     ],
                   ),
-                );
-              } else {
-                return SizedBox.shrink();
-              }
-            },
-          ),
-        ),
+                ),
+                itemBuilder: (context, Service element) {
+                  final DateTime serviceTime =
+                      formatTimestamp(element.date!, element.time!);
+                  final DateTime now = DateTime.now();
+                  return Column(
+                    children: [
+                      _kartuMobile(
+                        context: context,
+                        data: element,
+                        isNext: serviceTime.difference(now).inMinutes > 29,
+                        isFinished: now.difference(serviceTime).inMinutes > 89,
+                      ),
+                      SizedBox(height: 7),
+                    ],
+                  );
+                },
+              ),
+            );
+          } else if (state is ServicesGetAllDataIsEmpty) {
+            return Center(
+              child: Column(
+                children: [
+                  const SizedBox(height: 60),
+                  Text(
+                    "Data kegiatan belum ditambahkan",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: lightGrey,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return SizedBox.shrink();
+          }
+        },
       ),
     ],
   );

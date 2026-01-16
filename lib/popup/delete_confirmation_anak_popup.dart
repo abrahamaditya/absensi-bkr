@@ -1,3 +1,4 @@
+// ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:absensi_bkr/helper/color.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,6 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:absensi_bkr/model/kid_model.dart';
 import 'package:absensi_bkr/bloc/kids_bloc/kids_bloc.dart';
 import 'package:absensi_bkr/bloc/kids_bloc/kids_event.dart';
+import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_bloc.dart';
+import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_event.dart';
 
 class DeleteConfirmationAnakPopup extends StatelessWidget {
   final BuildContext parentContext;
@@ -108,9 +111,11 @@ class DeleteConfirmationAnakPopup extends StatelessWidget {
                             );
 
                         Future.delayed(const Duration(milliseconds: 400), () {
-                          // ignore: use_build_context_synchronously
                           parentContext.read<GetKidsBloc>().add(
                               FetchKidsEvent(page: 1, searchNameQuery: ""));
+                          parentContext.read<SidebarMenuBloc>().add(
+                              FetchSidebarMenuEvent(
+                                  menu: "Anak", data: Object()));
                         });
 
                         ScaffoldMessenger.of(parentContext).showSnackBar(
@@ -132,9 +137,9 @@ class DeleteConfirmationAnakPopup extends StatelessWidget {
                           ),
                         );
                         Navigator.of(parentContext).pop(false);
+
                         // html.window.location.reload();
                       } catch (e) {
-                        print(e.toString());
                         ScaffoldMessenger.of(parentContext).showSnackBar(
                           SnackBar(
                             backgroundColor: red,

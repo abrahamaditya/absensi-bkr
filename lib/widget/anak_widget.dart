@@ -560,85 +560,85 @@ Widget _fieldCariData(
 Widget mobileLayout(BuildContext context) {
   final double screenWidth = MediaQuery.of(context).size.width;
   TextEditingController namaAnakController = TextEditingController();
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  return ScrollConfiguration(
+    behavior: const ScrollBehavior().copyWith(overscroll: false),
+    child: SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "Semua Anak",
-                style: GoogleFonts.montserrat(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                  color: black,
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Semua Anak",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                      color: black,
+                    ),
+                  ),
+                  Text(
+                    "${kelasOptions[1]} - ${kelasOptions.last}",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: black,
+                    ),
+                  ),
+                ],
               ),
-              Text(
-                "${kelasOptions[1]} - ${kelasOptions.last}",
-                style: GoogleFonts.montserrat(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: black,
+              SizedBox(
+                child: ElevatedButton(
+                  onPressed: () {
+                    context.read<SidebarMenuBloc>().add(FetchSidebarMenuEvent(
+                        menu: "Anak Tambah Data", data: Object()));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: orange,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 18,
+                      horizontal: 14,
+                    ),
+                  ),
+                  child: screenWidth < 430
+                      ? Icon(
+                          Icons.add,
+                          color: white,
+                          size: 18,
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.add,
+                              color: white,
+                              size: 12,
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              "Tambah Anak",
+                              style: GoogleFonts.montserrat(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: white,
+                              ),
+                            ),
+                          ],
+                        ),
                 ),
               ),
             ],
           ),
-          SizedBox(
-            child: ElevatedButton(
-              onPressed: () {
-                context.read<SidebarMenuBloc>().add(FetchSidebarMenuEvent(
-                    menu: "Anak Tambah Data", data: Object()));
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: orange,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(2),
-                ),
-                elevation: 0,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 18,
-                  horizontal: 14,
-                ),
-              ),
-              child: screenWidth < 430
-                  ? Icon(
-                      Icons.add,
-                      color: white,
-                      size: 18,
-                    )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(
-                          Icons.add,
-                          color: white,
-                          size: 12,
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          "Tambah Anak",
-                          style: GoogleFonts.montserrat(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: white,
-                          ),
-                        ),
-                      ],
-                    ),
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 25),
-      ScrollConfiguration(
-        behavior: const ScrollBehavior().copyWith(overscroll: false),
-        child: SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          child: BlocBuilder<GetKidsBloc, KidsState>(
+          const SizedBox(height: 25),
+          BlocBuilder<GetKidsBloc, KidsState>(
             builder: (context, state) {
               if (tableLoadingAnak == false) {
                 tableLoadingAnak = true;
@@ -932,8 +932,8 @@ Widget mobileLayout(BuildContext context) {
               }
             },
           ),
-        ),
+        ],
       ),
-    ],
+    ),
   );
 }

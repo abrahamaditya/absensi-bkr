@@ -660,59 +660,58 @@ String _membuat3HurufRandom(int length) {
 }
 
 Widget mobileLayout(BuildContext context) {
-  idController = "";
-  kegiatanController = "Pilih Kegiatan";
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Row(
-        spacing: 10,
-        mainAxisAlignment: MainAxisAlignment.start,
+  return ScrollConfiguration(
+    behavior: const ScrollBehavior().copyWith(overscroll: false),
+    child: SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 30,
-            height: 30,
-            decoration: BoxDecoration(
-              color: purple,
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              onPressed: () {
-                context.read<SidebarMenuBloc>().add(
-                      FetchSidebarMenuEvent(menu: "Kegiatan", data: Object()),
-                    );
+          Row(
+            spacing: 10,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: purple,
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  onPressed: () {
+                    context.read<SidebarMenuBloc>().add(
+                          FetchSidebarMenuEvent(
+                              menu: "Kegiatan", data: Object()),
+                        );
 
-                idController = "";
-                kegiatanController = "Pilih Kegiatan";
-                tanggalKegiatanController.clear();
-                waktuKegiatanController.clear();
-                lainnyaController.clear();
-              },
-              icon: Icon(
-                Icons.arrow_back,
-                color: white,
-                size: 15,
+                    idController = "";
+                    kegiatanController = "Pilih Kegiatan";
+                    tanggalKegiatanController.clear();
+                    waktuKegiatanController.clear();
+                    lainnyaController.clear();
+                  },
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: white,
+                    size: 15,
+                  ),
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                ),
               ),
-              hoverColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-            ),
+              Text(
+                "Tambah Data Kegiatan",
+                style: GoogleFonts.montserrat(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: black,
+                ),
+              ),
+            ],
           ),
-          Text(
-            "Tambah Data Kegiatan",
-            style: GoogleFonts.montserrat(
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-              color: black,
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 25),
-      ScrollConfiguration(
-        behavior: const ScrollBehavior().copyWith(overscroll: false),
-        child: SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          child: Column(
+          const SizedBox(height: 25),
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _fieldDropdownFormKegiatan(
@@ -742,195 +741,196 @@ Widget mobileLayout(BuildContext context) {
               _fieldDropdownFormWaktu(
                   "Waktu Kegiatan", waktuKegiatanController, context,
                   isMobile: true),
-              const SizedBox(height: 25),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
+              const SizedBox(height: 30),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    context.read<SidebarMenuBloc>().add(
+                          FetchSidebarMenuEvent(
+                              menu: "Kegiatan", data: Object()),
+                        );
+
+                    idController = "";
+                    kegiatanController = "Pilih Kegiatan";
+                    tanggalKegiatanController.clear();
+                    waktuKegiatanController.clear();
+                    lainnyaController.clear();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(2),
+                      side: BorderSide(color: orange, width: 1),
+                    ),
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 18,
+                      horizontal: 20,
+                    ),
+                  ),
+                  child: Text(
+                    "Batal",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: orange,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    String selectedKegiatan =
+                        kegiatanController ?? "Pilih Kegiatan";
+
+                    // Hati-hati dengan code ini
+                    // Fungsinya adalah jika kegiatan adalah "Lainnya", maka kita akan ambil inputan dari field "Lainnya"
+                    if (selectedKegiatan == "Lainnya") {
+                      selectedKegiatan = lainnyaController.text;
+                    }
+
+                    // Validasi
+                    if (selectedKegiatan == "Pilih Kegiatan" ||
+                        selectedKegiatan.isEmpty ||
+                        tanggalKegiatanController.text.isEmpty ||
+                        waktuKegiatanController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: red,
+                          duration: Duration(seconds: 3),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          showCloseIcon: true,
+                          closeIconColor: white,
+                          content: Text(
+                            "Pastikan semua data terisi dengan benar",
+                            style: GoogleFonts.montserrat(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: white,
+                            ),
+                          ),
+                        ),
+                      );
+                      return;
+                    }
+
+                    if (lainnyaController.text.isNotEmpty) {
+                      idController = _membuatServiceId(
+                        selectedKegiatan,
+                        tanggalKegiatanController.text,
+                        waktuKegiatanController.text,
+                        lainnyaController.text,
+                      );
+                    } else {
+                      idController = _membuatServiceId(
+                        selectedKegiatan,
+                        tanggalKegiatanController.text,
+                        waktuKegiatanController.text,
+                      );
+                    }
+
+                    Map<String, dynamic> newData = {
+                      '_id': idController,
+                      'name': selectedKegiatan,
+                      'date': tanggalKegiatanController.text,
+                      'time': waktuKegiatanController.text,
+                      'attendance': [],
+                    };
+
+                    try {
+                      context
+                          .read<CreateServicesBloc>()
+                          .add(CreateServicesEvent(newData: newData));
+
+                      newData = {};
+                      idController = "";
+                      kegiatanController = "Pilih Kegiatan";
+                      selectedKegiatan = "Pilih Kegiatan";
+                      tanggalKegiatanController.clear();
+                      waktuKegiatanController.clear();
+                      lainnyaController.clear();
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: green,
+                          duration: Duration(seconds: 3),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          showCloseIcon: true,
+                          closeIconColor: white,
+                          content: Text(
+                            "Data berhasil ditambahkan!",
+                            style: GoogleFonts.montserrat(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: white,
+                            ),
+                          ),
+                        ),
+                      );
+
+                      context.read<GetServicesBloc>().add(
+                          FetchServicesEvent(page: 1, searchNameQuery: ""));
+
+                      context
+                          .read<GetAllServicesBloc>()
+                          .add(FetchAllServicesEvent());
+
                       context.read<SidebarMenuBloc>().add(
                             FetchSidebarMenuEvent(
                                 menu: "Kegiatan", data: Object()),
                           );
-
-                      idController = "";
-                      kegiatanController = "Pilih Kegiatan";
-                      tanggalKegiatanController.clear();
-                      waktuKegiatanController.clear();
-                      lainnyaController.clear();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(2),
-                        side: BorderSide(color: orange, width: 1),
-                      ),
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 18,
-                        horizontal: 20,
-                      ),
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: red,
+                          duration: Duration(seconds: 3),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          showCloseIcon: true,
+                          closeIconColor: white,
+                          content: Text(
+                            "Gagal menambahkan kegiatan baru",
+                            style: GoogleFonts.montserrat(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: white,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: orange,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(2),
                     ),
-                    child: Text(
-                      "Batal",
-                      style: GoogleFonts.montserrat(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: orange,
-                      ),
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 18,
+                      horizontal: 20,
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    onPressed: () async {
-                      String selectedKegiatan =
-                          kegiatanController ?? "Pilih Kegiatan";
-
-                      // Hati-hati dengan code ini
-                      // Fungsinya adalah jika kegiatan adalah "Lainnya", maka kita akan ambil inputan dari field "Lainnya"
-                      if (selectedKegiatan == "Lainnya") {
-                        selectedKegiatan = lainnyaController.text;
-                      }
-
-                      // Validasi
-                      if (selectedKegiatan == "Pilih Kegiatan" ||
-                          selectedKegiatan.isEmpty ||
-                          tanggalKegiatanController.text.isEmpty ||
-                          waktuKegiatanController.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: red,
-                            duration: Duration(seconds: 3),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            showCloseIcon: true,
-                            closeIconColor: white,
-                            content: Text(
-                              "Pastikan semua data terisi dengan benar",
-                              style: GoogleFonts.montserrat(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: white,
-                              ),
-                            ),
-                          ),
-                        );
-                        return;
-                      }
-
-                      if (lainnyaController.text.isNotEmpty) {
-                        idController = _membuatServiceId(
-                          selectedKegiatan,
-                          tanggalKegiatanController.text,
-                          waktuKegiatanController.text,
-                          lainnyaController.text,
-                        );
-                      } else {
-                        idController = _membuatServiceId(
-                          selectedKegiatan,
-                          tanggalKegiatanController.text,
-                          waktuKegiatanController.text,
-                        );
-                      }
-
-                      Map<String, dynamic> newData = {
-                        '_id': idController,
-                        'name': selectedKegiatan,
-                        'date': tanggalKegiatanController.text,
-                        'time': waktuKegiatanController.text,
-                        'attendance': [],
-                      };
-
-                      try {
-                        context
-                            .read<CreateServicesBloc>()
-                            .add(CreateServicesEvent(newData: newData));
-
-                        newData = {};
-                        idController = "";
-                        kegiatanController = "Pilih Kegiatan";
-                        selectedKegiatan = "Pilih Kegiatan";
-                        tanggalKegiatanController.clear();
-                        waktuKegiatanController.clear();
-                        lainnyaController.clear();
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: green,
-                            duration: Duration(seconds: 3),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            showCloseIcon: true,
-                            closeIconColor: white,
-                            content: Text(
-                              "Data berhasil ditambahkan!",
-                              style: GoogleFonts.montserrat(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: white,
-                              ),
-                            ),
-                          ),
-                        );
-
-                        context.read<GetServicesBloc>().add(
-                            FetchServicesEvent(page: 1, searchNameQuery: ""));
-
-                        context
-                            .read<GetAllServicesBloc>()
-                            .add(FetchAllServicesEvent());
-
-                        context.read<SidebarMenuBloc>().add(
-                              FetchSidebarMenuEvent(
-                                  menu: "Kegiatan", data: Object()),
-                            );
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: red,
-                            duration: Duration(seconds: 3),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            showCloseIcon: true,
-                            closeIconColor: white,
-                            content: Text(
-                              "Gagal menambahkan kegiatan baru",
-                              style: GoogleFonts.montserrat(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: white,
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: orange,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 18,
-                        horizontal: 20,
-                      ),
-                    ),
-                    child: Text(
-                      "Simpan Data",
-                      style: GoogleFonts.montserrat(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: white,
-                      ),
+                  child: Text(
+                    "Simpan Data",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: white,
                     ),
                   ),
-                ],
+                ),
               ),
             ],
           ),
-        ),
+        ],
       ),
-    ],
+    ),
   );
 }

@@ -789,177 +789,184 @@ Widget _infoDetailStatusDataAnak({
 }
 
 Widget mobileLayout(BuildContext parentContext, Kid kidsData) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      SizedBox(
-        width: double.infinity,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // SISI KIRI: Tombol Back + Nama Anak
-            Expanded(
-              child: Row(
-                children: [
-                  // Tombol Back Bulat
-                  Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color:
-                          purple, // Pastikan variabel 'purple' sudah didefinisikan
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () {
-                        parentContext.read<SidebarMenuBloc>().add(
-                              FetchSidebarMenuEvent(
-                                  menu: "Anak", data: Object()),
-                            );
-                      },
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color:
-                            white, // Pastikan variabel 'white' sudah didefinisikan
-                        size: 15,
-                      ),
-                      // Menghilangkan efek hover/klik pada tombol back
-                      hoverColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      tooltip: '',
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  // Nama Anak dengan proteksi overflow
-                  Expanded(
-                    child: SelectionArea(
-                      child: Text(
-                        kidsData.name!,
-                        style: GoogleFonts.montserrat(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
+  return ScrollConfiguration(
+    behavior: const ScrollBehavior().copyWith(overscroll: false),
+    child: SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // SISI KIRI: Tombol Back + Nama Anak
+                Expanded(
+                  child: Row(
+                    children: [
+                      // Tombol Back Bulat
+                      Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
                           color:
-                              black, // Pastikan variabel 'black' sudah didefinisikan
+                              purple, // Pastikan variabel 'purple' sudah didefinisikan
+                          shape: BoxShape.circle,
                         ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            parentContext.read<GetKidsBloc>().add(
+                                FetchKidsEvent(page: 1, searchNameQuery: ""));
+                            selectedPaginationNumberOfAllAnakPage = 1;
+                            parentContext.read<SidebarMenuBloc>().add(
+                                FetchSidebarMenuEvent(
+                                    menu: "Anak", data: Object()));
+                          },
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color:
+                                white, // Pastikan variabel 'white' sudah didefinisikan
+                            size: 15,
+                          ),
+                          // Menghilangkan efek hover/klik pada tombol back
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          tooltip: '',
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 12),
+                      // Nama Anak dengan proteksi overflow
+                      Expanded(
+                        child: SelectionArea(
+                          child: Text(
+                            kidsData.name!,
+                            style: GoogleFonts.montserrat(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800,
+                              color:
+                                  black, // Pastikan variabel 'black' sudah didefinisikan
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
+                ),
 
-            // SISI KANAN: Menu Titik Tiga (Popup Menu)
-            PopupMenuButton<String>(
-              padding: EdgeInsets.zero,
-              tooltip: '', // Menghilangkan tooltip
-              splashRadius:
-                  0.1, // Mengecilkan radius splash hingga hampir tidak terlihat
-              style: ButtonStyle(
-                // Menghilangkan efek hover dan klik secara total
-                overlayColor: WidgetStateProperty.all(Colors.transparent),
-              ),
-              icon: const Icon(
-                Icons.more_vert,
-                color: Colors.grey,
-              ),
-              onSelected: (value) {
-                if (value == 'qr') {
-                  showDialog(
-                    context: parentContext,
-                    builder: (context) => QRCodePopup(
-                      id: kidsData.id!,
-                      name: kidsData.name!,
-                    ),
-                  );
-                } else if (value == 'edit') {
-                  parentContext.read<SidebarMenuBloc>().add(
-                        FetchSidebarMenuEvent(
-                            menu: "Anak Ubah Data", data: kidsData),
+                // SISI KANAN: Menu Titik Tiga (Popup Menu)
+                PopupMenuButton<String>(
+                  padding: EdgeInsets.zero,
+                  tooltip: '', // Menghilangkan tooltip
+                  splashRadius:
+                      0.1, // Mengecilkan radius splash hingga hampir tidak terlihat
+                  style: ButtonStyle(
+                    // Menghilangkan efek hover dan klik secara total
+                    overlayColor: WidgetStateProperty.all(Colors.transparent),
+                  ),
+                  icon: const Icon(
+                    Icons.more_vert,
+                    color: Colors.grey,
+                  ),
+                  onSelected: (value) {
+                    if (value == 'qr') {
+                      showDialog(
+                        context: parentContext,
+                        builder: (context) => QRCodePopup(
+                          id: kidsData.id!,
+                          name: kidsData.name!,
+                        ),
                       );
-                } else if (value == 'delete') {
-                  showDialog(
-                    context: parentContext,
-                    builder: (context) => DeleteConfirmationAnakPopup(
-                      parentContext: parentContext,
-                      kidData: kidsData,
+                    } else if (value == 'edit') {
+                      parentContext.read<SidebarMenuBloc>().add(
+                            FetchSidebarMenuEvent(
+                                menu: "Anak Ubah Data", data: kidsData),
+                          );
+                    } else if (value == 'delete') {
+                      showDialog(
+                        context: parentContext,
+                        builder: (context) => DeleteConfirmationAnakPopup(
+                          parentContext: parentContext,
+                          kidData: kidsData,
+                        ),
+                      );
+                    }
+                  },
+                  itemBuilder: (BuildContext context) => [
+                    PopupMenuItem(
+                      value: 'qr',
+                      child: Row(
+                        children: [
+                          Icon(Icons.qr_code, size: 18, color: black),
+                          const SizedBox(width: 10),
+                          Text(
+                            "Lihat QR Code",
+                            style: GoogleFonts.montserrat(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: black,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  );
-                }
-              },
-              itemBuilder: (BuildContext context) => [
-                PopupMenuItem(
-                  value: 'qr',
-                  child: Row(
-                    children: [
-                      Icon(Icons.qr_code, size: 18, color: black),
-                      const SizedBox(width: 10),
-                      Text(
-                        "Lihat QR Code",
-                        style: GoogleFonts.montserrat(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: black,
-                        ),
+                    PopupMenuItem(
+                      value: 'edit',
+                      child: Row(
+                        children: [
+                          Icon(Icons.mode_edit_outline_outlined,
+                              size: 18, color: black),
+                          const SizedBox(width: 10),
+                          Text(
+                            "Ubah Data Anak",
+                            style: GoogleFonts.montserrat(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: black,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
-                  value: 'edit',
-                  child: Row(
-                    children: [
-                      Icon(Icons.mode_edit_outline_outlined,
-                          size: 18, color: black),
-                      const SizedBox(width: 10),
-                      Text(
-                        "Ubah Data Anak",
-                        style: GoogleFonts.montserrat(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: black,
-                        ),
+                    ),
+                    PopupMenuItem(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete_outline_rounded,
+                              size: 18, color: red),
+                          const SizedBox(width: 10),
+                          Text(
+                            "Hapus Anak",
+                            style: GoogleFonts.montserrat(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: red,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
-                  value: 'delete',
-                  child: Row(
-                    children: [
-                      Icon(Icons.delete_outline_rounded, size: 18, color: red),
-                      const SizedBox(width: 10),
-                      Text(
-                        "Hapus Anak",
-                        style: GoogleFonts.montserrat(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: red,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-      const SizedBox(height: 18),
-      ScrollConfiguration(
-        behavior: const ScrollBehavior().copyWith(overscroll: false),
-        child: SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          child: Column(
+          ),
+          const SizedBox(height: 18),
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _infoDetailAnak("ID", kidsData.id!, true),
-              _infoDetailAnak("Tanggal Lahir",
-                  formatJadiDDMMMMYYYYIndonesia(kidsData.birthdate), true),
+              _infoDetailAnak(
+                  "Tanggal Lahir",
+                  kidsData.birthdate == null || kidsData.birthdate!.isEmpty
+                      ? null
+                      : formatJadiDDMMMMYYYYIndonesia(kidsData.birthdate),
+                  true),
               _infoDetailAnak("Alamat", kidsData.address, true),
               _infoDetailAnak("No. Hp", kidsData.mobile, true),
               _infoDetailAnak("Nama Orang Tua", kidsData.parentName, true),
@@ -1039,8 +1046,8 @@ Widget mobileLayout(BuildContext parentContext, Kid kidsData) {
               ],
             ],
           ),
-        ),
+        ],
       ),
-    ],
+    ),
   );
 }

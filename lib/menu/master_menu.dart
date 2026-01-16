@@ -240,7 +240,7 @@ class ScreensView extends StatelessWidget {
         page = anakTambahDataSubmenu(context);
         break;
       case 'Anak Ubah Data':
-        page = anakUbahDataSubmenu(context, data);
+        page = AnakUbahDataSubmenu(kidsData: data);
         break;
       default:
         page = Container(
