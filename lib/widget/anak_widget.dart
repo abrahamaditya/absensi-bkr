@@ -16,9 +16,9 @@ import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_bloc.dart';
 import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_event.dart';
 
 bool isDataActuallyThere = false;
+final TextEditingController namaAnakController = TextEditingController();
 
 Widget semuaAnakWidget(BuildContext context) {
-  TextEditingController namaAnakController = TextEditingController();
   final ScrollController scrollController = ScrollController();
   final double screenWidth = MediaQuery.of(context).size.width;
 
@@ -559,7 +559,6 @@ Widget _fieldCariData(
 
 Widget mobileLayout(BuildContext context) {
   final double screenWidth = MediaQuery.of(context).size.width;
-  TextEditingController namaAnakController = TextEditingController();
   return ScrollConfiguration(
     behavior: const ScrollBehavior().copyWith(overscroll: false),
     child: SingleChildScrollView(

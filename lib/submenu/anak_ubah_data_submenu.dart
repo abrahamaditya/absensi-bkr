@@ -48,6 +48,7 @@ class _AnakUbahDataSubmenuState extends State<AnakUbahDataSubmenu> {
         TextEditingController(text: widget.kidsData.parentName ?? "");
 
     kelasController = widget.kidsData.grade;
+    formattedDateForSubmit = widget.kidsData.birthdate;
   }
 
   @override
