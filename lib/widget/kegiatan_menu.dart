@@ -530,7 +530,7 @@ Widget mobileLayout(BuildContext context) {
             );
           } else if (state is ServicesGetAllData) {
             return SizedBox(
-              height: MediaQuery.of(context).size.height,
+              height: MediaQuery.of(context).size.height + 75,
               child: GroupedListView<Service, String>(
                 elements: state.data,
                 groupBy: (Service element) {

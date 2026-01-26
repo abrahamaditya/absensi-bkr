@@ -39,7 +39,7 @@ bool tableLoadingKegiatan = false;
 
 Kid defaultKid = Kid(
   id: "-",
-  name: "Pilih Data",
+  name: "Pilih Data Anak",
   birthdate: null,
   parentName: null,
   mobile: null,

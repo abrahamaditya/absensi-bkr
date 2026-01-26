@@ -12,6 +12,7 @@ import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_bloc.dart';
 import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_event.dart';
 
 String? kelasController;
+String? formattedDateForSubmit;
 bool isDataComplete = false;
 
 TextEditingController namaController = TextEditingController();
@@ -98,7 +99,7 @@ Widget anakTambahDataSubmenu(BuildContext context) {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _fieldFormInputTeks(
-                                  "Nama lengkap", namaController, false),
+                                  "Nama Lengkap", namaController, false),
                               const SizedBox(height: 18),
                               _fieldDatePickerTanggal("Tanggal Lahir",
                                   tanggalLahirController, context, false),
@@ -215,7 +216,7 @@ Widget anakTambahDataSubmenu(BuildContext context) {
                             Map<String, dynamic> newData = {
                               '_id': membuatKidId(),
                               'name': namaController.text,
-                              'birthDate': tanggalLahirController.text,
+                              'birthDate': formattedDateForSubmit,
                               'address': alamatController.text,
                               'mobile': noHpController.text,
                               'parents': orangTuaController.text,
@@ -494,6 +495,8 @@ Widget _fieldDatePickerTanggal(
           );
           if (selectedDate != null) {
             controller.text =
+                "${selectedDate.day.toString().padLeft(2, '0')} ${getMonthName(selectedDate.month)} ${selectedDate.year}";
+            formattedDateForSubmit =
                 "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
           }
         },
@@ -613,7 +616,7 @@ Widget mobileLayout(BuildContext context) {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _fieldFormInputTeks("Nama lengkap", namaController, true),
+              _fieldFormInputTeks("Nama Lengkap", namaController, true),
               const SizedBox(height: 18),
               _fieldDatePickerTanggal(
                   "Tanggal Lahir", tanggalLahirController, context, true),
@@ -713,7 +716,7 @@ Widget mobileLayout(BuildContext context) {
                     Map<String, dynamic> newData = {
                       '_id': membuatKidId(),
                       'name': namaController.text,
-                      'birthDate': tanggalLahirController.text,
+                      'birthDate': formattedDateForSubmit,
                       'address': alamatController.text,
                       'mobile': noHpController.text,
                       'parents': orangTuaController.text,

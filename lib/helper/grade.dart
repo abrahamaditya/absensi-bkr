@@ -10,5 +10,6 @@ List<String> kelasOptions = [
   "4 SD",
   "5 SD",
   "6 SD",
-  "1 SMP"
+  "1 SMP",
+  "2 SMP"
 ];

@@ -37,8 +37,8 @@ class _AnakUbahDataSubmenuState extends State<AnakUbahDataSubmenu> {
     super.initState();
 
     namaController = TextEditingController(text: widget.kidsData.name ?? "");
-    tanggalLahirController =
-        TextEditingController(text: widget.kidsData.birthdate ?? "");
+    tanggalLahirController = TextEditingController(
+        text: formatJadiDDMMMMYYYYIndonesia(widget.kidsData.birthdate ?? ""));
     alamatController =
         TextEditingController(text: widget.kidsData.address ?? "");
     sekolahController =
@@ -147,7 +147,7 @@ class _AnakUbahDataSubmenuState extends State<AnakUbahDataSubmenu> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _fieldFormInputTeks(
-                              "Nama lengkap", namaController, false),
+                              "Nama Lengkap", namaController, false),
                           const SizedBox(height: 18),
                           _fieldDatePickerTanggal("Tanggal Lahir",
                               tanggalLahirController, context, false),
@@ -300,12 +300,14 @@ class _AnakUbahDataSubmenuState extends State<AnakUbahDataSubmenu> {
                 ],
               ),
               const SizedBox(height: 25),
-              _fieldFormInputTeks("Nama lengkap", namaController, true),
+              _fieldFormInputTeks("Nama Lengkap", namaController, true),
               const SizedBox(height: 18),
               _fieldDatePickerTanggal(
                   "Tanggal Lahir", tanggalLahirController, context, true),
               const SizedBox(height: 18),
               _fieldFormInputTeks("Alamat", alamatController, true),
+              const SizedBox(height: 18),
+              _fieldDropdownFormKelas("Kelas", kelasController, true),
               const SizedBox(height: 18),
               _fieldFormInputTeks("No. HP", noHpController, true,
                   isNumber: true),
@@ -313,8 +315,6 @@ class _AnakUbahDataSubmenuState extends State<AnakUbahDataSubmenu> {
               _fieldFormInputTeks("Nama Orang Tua", orangTuaController, true),
               const SizedBox(height: 18),
               _fieldFormInputTeks("Sekolah", sekolahController, true),
-              const SizedBox(height: 18),
-              _fieldDropdownFormKelas("Kelas", kelasController, true),
               const SizedBox(height: 35),
               SizedBox(
                 width: double.infinity,
@@ -494,24 +494,6 @@ class _AnakUbahDataSubmenuState extends State<AnakUbahDataSubmenu> {
     }
   }
 
-  String _getMonthName(int month) {
-    const List<String> months = [
-      'Januari',
-      'Februari',
-      'Maret',
-      'April',
-      'Mei',
-      'Juni',
-      'Juli',
-      'Agustus',
-      'September',
-      'Oktober',
-      'November',
-      'Desember'
-    ];
-    return months[month - 1];
-  }
-
   Widget _fieldFormInputTeks(
       String labelText, TextEditingController controller, bool isMobile,
       {bool isNumber = false}) {
@@ -627,7 +609,7 @@ class _AnakUbahDataSubmenuState extends State<AnakUbahDataSubmenu> {
             if (selectedDate != null) {
               setState(() {
                 controller.text =
-                    "${selectedDate.day.toString().padLeft(2, '0')} ${_getMonthName(selectedDate.month)} ${selectedDate.year}";
+                    "${selectedDate.day.toString().padLeft(2, '0')} ${getMonthName(selectedDate.month)} ${selectedDate.year}";
                 formattedDateForSubmit =
                     "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
               });

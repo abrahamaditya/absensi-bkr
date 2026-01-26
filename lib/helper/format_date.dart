@@ -1,5 +1,23 @@
 import 'package:intl/intl.dart';
 
+String getMonthName(int month) {
+  const List<String> months = [
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember'
+  ];
+  return months[month - 1];
+}
+
 DateTime now = DateTime.now();
 String dateNow = DateFormat('EEEE, d MMMM yyyy', 'id_ID').format(now);
 

@@ -17,12 +17,12 @@ import 'package:absensi_bkr/model/attendance_model.dart';
 import 'package:qrcode_reader_web/qrcode_reader_web.dart';
 import 'package:absensi_bkr/bloc/today_bloc/today_bloc.dart';
 import 'package:absensi_bkr/bloc/today_bloc/today_event.dart';
-import 'package:absensi_bkr/popup/delete_confirmation_attendance_popup.dart';
 import 'package:absensi_bkr/bloc/services_bloc/services_bloc.dart';
 import 'package:absensi_bkr/bloc/services_bloc/services_state.dart';
 import 'package:absensi_bkr/bloc/services_bloc/services_event.dart';
 import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_bloc.dart';
 import 'package:absensi_bkr/bloc/sidebar_menu_bloc/sidebar_menu_event.dart';
+import 'package:absensi_bkr/popup/delete_confirmation_attendance_popup.dart';
 import 'package:absensi_bkr/bloc/camera_scan_absen_bloc/camera_scan_absen_bloc.dart';
 import 'package:absensi_bkr/bloc/select_data_absen_bloc/select_data_absen_bloc.dart';
 import 'package:absensi_bkr/bloc/camera_scan_absen_bloc/camera_scan_absen_event.dart';
@@ -37,7 +37,7 @@ final KidsService _kidsService = KidsService();
 
 Kid selected = Kid(
   id: "-",
-  name: "Pilih Data",
+  name: "Pilih Data Anak",
   birthdate: null,
   parentName: null,
   mobile: null,
@@ -1622,9 +1622,9 @@ bool _apakahKegiatannyaItuBisaAbsenAtauLive(String date, String time) {
     // Format date dan time digabung menjadi satu DateTime
     final dateTime = DateTime.parse('$date $time:00');
 
-    // Rentang waktu absen (30 menit sebelum dan 1 jam 30 menit setelah waktu kegiatan)
+    // Rentang waktu absen (30 menit sebelum dan 1 jam 45 menit setelah waktu kegiatan)
     final startTime = dateTime.subtract(Duration(minutes: 30));
-    final endTime = dateTime.add(Duration(hours: 1, minutes: 30));
+    final endTime = dateTime.add(Duration(hours: 1, minutes: 45));
 
     // Gunakan waktu sekarang
     final now = DateTime.now();
@@ -2323,9 +2323,13 @@ Widget mobileLayout(
                                         width: 0.75,
                                       ),
                                     ),
+                                    contentPadding: EdgeInsets.symmetric(
+                                      vertical: 12,
+                                      horizontal: 12,
+                                    ),
                                   ),
                                   baseStyle: GoogleFonts.montserrat(
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w400,
                                     color: black,
                                   ),
@@ -2350,7 +2354,7 @@ Widget mobileLayout(
                                   },
                                   searchFieldProps: TextFieldProps(
                                     style: GoogleFonts.montserrat(
-                                      fontSize: 10,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.w400,
                                       color: black,
                                     ),
@@ -2378,6 +2382,10 @@ Widget mobileLayout(
                                       ),
                                       constraints: BoxConstraints(
                                         maxHeight: 45,
+                                      ),
+                                      contentPadding: EdgeInsets.symmetric(
+                                        vertical: 12,
+                                        horizontal: 12,
                                       ),
                                     ),
                                   ),
