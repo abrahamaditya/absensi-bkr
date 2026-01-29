@@ -60,7 +60,7 @@ Widget cetakKartuWidget(BuildContext context) {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        "Lihat pendataan anak yang telah melakukan pencetakan kartu absensi di setiap batch-nya, serta dapat diisi untuk pendataan jika ada anak yang ingin melakukan pencetakan ulang.",
+                        "Lihat list data anak yang telah melakukan pencetakan kartu absensi di setiap batch-nya, serta dapat diisi untuk pendataan jika ada anak yang ingin melakukan pencetakan ulang.",
                         style: GoogleFonts.montserrat(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -150,14 +150,14 @@ Widget mobileLayout(BuildContext context) {
       ),
       const SizedBox(height: 5),
       Text(
-        "Lihat pendataan anak yang telah melakukan pencetakan kartu absensi di setiap batch-nya, serta dapat diisi untuk pendataan jika ada anak yang ingin melakukan pencetakan ulang.",
+        "Lihat list data anak yang telah melakukan pencetakan kartu absensi di setiap batch-nya, serta dapat diisi untuk pendataan jika ada anak yang ingin melakukan pencetakan ulang.",
         style: GoogleFonts.montserrat(
           fontSize: 12,
           fontWeight: FontWeight.w500,
           color: black,
         ),
       ),
-      const SizedBox(height: 5),
+      const SizedBox(height: 8),
       ElevatedButton(
         onPressed: () => web.window.open(
             'https://docs.google.com/spreadsheets/d/1T-ezLitcax3z4xfvTz0lXhpNtD7oqUJxJsrenuD6Hcs/edit?usp=sharing',

@@ -116,7 +116,7 @@ Widget laporanWidget(BuildContext context) {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        "Unduh laporan lengkap kegiatan yang telah dilakukan dalam format PDF.",
+                        "Unduh laporan lengkap aktivitas & kegiatan yang telah dilakukan dalam format PDF.",
                         style: GoogleFonts.montserrat(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -213,7 +213,7 @@ Widget mobileLayout(BuildContext context) {
           color: black,
         ),
       ),
-      const SizedBox(height: 5),
+      const SizedBox(height: 8),
       ElevatedButton(
         onPressed: () => web.window.open(
             'https://docs.google.com/spreadsheets/d/e/2PACX-1vTaAGdgcSFZhFFHitJWtRiF7jaWJp0VXDDgD54cur1FGe_b4rf4jsoB9GcFH0P2e4BIlQsZ9z5yMn6N/pubhtml?gid=816666399&single=true',
@@ -251,7 +251,7 @@ Widget mobileLayout(BuildContext context) {
           ],
         ),
       ),
-      const SizedBox(height: 18),
+      const SizedBox(height: 25),
       Text(
         "✉️ Download PDF",
         style: GoogleFonts.montserrat(
@@ -262,14 +262,14 @@ Widget mobileLayout(BuildContext context) {
       ),
       const SizedBox(height: 5),
       Text(
-        "Unduh laporan lengkap kegiatan yang telah dilakukan dalam format PDF.",
+        "Unduh laporan lengkap aktivitas & kegiatan yang telah dilakukan dalam format PDF.",
         style: GoogleFonts.montserrat(
           fontSize: 12,
           fontWeight: FontWeight.w500,
           color: black,
         ),
       ),
-      const SizedBox(height: 5),
+      const SizedBox(height: 8),
       ElevatedButton(
         onPressed: () => web.window.open(
             'https://docs.google.com/spreadsheets/d/e/2PACX-1vTaAGdgcSFZhFFHitJWtRiF7jaWJp0VXDDgD54cur1FGe_b4rf4jsoB9GcFH0P2e4BIlQsZ9z5yMn6N/pub?gid=816666399&single=true&output=pdf',

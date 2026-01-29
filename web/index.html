@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <base href="$FLUTTER_BASE_HREF" />
@@ -57,25 +57,57 @@
       <div class="loader"></div>
     </div>
 
-    <script src="flutter_bootstrap.js" async></script>
+    <script src="flutter_bootstrap.js?v=1.0.1" async></script>
 
     <script>
-      // LOGIKA ANTI CACHE: Paksa Update Service Worker
+      // 1. Fungsi untuk membersihkan Cache browser secara manual
+      async function clearOldCaches() {
+        try {
+          const cacheNames = await caches.keys();
+          await Promise.all(
+            cacheNames.map((cacheName) => {
+              console.log("Menghapus cache lama: " + cacheName);
+              return caches.delete(cacheName);
+            }),
+          );
+        } catch (e) {
+          console.log("Gagal menghapus cache:", e);
+        }
+      }
+
+      // 2. Logika Service Worker: Cek update dan paksa reload
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
           navigator.serviceWorker
             .getRegistrations()
             .then(function (registrations) {
               for (let registration of registrations) {
-                // Jika ada versi baru, service worker akan langsung diupdate
+                // Cek update ke server
                 registration.update();
-                console.log("Checking for updates...");
+
+                registration.onupdatefound = function () {
+                  const installingWorker = registration.installing;
+                  installingWorker.onstatechange = function () {
+                    if (
+                      installingWorker.state === "installed" &&
+                      navigator.sizeWorker.controller
+                    ) {
+                      // Jika ada versi baru terinstall, bersihkan cache dan reload
+                      console.log(
+                        "Versi baru ditemukan. Membersihkan cache dan reload...",
+                      );
+                      clearOldCaches().then(() => {
+                        window.location.reload(true);
+                      });
+                    }
+                  };
+                };
               }
             });
         });
       }
 
-      // LOGIKA PENGHAPUS LOADING (Sesuai cara kerja Flutter)
+      // 3. Logika Penghapus Loading (Bawaan Flutter)
       window.addEventListener("load", function () {
         var isRemoved = false;
         var checkFlutterInterval = setInterval(function () {
