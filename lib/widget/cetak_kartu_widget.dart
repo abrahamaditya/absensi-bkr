@@ -179,7 +179,7 @@ Widget mobileLayout(BuildContext context) {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              "Lihat Laporan Selengkapnya",
+              "Lihat & Isi Data",
               style: GoogleFonts.montserrat(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,

@@ -251,7 +251,7 @@ Widget mobileLayout(BuildContext context) {
           ],
         ),
       ),
-      const SizedBox(height: 25),
+      const SizedBox(height: 22),
       Text(
         "✉️ Download PDF",
         style: GoogleFonts.montserrat(
