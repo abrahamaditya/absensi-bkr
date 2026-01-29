@@ -116,7 +116,7 @@ Widget topbarMobileWidget(BuildContext context, SidebarMenuSuccess state) {
                             web.window.location.assign('/');
                           },
                           child: Container(
-                            width: 125,
+                            width: 105,
                             padding: EdgeInsets.symmetric(
                               horizontal: 10,
                               vertical: 15,
@@ -178,7 +178,7 @@ Widget topbarMobileWidget(BuildContext context, SidebarMenuSuccess state) {
                                 .add(InitIDScanQREvent());
                           },
                           child: Container(
-                            width: 125,
+                            width: 105,
                             padding: EdgeInsets.symmetric(
                               horizontal: 10,
                               vertical: 15,
@@ -239,7 +239,7 @@ Widget topbarMobileWidget(BuildContext context, SidebarMenuSuccess state) {
                                 .add(InitIDScanQREvent());
                           },
                           child: Container(
-                            width: 125,
+                            width: 105,
                             padding: EdgeInsets.symmetric(
                               horizontal: 10,
                               vertical: 15,
@@ -299,7 +299,7 @@ Widget topbarMobileWidget(BuildContext context, SidebarMenuSuccess state) {
                                 .add(InitIDScanQREvent());
                           },
                           child: Container(
-                            width: 125,
+                            width: 105,
                             padding: EdgeInsets.symmetric(
                               horizontal: 10,
                               vertical: 15,
@@ -360,7 +360,7 @@ Widget topbarMobileWidget(BuildContext context, SidebarMenuSuccess state) {
                                 .add(InitIDScanQREvent());
                           },
                           child: Container(
-                            width: 125,
+                            width: 105,
                             padding: EdgeInsets.symmetric(
                               horizontal: 10,
                               vertical: 15,

@@ -170,7 +170,7 @@ Widget mobileLayout(BuildContext context) {
           ),
           elevation: 0,
           padding: const EdgeInsets.symmetric(
-            vertical: 18,
+            vertical: 14,
             horizontal: 14,
           ),
         ),
