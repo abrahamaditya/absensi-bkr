@@ -1,3 +1,4 @@
+import 'dart:ui' as ui;
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi_bkr/helper/theme.dart';
@@ -33,6 +34,14 @@ class MyApp extends StatelessWidget {
       supportedLocales: const [
         Locale('id', 'ID'),
       ],
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+        dragDevices: {
+          ui.PointerDeviceKind.mouse,
+          ui.PointerDeviceKind.touch,
+          ui.PointerDeviceKind.stylus,
+          ui.PointerDeviceKind.unknown
+        },
+      ),
       title: 'Absensi BKR Modernland',
       home: const LoginMenu(),
       theme: themeData,

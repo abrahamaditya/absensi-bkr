@@ -3,10 +3,12 @@ import 'package:absensi_bkr/helper/color.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:absensi_bkr/model/kid_model.dart';
 import 'package:absensi_bkr/widget/anak_widget.dart';
-import 'package:absensi_bkr/widget/kegiatan_menu.dart';
+import 'package:absensi_bkr/widget/laporan_widget.dart';
+import 'package:absensi_bkr/widget/kegiatan_widget.dart';
 import 'package:absensi_bkr/widget/hari_ini_widget.dart';
 import 'package:absensi_bkr/bloc/auth_bloc/auth_bloc.dart';
 import 'package:absensi_bkr/bloc/kids_bloc/kids_bloc.dart';
+import 'package:absensi_bkr/widget/cetak_kartu_widget.dart';
 import 'package:absensi_bkr/bloc/auth_bloc/auth_event.dart';
 import 'package:absensi_bkr/bloc/kids_bloc/kids_event.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -226,6 +228,12 @@ class ScreensView extends StatelessWidget {
         break;
       case 'Anak':
         page = semuaAnakWidget(context);
+        break;
+      case 'Cetak Kartu':
+        page = cetakKartuWidget(context);
+        break;
+      case 'Laporan':
+        page = laporanWidget(context);
         break;
       case 'Anak Detail':
         page = detailAnakSubmenu(context, data);

@@ -91,12 +91,16 @@ Widget topbarMobileWidget(BuildContext context, SidebarMenuSuccess state) {
             BlocBuilder<SidebarMenuBloc, SidebarMenuState>(
               builder: (context, state) {
                 if (state is SidebarMenuSuccess) {
-                  return Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 10,
-                    children: [
-                      Expanded(
-                        child: InkWell(
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    // Physics agar scroll terasa natural (bouncing di iOS/Android)
+                    physics: const BouncingScrollPhysics(),
+                    clipBehavior: Clip.none,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 10,
+                      children: [
+                        InkWell(
                           onTap: () {
                             // context.read<TodayBloc>().add(FetchTodayEvent(
                             //     date: DateTime.now()
@@ -112,7 +116,7 @@ Widget topbarMobileWidget(BuildContext context, SidebarMenuSuccess state) {
                             web.window.location.assign('/');
                           },
                           child: Container(
-                            width: 75,
+                            width: 125,
                             padding: EdgeInsets.symmetric(
                               horizontal: 10,
                               vertical: 15,
@@ -161,9 +165,7 @@ Widget topbarMobileWidget(BuildContext context, SidebarMenuSuccess state) {
                             ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: InkWell(
+                        InkWell(
                           onTap: () {
                             context
                                 .read<GetAllServicesBloc>()
@@ -176,7 +178,7 @@ Widget topbarMobileWidget(BuildContext context, SidebarMenuSuccess state) {
                                 .add(InitIDScanQREvent());
                           },
                           child: Container(
-                            width: 75,
+                            width: 125,
                             padding: EdgeInsets.symmetric(
                               horizontal: 10,
                               vertical: 15,
@@ -225,9 +227,7 @@ Widget topbarMobileWidget(BuildContext context, SidebarMenuSuccess state) {
                             ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: InkWell(
+                        InkWell(
                           onTap: () {
                             context.read<GetKidsBloc>().add(
                                 FetchKidsEvent(page: 1, searchNameQuery: ""));
@@ -239,7 +239,7 @@ Widget topbarMobileWidget(BuildContext context, SidebarMenuSuccess state) {
                                 .add(InitIDScanQREvent());
                           },
                           child: Container(
-                            width: 75,
+                            width: 125,
                             padding: EdgeInsets.symmetric(
                               horizontal: 10,
                               vertical: 15,
@@ -287,8 +287,130 @@ Widget topbarMobileWidget(BuildContext context, SidebarMenuSuccess state) {
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        InkWell(
+                          onTap: () {
+                            context.read<GetKidsBloc>().add(
+                                FetchKidsEvent(page: 1, searchNameQuery: ""));
+                            context.read<SidebarMenuBloc>().add(
+                                FetchSidebarMenuEvent(
+                                    menu: "Cetak Kartu", data: Object()));
+                            context
+                                .read<GetKidsByIdScanQRBloc>()
+                                .add(InitIDScanQREvent());
+                          },
+                          child: Container(
+                            width: 125,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 15,
+                            ),
+                            decoration: BoxDecoration(
+                              color: state.menu!.startsWith("Cetak Kartu")
+                                  ? orange
+                                  : white,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(2),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: Offset(0, -1),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              spacing: 2,
+                              children: [
+                                Icon(
+                                  Icons.print_outlined,
+                                  color: state.menu!.startsWith("Cetak Kartu")
+                                      ? white
+                                      : black,
+                                  size: 22,
+                                ),
+                                Text(
+                                  "Cetak Kartu",
+                                  style: GoogleFonts.montserrat(
+                                    color: state.menu!.startsWith("Cetak Kartu")
+                                        ? white
+                                        : black,
+                                    fontSize: 12,
+                                    fontWeight:
+                                        state.menu!.startsWith("Cetak Kartu")
+                                            ? FontWeight.w700
+                                            : FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            context.read<GetKidsBloc>().add(
+                                FetchKidsEvent(page: 1, searchNameQuery: ""));
+                            context.read<SidebarMenuBloc>().add(
+                                FetchSidebarMenuEvent(
+                                    menu: "Laporan", data: Object()));
+                            context
+                                .read<GetKidsByIdScanQRBloc>()
+                                .add(InitIDScanQREvent());
+                          },
+                          child: Container(
+                            width: 125,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 15,
+                            ),
+                            decoration: BoxDecoration(
+                              color: state.menu!.startsWith("Laporan")
+                                  ? orange
+                                  : white,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(2),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: Offset(0, -1),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              spacing: 2,
+                              children: [
+                                Icon(
+                                  Icons.bar_chart_outlined,
+                                  color: state.menu!.startsWith("Laporan")
+                                      ? white
+                                      : black,
+                                  size: 22,
+                                ),
+                                Text(
+                                  "Laporan",
+                                  style: GoogleFonts.montserrat(
+                                    color: state.menu!.startsWith("Laporan")
+                                        ? white
+                                        : black,
+                                    fontSize: 12,
+                                    fontWeight:
+                                        state.menu!.startsWith("Laporan")
+                                            ? FontWeight.w700
+                                            : FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 } else {
                   return SizedBox.shrink();

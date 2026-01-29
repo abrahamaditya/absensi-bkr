@@ -220,6 +220,105 @@ Widget sidebarWebWidget(BuildContext context, SidebarMenuSuccess state) {
               ),
             ),
           ),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                context
+                    .read<GetKidsBloc>()
+                    .add(FetchKidsEvent(page: 1, searchNameQuery: ""));
+                context.read<SidebarMenuBloc>().add(
+                    FetchSidebarMenuEvent(menu: "Cetak Kartu", data: Object()));
+                context.read<GetKidsByIdScanQRBloc>().add(InitIDScanQREvent());
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    state.menu!.startsWith("Cetak Kartu") ? white : purple,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(50),
+                    bottomLeft: Radius.circular(50),
+                  ),
+                ),
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 18,
+                  horizontal: 20,
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.print_outlined,
+                    color:
+                        state.menu!.startsWith("Cetak Kartu") ? purple : white,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    "Cetak Kartu",
+                    style: GoogleFonts.montserrat(
+                      color: state.menu!.startsWith("Cetak Kartu")
+                          ? purple
+                          : white,
+                      fontSize: 18,
+                      fontWeight: state.menu!.startsWith("Cetak Kartu")
+                          ? FontWeight.w700
+                          : FontWeight.w400,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                context
+                    .read<GetKidsBloc>()
+                    .add(FetchKidsEvent(page: 1, searchNameQuery: ""));
+                context.read<SidebarMenuBloc>().add(
+                    FetchSidebarMenuEvent(menu: "Laporan", data: Object()));
+                context.read<GetKidsByIdScanQRBloc>().add(InitIDScanQREvent());
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    state.menu!.startsWith("Laporan") ? white : purple,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(50),
+                    bottomLeft: Radius.circular(50),
+                  ),
+                ),
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 18,
+                  horizontal: 20,
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.bar_chart_outlined,
+                    color: state.menu!.startsWith("Laporan") ? purple : white,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    "Laporan",
+                    style: GoogleFonts.montserrat(
+                      color: state.menu!.startsWith("Laporan") ? purple : white,
+                      fontSize: 18,
+                      fontWeight: state.menu!.startsWith("Laporan")
+                          ? FontWeight.w700
+                          : FontWeight.w400,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           Spacer(),
           Align(
             alignment: Alignment.centerLeft,
